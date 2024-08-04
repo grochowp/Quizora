@@ -1,11 +1,21 @@
-const mongoose = require("mongoose");
+import mongoose, { Document } from "mongoose";
 
-const userSchema = new mongoose.Schema({
+export interface IUser extends Document {
+  login: string;
+  email: string;
+  password: string;
+  points: number;
+  profilePicture: string;
+  createdAt: Date;
+  createdQuizzes: mongoose.Types.ObjectId[];
+}
+
+const userSchema = new mongoose.Schema<IUser>({
   login: {
     type: String,
     required: true,
     unique: true,
-    maxlength: 20, // Poprawione max na maxlength
+    maxlength: 20,
   },
   email: {
     type: String,
@@ -29,4 +39,4 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model<IUser>("User", userSchema);

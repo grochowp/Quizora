@@ -1,9 +1,7 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-dotenv.config();
 const cors = require("cors");
 const app = express();
+const connectDatabase = require("./config/database");
 
 app.use(cors());
 app.use(express.json());
@@ -14,14 +12,4 @@ app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
 
-mongoose
-  .connect(process.env.MONGODB_URL, {
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("DB Connetion Successfull");
-  })
-  .catch((err: any) => {
-    console.log(err.message);
-  });
+connectDatabase();
