@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const connectDatabase = require("./config/database");
+const userRoutes = require("./routes/user.route");
+const quizRoutes = require("./routes/quiz.route");
 
 app.use(cors());
 app.use(express.json());
@@ -13,3 +15,6 @@ app.listen(port, () => {
 });
 
 connectDatabase();
+
+app.use("/api/user", userRoutes);
+app.use("/api/quiz", quizRoutes);

@@ -8,6 +8,8 @@ export interface IQuiz extends Document {
     answers: Array<String>;
     correctAnswerIndex: number;
   }>;
+  points: number;
+  difficulty: string;
   createdBy: {
     userId: mongoose.Types.ObjectId;
     login: string;
@@ -20,13 +22,32 @@ export interface IQuiz extends Document {
 const quizSchema = new mongoose.Schema<IQuiz>({
   title: { type: String, minlength: 5, maxlength: 30, required: true },
   time: { type: Number, min: 1, max: 10, required: true },
-  questions: [
-    {
-      question: { type: String, minLength: 5, maxLength: 50, required: true },
-      answers: { type: [String], required: true },
-      correctAnswerIndex: { type: Number, required: true },
+  questions: {
+    type: [
+      {
+        question: { type: String, minlength: 5, maxlength: 50, required: true },
+        answers: { type: [String], required: true },
+        correctAnswerIndex: { type: Number, required: true },
+      },
+    ],
+    validate: {
+      validator: (questions: any[]) =>
+        questions.length >= 3 && questions.length <= 15,
+      message: "The quiz must have between 3 and 15 questions.",
     },
-  ],
+  },
+
+  points: {
+    type: Number,
+    min: 10,
+    max: 50,
+    required: true,
+  },
+  difficulty: {
+    type: String,
+    enum: ["easy", "medium", "hard"],
+    required: true,
+  },
   createdBy: {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
