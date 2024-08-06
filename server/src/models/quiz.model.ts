@@ -1,6 +1,7 @@
 import mongoose, { Document } from "mongoose";
 
 export interface IQuiz extends Document {
+  _id: mongoose.ObjectId;
   title: string;
   time: number;
   questions: Array<{

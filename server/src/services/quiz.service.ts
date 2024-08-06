@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { IQuiz } from "../models/quiz.model";
 
+const User = require("../models/user.model");
 const Quiz = require("../models/quiz.model");
 
 const calculatePoints = (time: number, difficulty: string, length: number) => {
@@ -12,6 +13,7 @@ const calculatePoints = (time: number, difficulty: string, length: number) => {
 
 class QuizService {
   async createQuiz(
+    userId: mongoose.ObjectId,
     title: string,
     time: number,
     questions: IQuiz["questions"],
@@ -43,6 +45,11 @@ class QuizService {
       // status?: 'draft' | 'published' | 'archived';
     });
 
+    await User.findByIdAndUpdate(userId, {
+      $push: { createdQuizzes: quiz._id },
+      new: true,
+    });
+
     if (!quiz) throw new Error("Invalid quiz data");
 
     return {
@@ -51,6 +58,16 @@ class QuizService {
   }
 
   async editQuiz() {}
+
+  async deleteQuiz(userId: mongoose.ObjectId, quizId: mongoose.ObjectId) {
+    await Quiz.findOneAndDelete({ _id: quizId });
+    const user = await User.findByIdAndUpdate(userId, {
+      $pull: { createdQuizzes: quizId },
+      new: true,
+    });
+
+    return { ...user };
+  }
 }
 
 module.exports = new QuizService();
