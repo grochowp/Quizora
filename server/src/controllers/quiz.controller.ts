@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const QuizService = require("../services/quiz.service");
 
 interface IQuizRequest extends Request {
-  body: IQuiz & { userId: mongoose.ObjectId };
+  body: IQuiz & { userId?: mongoose.ObjectId };
 }
 
 const createQuiz = async (req: IQuizRequest, res: Response) => {
@@ -37,7 +37,19 @@ const deleteQuiz = async (req: IQuizRequest, res: Response) => {
   }
 };
 
+const getQuizzesByUserId = async (req: IQuizRequest, res: Response) => {
+  const { userId } = req.query;
+
+  try {
+    const quizzes = await QuizService.getQuizzesByUserId(userId);
+    res.status(201).json(quizzes);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createQuiz,
   deleteQuiz,
+  getQuizzesByUserId,
 };

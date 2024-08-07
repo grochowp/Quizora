@@ -2,7 +2,20 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 import { Request, Response, NextFunction } from "express";
 
-const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+interface IUserRequest extends Request {
+  user: {
+    login: string;
+    email?: string;
+    password: string;
+    token: string;
+  };
+}
+
+const verifyToken = async (
+  req: IUserRequest,
+  res: Response,
+  next: NextFunction
+) => {
   let token;
 
   if (

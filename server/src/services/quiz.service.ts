@@ -31,8 +31,6 @@ class QuizService {
       throw new Error("Quiz must have between 3 and 15 questions.");
     }
 
-    // throw new Error(title + " " + time);
-
     const quiz = await Quiz.create({
       title,
       time,
@@ -50,23 +48,39 @@ class QuizService {
       new: true,
     });
 
-    if (!quiz) throw new Error("Invalid quiz data");
+    if (!quiz) throw new Error("Invalid quiz data.");
 
-    return {
-      ...quiz,
-    };
+    return quiz;
   }
 
   async editQuiz() {}
 
   async deleteQuiz(userId: mongoose.ObjectId, quizId: mongoose.ObjectId) {
-    await Quiz.findOneAndDelete({ _id: quizId });
+    const quiz = await Quiz.findOneAndDelete({ _id: quizId, new: true });
+    if (!quiz) throw new Error("Invalid quiz data.");
     const user = await User.findByIdAndUpdate(userId, {
       $pull: { createdQuizzes: quizId },
       new: true,
     });
+    if (!user) throw new Error("Invalid user data.");
 
-    return { ...user };
+    return user;
+  }
+
+  async getQuizzesByUserId(userId: mongoose.ObjectId) {
+    const user = await User.findById(userId).select("createdQuizzes");
+
+    if (!user) {
+      throw new Error("User not found.");
+    }
+
+    const quizzes = await Quiz.find({
+      _id: { $in: user.createdQuizzes },
+    });
+
+    if (!user) throw new Error("No quizzes have been found.");
+
+    return quizzes;
   }
 }
 

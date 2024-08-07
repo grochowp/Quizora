@@ -1,17 +1,23 @@
+import { IUser } from "../models/user.model";
+
 const User = require("../models/user.model");
-const generateToken = require("../config/auth");
+const { generateToken } = require("../config/authentication");
 const bcrypt = require("bcrypt");
 
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
 class UserService {
-  async registerUser(login: string, email: string, password: string) {
+  async registerUser(
+    login: string,
+    email: string,
+    password: string
+  ): Promise<IUser> {
     const userExist = await User.findOne({ login });
 
-    if (userExist) throw new Error("User already exists");
+    if (userExist) throw new Error("User already exists.");
 
-    if (password.length > 8)
-      throw new Error("Password must be at least 8 characters long");
+    if (password.length < 8)
+      throw new Error("Password must be at least 8 characters long.");
 
     if (!passwordRegex.test(password))
       throw new Error(
@@ -20,7 +26,7 @@ class UserService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({
+    const user = await User.create({
       login,
       email,
       password: hashedPassword,
@@ -40,7 +46,7 @@ class UserService {
     };
   }
 
-  async loginUser(login: string, password: string) {
+  async loginUser(login: string, password: string): Promise<IUser> {
     const user = await User.findOne({ login });
     if (!user) throw new Error("Invalid login or password");
 
@@ -55,8 +61,6 @@ class UserService {
       token: generateToken(user._id),
     };
   }
-
-  async logoutUser() {}
 
   async editUser(login: string) {}
 
