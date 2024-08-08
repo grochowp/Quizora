@@ -34,20 +34,22 @@ class UserService {
       profilePicture: process.env.DEFAULT_PROFILE_PICTURE,
       createdAt: new Date(),
       createdQuizzes: [],
+      achievements: [],
+      titles: [],
     });
 
     if (!user) throw new Error("Invalid user data");
 
-    delete user.password;
+    const { password: _, ...userWithoutPassword } = user.toObject();
 
     return {
-      ...user,
+      ...userWithoutPassword,
       token: generateToken(user._id),
     };
   }
 
   async loginUser(login: string, password: string): Promise<IUser> {
-    const user = await User.findOne({ login });
+    const user = await User.findOne({ login }).lean();
     if (!user) throw new Error("Invalid login or password");
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -56,8 +58,10 @@ class UserService {
 
     delete user.password;
 
+    const { password: _, ...userWithoutPassword } = user;
+
     return {
-      ...user,
+      ...userWithoutPassword,
       token: generateToken(user._id),
     };
   }

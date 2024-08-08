@@ -1,14 +1,11 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 import { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose";
+import { IUser } from "../models/user.model";
 
 interface IUserRequest extends Request {
-  user: {
-    login: string;
-    email?: string;
-    password: string;
-    token: string;
-  };
+  user: IUser;
 }
 
 const verifyToken = async (

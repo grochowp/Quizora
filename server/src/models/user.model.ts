@@ -1,13 +1,16 @@
 import mongoose, { Document } from "mongoose";
 
 export interface IUser extends Document {
+  _id: mongoose.ObjectId;
   login: string;
   email: string;
   password: string;
   points: number;
   profilePicture: string;
   createdAt: Date;
-  createdQuizzes: mongoose.Types.ObjectId[];
+  createdQuizzes: Array<mongoose.Types.ObjectId>;
+  achievements: Array<string>;
+  titles: Array<string>;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -35,6 +38,19 @@ const userSchema = new mongoose.Schema<IUser>({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Quiz",
+    },
+  ],
+  achievements: [
+    // {
+    //   type: mongoose.Schema.Types.String,
+    //   ref: "Achievement",
+    // },
+    { type: String, required: true },
+  ],
+  titles: [
+    {
+      type: String,
+      required: true,
     },
   ],
 });

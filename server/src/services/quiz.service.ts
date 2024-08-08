@@ -71,14 +71,14 @@ class QuizService {
     const user = await User.findById(userId).select("createdQuizzes");
 
     if (!user) {
-      throw new Error("User not found.");
+      throw new Error(JSON.stringify(userId));
     }
 
     const quizzes = await Quiz.find({
       _id: { $in: user.createdQuizzes },
     });
 
-    if (!user) throw new Error("No quizzes have been found.");
+    if (!quizzes) throw new Error("No quizzes have been found.");
 
     return quizzes;
   }
