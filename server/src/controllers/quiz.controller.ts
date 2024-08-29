@@ -11,9 +11,9 @@ interface IQuizRequest extends Request {
 }
 
 const createQuiz = async (req: IQuizRequest, res: Response) => {
-  const { _id: userId } = req.user;
-  const { title, time, questions, difficulty, createdBy } = req.body;
-
+  const { _id: userId, nickname } = req.user;
+  const { title, time, questions, difficulty } = req.body;
+  const createdBy = { userId, nickname };
   try {
     const quiz = await QuizService.createQuiz(
       userId,
@@ -42,7 +42,7 @@ const deleteQuiz = async (req: IQuizRequest, res: Response) => {
 };
 
 const getQuizzesByUserId = async (req: IQuizRequest, res: Response) => {
-  const { _id: userId } = req.user;
+  const { userId } = req.query;
 
   try {
     const quizzes = await QuizService.getQuizzesByUserId(userId);

@@ -43,21 +43,25 @@ class QuizService {
       // status?: 'draft' | 'published' | 'archived';
     });
 
-    await User.findByIdAndUpdate(userId, {
+    if (!quiz) throw new Error("Invalid quiz data.");
+
+    const user = await User.findByIdAndUpdate(userId, {
       $push: { createdQuizzes: quiz._id },
       new: true,
     });
 
-    if (!quiz) throw new Error("Invalid quiz data.");
+    if (!user) throw new Error("Invalid user data.");
 
-    return quiz;
+    return user;
   }
 
   async editQuiz() {}
 
   async deleteQuiz(userId: mongoose.ObjectId, quizId: mongoose.ObjectId) {
-    const quiz = await Quiz.findOneAndDelete({ _id: quizId, new: true });
+    const quiz = await Quiz.findOneAndDelete({ _id: quizId }, { new: true });
+
     if (!quiz) throw new Error("Invalid quiz data.");
+
     const user = await User.findByIdAndUpdate(userId, {
       $pull: { createdQuizzes: quizId },
       new: true,
@@ -71,7 +75,7 @@ class QuizService {
     const user = await User.findById(userId).select("createdQuizzes");
 
     if (!user) {
-      throw new Error(JSON.stringify(userId));
+      throw new Error("Invalid user data");
     }
 
     const quizzes = await Quiz.find({

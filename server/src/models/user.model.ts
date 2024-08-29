@@ -2,35 +2,19 @@ import mongoose, { Document } from "mongoose";
 
 export interface IUser extends Document {
   _id: mongoose.ObjectId;
-  login: string;
-  email: string;
-  password: string;
+  nickname: string;
   points: number;
   profilePicture: string;
   createdAt: Date;
   createdQuizzes: Array<mongoose.Types.ObjectId>;
-  achievements: Array<string>;
+  achievements: Array<mongoose.Types.ObjectId>;
   titles: Array<string>;
+  likes: Array<mongoose.Types.ObjectId>;
+  dislikes: Array<mongoose.Types.ObjectId>;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
-  login: {
-    type: String,
-    required: true,
-    unique: true,
-    maxlength: 20,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    maxlength: 50,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 8,
-  },
+  nickname: { type: String, required: true, minlength: 5, maxlength: 20 },
   points: { type: Number, required: true },
   profilePicture: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
@@ -41,13 +25,25 @@ const userSchema = new mongoose.Schema<IUser>({
     },
   ],
   achievements: [
-    // {
-    //   type: mongoose.Schema.Types.String,
-    //   ref: "Achievement",
-    // },
+    {
+      type: mongoose.Schema.Types.String,
+      ref: "Achievement",
+    },
     { type: String, required: true },
   ],
   titles: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+  likes: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
+  dislikes: [
     {
       type: String,
       required: true,
