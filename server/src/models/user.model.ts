@@ -6,11 +6,11 @@ export interface IUser extends Document {
   points: number;
   profilePicture: string;
   createdAt: Date;
-  createdQuizzes: Array<mongoose.Types.ObjectId>;
-  achievements: Array<mongoose.Types.ObjectId>;
-  titles: Array<string>;
-  likes: Array<mongoose.Types.ObjectId>;
-  dislikes: Array<mongoose.Types.ObjectId>;
+  activeTitles: Array<string>;
+  createdQuizes: number;
+  finishedQuizes: number;
+  likedQuizes: number;
+  privateAccount: boolean;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -18,37 +18,11 @@ const userSchema = new mongoose.Schema<IUser>({
   points: { type: Number, required: true },
   profilePicture: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-  createdQuizzes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Quiz",
-    },
-  ],
-  achievements: [
-    {
-      type: mongoose.Schema.Types.String,
-      ref: "Achievement",
-    },
-    { type: String, required: true },
-  ],
-  titles: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  likes: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  dislikes: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
+  activeTitles: { type: [String], required: true },
+  createdQuizes: { type: Number, default: 0 }, // required ?
+  finishedQuizes: { type: Number, default: 0 }, // required ?
+  likedQuizes: { type: Number, default: 0 }, // required ?
+  privateAccount: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model<IUser>("User", userSchema);
