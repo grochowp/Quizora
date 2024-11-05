@@ -2,20 +2,28 @@ import { Request, Response } from "express";
 import { IQuiz } from "../models/quiz.model";
 import mongoose from "mongoose";
 import { IUser } from "../models/user.model";
+import { IQuizDetails } from "../models/quizDetails.model";
 
 const QuizService = require("../services/quiz.service");
 
 interface IQuizRequest extends Request {
-  body: IQuiz;
+  body: IQuiz & IQuizDetails;
   user: IUser;
 }
 
 const createQuiz = async (req: IQuizRequest, res: Response) => {
-  // const { _id: userId, nickname } = req.user;
-  // const { title, time, questions, difficulty } = req.body;
-  // const createdBy = { userId, nickname };
+  const { _id: userId } = req.user;
+  const { title, time, questions, difficulty, category } = req.body;
   try {
-    res.status(201).json();
+    const quiz = await QuizService.createQuiz(
+      userId,
+      title,
+      time,
+      questions,
+      difficulty,
+      category
+    );
+    res.status(201).json(quiz);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

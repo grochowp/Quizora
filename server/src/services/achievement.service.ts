@@ -1,10 +1,9 @@
 import { IAchievement } from "../models/achievement.model";
-
-const Achievement = require("../models/achievement.model");
+import AchievementRepository from "../repository/achievement.repository";
 
 class AchievementService {
   async getAchievements(): Promise<IAchievement> {
-    const achievements = await Achievement.find();
+    const achievements = await AchievementRepository.get();
     return achievements;
   }
 }

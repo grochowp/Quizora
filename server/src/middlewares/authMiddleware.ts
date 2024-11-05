@@ -14,7 +14,6 @@ const verifyToken = async (
   next: NextFunction
 ) => {
   let token;
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -29,7 +28,6 @@ const verifyToken = async (
       res.status(401).json({ message: "Unauthorized" });
     }
   }
-
   if (!token) {
     res.status(401).json({ message: "Unauthorized" });
   }

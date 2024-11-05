@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
 import { IAchievement } from "../models/achievement.model";
+import userRepository from "../repository/user.repository";
+import UserPrivateRepository from "../repository/userPrivate.repository";
+import UserProfileRepository from "../repository/userProfile.repository";
 
 const UserPrivate = require("../models/userPrivate.model");
 const User = require("../models/user.model");
-const UserProfile = require("../models/userProfile.model");
 
 const AchievementService = require("./achievement.service");
 
@@ -19,8 +21,8 @@ class UserService {
     email: string,
     nickname: string
   ): Promise<any> {
-    const userExistLogin = await UserPrivate.findOne({ login });
-    const userExistEmail = await UserPrivate.findOne({ email });
+    const userExistLogin = await UserPrivateRepository.findByLogin(login);
+    const userExistEmail = await UserPrivateRepository.findByEmail(email);
 
     if (userExistLogin || userExistEmail)
       throw new Error("User already exists.");
@@ -35,30 +37,23 @@ class UserService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      nickname,
-      profilePicture: process.env.DEFAULT_PROFILE_PICTURE,
-    });
-
-    const userPrivate = await UserPrivate.create({
-      userId: user._id,
-      login,
-      password: hashedPassword,
-      email,
-    });
-
     const allAchievements = await AchievementService.getAchievements();
     const achievements = allAchievements.map((achievement: IAchievement) => ({
       achievementId: achievement._id,
       name: achievement.name,
       level: 1,
     }));
-
-    const userProfile = await UserProfile.create({
-      userId: user._id,
-      // theme: "default",
-      achievements: achievements,
-    });
+    const user = await userRepository.create(nickname);
+    const userPrivate = await UserPrivateRepository.create(
+      user._id,
+      login,
+      hashedPassword,
+      email
+    );
+    const userProfile = await UserProfileRepository.create(
+      user._id,
+      achievements
+    );
 
     if (!user || !userPrivate || !userProfile)
       throw new Error("Invalid user data");
@@ -70,10 +65,8 @@ class UserService {
   }
 
   async loginUser(login: string, password: string): Promise<any> {
-    const userPrivate = await UserPrivate.findOne({ login });
+    const userPrivate = await UserPrivateRepository.findByLogin(login);
     if (!userPrivate) throw new Error("Invalid login or password");
-    const user = await User.findOne(userPrivate.userId);
-    if (!user) throw new Error("User does not exist");
 
     const isPasswordValid = await bcrypt.compare(
       password,
@@ -82,26 +75,18 @@ class UserService {
 
     if (!isPasswordValid) throw new Error("Invalid login or password");
 
+    const user = await userRepository.login(userPrivate.userId);
+    if (!user) throw new Error("User does not exist");
+
     return {
       ...user,
       token: generateToken(user._id),
     };
   }
 
-  async editUser(login: string) {}
+  async editUser() {}
 
-  async editProfilePicture(
-    userId: mongoose.Schema.Types.ObjectId,
-    imgSource: string
-  ) {
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { profilePicture: imgSource },
-      { new: true }
-    );
-
-    return user;
-  }
+  async editProfilePicture() {}
 }
 
 module.exports = new UserService();
