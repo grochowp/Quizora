@@ -25,4 +25,6 @@ const userSchema = new mongoose.Schema<IUser>({
   privateAccount: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model<IUser>("User", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
+
+export default User;

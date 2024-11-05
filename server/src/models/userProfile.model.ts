@@ -21,8 +21,11 @@ const userProfileSchema = new mongoose.Schema<IUserProfile>({
   theme: {
     type: String,
     required: true,
-    default: "dark",
-    enum: { values: ["dark", "light", "blue"] },
+    default: "podstawowy",
+    enum: {
+      values: ["podstawowy", "jasny", "niebieski"],
+      message: "Motyw musi mieć wartość 'Podstawowy', 'Jasny' lub 'Niebieski'.",
+    },
   },
   checkpoints: { type: Boolean, default: false },
   lessAnimations: { type: Boolean, default: false },
@@ -40,4 +43,6 @@ const userProfileSchema = new mongoose.Schema<IUserProfile>({
   ],
 });
 
-module.exports = mongoose.model("UserProfile", userProfileSchema);
+const UserProfile = mongoose.model("UserProfile", userProfileSchema);
+
+export default UserProfile;

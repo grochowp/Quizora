@@ -33,4 +33,9 @@ const userPrivateSchema = new mongoose.Schema<IUserPrivate>({
   },
 });
 
-module.exports = mongoose.model<IUserPrivate>("UserPrivate", userPrivateSchema);
+const UserPrivate = mongoose.model<IUserPrivate>(
+  "UserPrivate",
+  userPrivateSchema
+);
+
+export default UserPrivate;

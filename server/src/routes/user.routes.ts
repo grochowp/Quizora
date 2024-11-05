@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const {
-  register,
-  login,
+
+import {
   editProfilePicture,
-} = require("../controllers/user.controller");
-const { verifyToken } = require("../middlewares/authMiddleware");
+  login,
+  register,
+} from "../controllers/user.controller";
+import { verifyToken } from "../middlewares/authMiddleware";
 
 router.post("/register", register);
 router.post("/login", login);
 router.put("/editProfilePicture/:imgSource", verifyToken, editProfilePicture);
 
-module.exports = router;
+export default router;

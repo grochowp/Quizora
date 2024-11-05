@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IUser } from "../models/user.model";
 import { IUserPrivate } from "../models/userPrivate.model";
 
@@ -77,7 +78,10 @@ class UserService {
 
   async editUser(login: string) {}
 
-  async editProfilePicture(userId: string, imgSource: string) {
+  async editProfilePicture(
+    userId: mongoose.Schema.Types.ObjectId,
+    imgSource: string
+  ) {
     const user = await User.findByIdAndUpdate(
       userId,
       { profilePicture: imgSource },
@@ -88,4 +92,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService();
+export default new UserService();

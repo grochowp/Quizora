@@ -4,13 +4,13 @@ export interface IQuiz extends Document {
   _id: mongoose.ObjectId;
   title: string;
   time: number;
-  category: string;
+  category: "programowanie" | "historia" | "rozrywka" | "" | "";
   createdBy: number;
   updatedAt: Date;
   rating: number;
   points: number;
   difficulty: string;
-  // status?: 'draft' | 'published' | 'archived';
+  status: "draft" | "published" | "archived";
 }
 
 const quizSchema = new mongoose.Schema<IQuiz>({
@@ -31,7 +31,17 @@ const quizSchema = new mongoose.Schema<IQuiz>({
     enum: ["easy", "medium", "hard"],
     required: true,
   },
-  //  status: { type: String, enum: ['draft', 'published', 'archived'], default: 'draft' }, // See later if this should be added
+  status: {
+    type: String,
+    enum: {
+      values: ["draft", "opublikowany", "zarchiwizowany"],
+      message:
+        "Status musi mieć wartość 'Draft', 'Opublikowany', lub 'Zarchiwizowany'.",
+    },
+    default: "draft",
+  },
 });
 
-module.exports = mongoose.model("Quiz", quizSchema);
+const Quiz = mongoose.model("Quiz", quizSchema);
+
+export default Quiz;

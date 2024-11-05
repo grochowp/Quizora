@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { getAchievements } = require("../controllers/achievement.controller");
 const { verifyToken } = require("../middlewares/authMiddleware");
+const { getComments } = require("../controllers/comment.controller");
 
-router.get("/getAchievements", verifyToken, getAchievements);
+router.get("/:quizId", verifyToken, getComments);
 
 export default router;

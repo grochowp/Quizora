@@ -13,4 +13,6 @@ const ratingSchema = new mongoose.Schema<IRating>({
   rating: { type: Number, default: 0 },
 });
 
-module.exports = mongoose.model("Rating", ratingSchema);
+const Rating = mongoose.model("Rating", ratingSchema);
+
+export default Rating;

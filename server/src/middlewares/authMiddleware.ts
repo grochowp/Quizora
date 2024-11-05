@@ -8,7 +8,7 @@ interface IUserRequest extends Request {
   user: IUser;
 }
 
-const verifyToken = async (
+export const verifyToken = async (
   req: IUserRequest,
   res: Response,
   next: NextFunction
@@ -34,5 +34,3 @@ const verifyToken = async (
     res.status(401).json({ message: "Unauthorized" });
   }
 };
-
-module.exports = { verifyToken };
