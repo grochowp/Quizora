@@ -5,4 +5,4 @@ const { verifyToken } = require("../middlewares/authMiddleware");
 
 router.get("/getAchievements", verifyToken, getAchievements);
 
-export default router;
+module.exports = router;

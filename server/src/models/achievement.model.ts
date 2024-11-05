@@ -27,6 +27,4 @@ const achievementSchema = new mongoose.Schema<IAchievement>({
   ],
 });
 
-const Achievement = mongoose.model("Achievement", achievementSchema);
-
-export default Achievement;
+module.exports = mongoose.model("Achievement", achievementSchema);

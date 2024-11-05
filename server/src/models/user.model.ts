@@ -15,16 +15,14 @@ export interface IUser extends Document {
 
 const userSchema = new mongoose.Schema<IUser>({
   nickname: { type: String, required: true, minlength: 5, maxlength: 20 },
-  points: { type: Number, required: true },
+  points: { type: Number, required: true, default: 0 },
   profilePicture: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-  activeTitles: { type: [String], required: true },
+  createdAt: { type: Date, required: true, default: Date.now },
+  activeTitles: { type: [String], required: true, default: [] },
   createdQuizes: { type: Number, default: 0 }, // required ?
   finishedQuizes: { type: Number, default: 0 }, // required ?
   likedQuizes: { type: Number, default: 0 }, // required ?
   privateAccount: { type: Boolean, default: false },
 });
 
-const User = mongoose.model<IUser>("User", userSchema);
-
-export default User;
+module.exports = mongoose.model<IUser>("User", userSchema);

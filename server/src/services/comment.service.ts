@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 import { IComment } from "../models/comment.model";
 
-const Comment = require("../models/comments.model");
+const Comment = require("../models/comment.model");
 
 class CommentService {
-  async getComments(quizId: string): Promise<IComment[]> {
+  async getComments(quizId: mongoose.Types.ObjectId): Promise<IComment[]> {
     const comments = await Comment.find({ quizId });
     return comments;
   }
 }
 
-export default new CommentService();
+module.exports = new CommentService();

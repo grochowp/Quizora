@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import { IUser } from "../models/user.model";
 import { IUserPrivate } from "../models/userPrivate.model";
-import { IUserProfile } from "../models/userProfile.model";
-import UserService from "../services/user.service";
+
+const UserService = require("../services/user.service");
+
 interface IUserRequest extends Request {
-  body: IUserPrivate & IUserProfile & IUser;
+  body: IUserPrivate & IUser;
   user: IUser;
 }
 
-export const register = async (req: IUserRequest, res: Response) => {
+const register = async (req: IUserRequest, res: Response) => {
   const { login, password, email, nickname } = req.body;
 
   try {
@@ -24,7 +25,7 @@ export const register = async (req: IUserRequest, res: Response) => {
   }
 };
 
-export const login = async (req: IUserRequest, res: Response) => {
+const login = async (req: IUserRequest, res: Response) => {
   const { login, password } = req.body;
 
   try {
@@ -35,7 +36,7 @@ export const login = async (req: IUserRequest, res: Response) => {
   }
 };
 
-export const editProfilePicture = async (req: IUserRequest, res: Response) => {
+const editProfilePicture = async (req: IUserRequest, res: Response) => {
   const { _id: userId } = req.user;
   const { imgSource } = req.params;
 

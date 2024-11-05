@@ -5,4 +5,4 @@ const { getComments } = require("../controllers/comment.controller");
 
 router.get("/:quizId", verifyToken, getComments);
 
-export default router;
+module.exports = router;

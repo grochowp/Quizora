@@ -51,4 +51,4 @@ class QuizService {
   async getQuizzesByUserId(): Promise<void> {}
 }
 
-export default new QuizService();
+module.exports = new QuizService();

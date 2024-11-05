@@ -1,15 +1,14 @@
-import {
+const express = require("express");
+const router = express.Router();
+const {
   createQuiz,
   deleteQuiz,
   getQuizzesByUserId,
-} from "../controllers/quiz.controller";
-import { verifyToken } from "../middlewares/authMiddleware";
-
-const express = require("express");
-const router = express.Router();
+} = require("../controllers/quiz.controller");
+const { verifyToken } = require("../middlewares/authMiddleware");
 
 router.post("/createQuiz", verifyToken, createQuiz);
 router.delete("/deleteQuiz", verifyToken, deleteQuiz);
 router.get("/getQuizzesByUserId", verifyToken, getQuizzesByUserId);
 
-export default router;
+module.exports = router;

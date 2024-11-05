@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
-import { IUser } from "../models/user.model";
-import { IUserPrivate } from "../models/userPrivate.model";
+import { IAchievement } from "../models/achievement.model";
 
-const User = require("../models/user.model");
 const UserPrivate = require("../models/userPrivate.model");
-const { generateToken } = require("../config/authentication");
+const User = require("../models/user.model");
+const UserProfile = require("../models/userProfile.model");
+
+const AchievementService = require("./achievement.service");
+
 const bcrypt = require("bcrypt");
+const { generateToken } = require("../config/authentication");
 
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
@@ -15,10 +18,12 @@ class UserService {
     password: string,
     email: string,
     nickname: string
-  ): Promise<IUser> {
-    const userExist = await UserPrivate.findOne({ login });
+  ): Promise<any> {
+    const userExistLogin = await UserPrivate.findOne({ login });
+    const userExistEmail = await UserPrivate.findOne({ email });
 
-    if (userExist) throw new Error("User already exists.");
+    if (userExistLogin || userExistEmail)
+      throw new Error("User already exists.");
 
     if (password.length < 8)
       throw new Error("Password must be at least 8 characters long.");
@@ -32,14 +37,7 @@ class UserService {
 
     const user = await User.create({
       nickname,
-      points: 0,
       profilePicture: process.env.DEFAULT_PROFILE_PICTURE,
-      createdAt: new Date(),
-      createdQuizzes: [],
-      achievements: [],
-      titles: [],
-      likes: [],
-      dislikes: [],
     });
 
     const userPrivate = await UserPrivate.create({
@@ -49,8 +47,21 @@ class UserService {
       email,
     });
 
-    if (!user) throw new Error("Invalid user data");
-    if (!userPrivate) throw new Error("Invalid user data");
+    const allAchievements = await AchievementService.getAchievements();
+    const achievements = allAchievements.map((achievement: IAchievement) => ({
+      achievementId: achievement._id,
+      name: achievement.name,
+      level: 1,
+    }));
+
+    const userProfile = await UserProfile.create({
+      userId: user._id,
+      // theme: "default",
+      achievements: achievements,
+    });
+
+    if (!user || !userPrivate || !userProfile)
+      throw new Error("Invalid user data");
 
     return {
       ...user,
@@ -58,10 +69,11 @@ class UserService {
     };
   }
 
-  async loginUser(login: string, password: string): Promise<IUserPrivate> {
+  async loginUser(login: string, password: string): Promise<any> {
     const userPrivate = await UserPrivate.findOne({ login });
+    if (!userPrivate) throw new Error("Invalid login or password");
     const user = await User.findOne(userPrivate.userId);
-    if (!user) throw new Error("Invalid login or password");
+    if (!user) throw new Error("User does not exist");
 
     const isPasswordValid = await bcrypt.compare(
       password,
@@ -92,4 +104,4 @@ class UserService {
   }
 }
 
-export default new UserService();
+module.exports = new UserService();

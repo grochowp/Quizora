@@ -9,4 +9,4 @@ class AchievementService {
   }
 }
 
-export default new AchievementService();
+module.exports = new AchievementService();

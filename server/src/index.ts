@@ -1,12 +1,15 @@
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const connectDatabase = require("./config/database");
+import express from "express";
+import cors from "cors";
+
 const userRoutes = require("./routes/user.routes");
 const quizRoutes = require("./routes/quiz.routes");
 const achievementRoutes = require("./routes/achievement.routes");
 const commentRoutes = require("./routes/comment.routes");
 const ratingRoutes = require("./routes/rating.routes");
+
+const connectDatabase = require("./config/database");
+
+const app = express();
 
 app.use(cors());
 app.use(express.json());
