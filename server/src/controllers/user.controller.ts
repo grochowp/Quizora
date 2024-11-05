@@ -48,6 +48,8 @@ const editProfilePicture = async (req: IUserRequest, res: Response) => {
   }
 };
 
+const deleteAccount = async (req: Request, res: Response) => {};
+
 module.exports = {
   register,
   login,

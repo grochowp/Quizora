@@ -5,7 +5,7 @@ const Comment = require("../models/comment.model");
 
 class CommentRepository {
   async getByQuizId(quizId: ObjectId): Promise<IComment[]> {
-    return await Comment.find(quizId);
+    return await Comment.find({ quizId });
   }
 }
 
