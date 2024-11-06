@@ -5,7 +5,7 @@ export interface IComment extends Document {
   userId: mongoose.ObjectId;
   quizId: mongoose.ObjectId;
   comment: string;
-  rated: number;
+  rating: number;
   date: Date;
 }
 
@@ -13,7 +13,14 @@ const commentSchema = new mongoose.Schema<IComment>({
   userId: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   quizId: { type: mongoose.Types.ObjectId, ref: "Quiz", required: true },
   comment: { type: String, required: true, minlength: 5, maxlength: 50 },
-  rated: { type: Number, enum: { values: [1, -1] }, required: true },
+  rating: {
+    type: Number,
+    enum: {
+      values: [1, -1],
+      message: "Rating must be positine (like) or negative (dislike).",
+    },
+    required: true,
+  },
   date: { type: Date, default: new Date() },
 });
 

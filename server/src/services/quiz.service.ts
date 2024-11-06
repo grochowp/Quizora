@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { IQuiz } from "../models/quiz.model";
 import { IQuestion } from "../models/quizDetails.model";
 import QuizRepository from "../repository/quiz.repository";
@@ -84,7 +84,8 @@ class QuizService {
   ): Promise<IQuiz[]> {
     const aggregationPipeline: any[] = [];
     const matchStage: any = {};
-    if (filters.userId) matchStage.createdBy = filters.userId;
+    if (filters.userId)
+      matchStage.createdBy = new mongoose.Types.ObjectId(filters.userId);
     if (filters.category) matchStage.category = filters.category;
     if (filters.title) {
       matchStage.title = { $regex: filters.title, $options: "i" };
@@ -125,6 +126,7 @@ class QuizService {
     aggregationPipeline.push({ $skip: skip });
     aggregationPipeline.push({ $limit: limit });
     aggregationPipeline.push({ $unset: "details" });
+    console.log(aggregationPipeline);
 
     return await quizRepository.executeAggregation(aggregationPipeline);
   }

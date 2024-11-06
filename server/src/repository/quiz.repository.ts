@@ -11,6 +11,10 @@ class QuizRepository {
   async executeAggregation(pipeline: any[]): Promise<IQuiz[]> {
     return await Quiz.aggregate(pipeline);
   }
+
+  async findQuizById(quizId: ObjectId): Promise<IQuiz> {
+    return await Quiz.findById(quizId);
+  }
 }
 
 export default new QuizRepository();
