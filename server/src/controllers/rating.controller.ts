@@ -1,11 +1,28 @@
 import { Request, Response } from "express";
+import { UserTokenRequest } from "../types/interfaces";
 
-const addRating = async (req: Request, res: Response) => {
+const RatingService = require("../services/rating.service");
+
+const addRating = async (req: Request & UserTokenRequest, res: Response) => {
+  const { _id: userId } = req.user;
+  const { quizId, rating } = req.body;
   try {
-    res.status(200).json();
+    const message = await RatingService.addRating(userId, quizId, rating);
+    res.status(200).json({ message });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-module.exports = { addRating };
+const deleteRating = async (req: Request & UserTokenRequest, res: Response) => {
+  const { _id: userId } = req.user;
+  const { ratingId } = req.params;
+  try {
+    const message = await RatingService.deleteRating(userId, ratingId);
+    res.status(200).json({ message });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports = { addRating, deleteRating };

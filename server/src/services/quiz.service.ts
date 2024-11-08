@@ -13,6 +13,29 @@ const calculatePoints = (time: number, difficulty: string, length: number) => {
   return Math.round((difficultyModifier * (4 + 10 / time) * length) / 3);
 };
 
+const sortQuizzes = (quizzes: IQuiz[], sortBy: string): IQuiz[] => {
+  const sortMap: Record<IQuiz["difficulty"], number> = {
+    easy: 0,
+    medium: 1,
+    hard: 2,
+  };
+
+  const sortFunctions: Record<string, (a: IQuiz, b: IQuiz) => number> = {
+    new: (a, b) =>
+      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    old: (a, b) =>
+      new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+    pointsAsc: (a, b) => a.points - b.points,
+    pointsDesc: (a, b) => b.points - a.points,
+    difficultyAsc: (a, b) => sortMap[a.difficulty] - sortMap[b.difficulty],
+    difficultyDesc: (a, b) => sortMap[b.difficulty] - sortMap[a.difficulty],
+  };
+
+  return sortFunctions[sortBy]
+    ? [...quizzes].sort(sortFunctions[sortBy])
+    : quizzes;
+};
+
 class QuizService {
   async createQuiz(
     userId: ObjectId,
@@ -52,38 +75,15 @@ class QuizService {
 
   async deleteQuiz(): Promise<void> {}
 
-  // async getQuizzes(filters: QuizFilters): Promise<IQuiz[]> {
-  //   if (filters.userId) {
-  //     return await quizRepository.getQuizzesByUserId(filters.userId);
-  //   }
-
-  //   if (filters.category) {
-  //     return await quizRepository.getQuizzesByCategory(filters.category);
-  //   }
-
-  //   if (filters.difficulty) {
-  //     return await quizRepository.getQuizzesByDifficulty(filters.difficulty);
-  //   }
-  //   if (filters.title) {
-  //     return await quizRepository.getQuizzesByTitle(filters.title);
-  //   }
-
-  //   if (filters.questionsCount) {
-  //     return await quizRepository.getQuizzesByNumberOfQuestions(
-  //       filters.questionsCount
-  //     );
-  //   }
-
-  //   return await quizRepository.getAllQuizzes();
-  // }
-
   async getQuizzes(
     filters: QuizFilters,
     page: number,
-    limit: number
+    limit: number,
+    sortBy: string
   ): Promise<IQuiz[]> {
     const aggregationPipeline: any[] = [];
     const matchStage: any = {};
+    let quizzes = [];
     if (filters.userId)
       matchStage.createdBy = new mongoose.Types.ObjectId(filters.userId);
     if (filters.category) matchStage.category = filters.category;
@@ -97,6 +97,7 @@ class QuizService {
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       matchStage.updatedAt = { $gte: oneWeekAgo };
     }
+    if (filters.status) matchStage.status = filters.status;
 
     if (filters.questionsCount !== undefined) {
       aggregationPipeline.push(
@@ -118,6 +119,28 @@ class QuizService {
         }
       );
     }
+
+    if (filters.liked === true) {
+      aggregationPipeline.push(
+        {
+          $lookup: {
+            from: "ratings",
+            localField: "_id",
+            foreignField: "quizId",
+            as: "ratings",
+          },
+        },
+        {
+          $match: {
+            "ratings.rating": 1,
+          },
+        },
+        {
+          $unwind: "$ratings",
+        }
+      );
+    }
+
     if (Object.keys(matchStage).length > 0) {
       aggregationPipeline.push({ $match: matchStage });
     }
@@ -128,7 +151,9 @@ class QuizService {
     aggregationPipeline.push({ $unset: "details" });
     console.log(aggregationPipeline);
 
-    return await quizRepository.executeAggregation(aggregationPipeline);
+    quizzes = await quizRepository.executeAggregation(aggregationPipeline);
+
+    return sortQuizzes(quizzes, sortBy);
   }
 }
 

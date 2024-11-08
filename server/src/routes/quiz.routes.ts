@@ -11,10 +11,9 @@ const { verifyToken } = require("../middlewares/authMiddleware");
 router.post("/", verifyToken, createQuiz);
 router.delete("/:quizId", verifyToken, deleteQuiz);
 // router.put("/:quizId", verifyToken, editQuiz); TO-DO quizId as a param, edit data as a body
-// router.get('/:quizId', verifyToken, getQuizDetails) TO-DO fetch quiz details after opening it, quizId as a params
+// router.get('/:quizId', getQuizDetails) TO-DO fetch quiz details after opening it, quizId as a params
 
 // Multiple Quizzes
 router.get("/", verifyToken, fetchQuizzes);
-// router.get("/liked"/:userId, verifyToken, getLikedQuizzes) TO-DO fetch quizzes with selected userId in Ratings and rating: 1, userId as a query
 
 module.exports = router;

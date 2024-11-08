@@ -11,6 +11,8 @@ export interface QuizFilters {
   title?: string;
   questionsCount?: number;
   recently?: boolean;
+  liked?: boolean;
+  status?: string;
 }
 
 export interface CommentFilters {

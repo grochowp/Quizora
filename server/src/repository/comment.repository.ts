@@ -15,12 +15,15 @@ class CommentRepository {
       quizId,
       comment,
       rating,
-      data: new Date(),
     });
   }
 
   async deleteComment(commentId: ObjectId) {
-    await Comment.findOneAndDelete(commentId); // TO-DO --- verify if findOneByIdAndDelete is a correct method
+    await Comment.findOneAndDelete(commentId);
+  }
+
+  async findCommentById(commentId: ObjectId): Promise<IComment> {
+    return await Comment.findOne({ _id: commentId });
   }
 
   async getComments(pipeline: any[]): Promise<IComment[]> {

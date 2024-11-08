@@ -18,7 +18,7 @@ router.put("/editProfilePicture/:imgSource", verifyToken, editProfilePicture);
 // router.put("finishQuiz/:userId", verifyToken, addFinishedQuizData); TO-DO add points, finishedQuizzes+1
 
 // Other people profiles
-// router.get('/ranking',verifyToken, findUsers) TO-DO fetch users from ranking, pagination with 10 result per page, could be sorted by createdQuizzes, finishedQuizzes, points (for now)
-// router.get('/:userId', verifyToken, getUser) TO-DO fetch other user informations (User)
+// router.get('/ranking', findUsers) TO-DO fetch users from ranking, pagination with 10 result per page, could be sorted by createdQuizzes, finishedQuizzes, points (for now)
+// router.get('/:userId', getUser) TO-DO fetch other user informations (User)
 
 module.exports = router;

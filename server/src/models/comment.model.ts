@@ -16,8 +16,9 @@ const commentSchema = new mongoose.Schema<IComment>({
   rating: {
     type: Number,
     enum: {
-      values: [1, -1],
-      message: "Rating must be positine (like) or negative (dislike).",
+      values: [1, 0, -1],
+      message:
+        "Rating must be positine (like), neutral (no rate) or negative (dislike).",
     },
     required: true,
   },

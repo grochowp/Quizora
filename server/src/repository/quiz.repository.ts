@@ -15,52 +15,19 @@ class QuizRepository {
   async findQuizById(quizId: ObjectId): Promise<IQuiz> {
     return await Quiz.findById(quizId);
   }
+
+  async addRating(quizId: ObjectId, rating: number) {
+    await Quiz.findOneAndUpdate({ _id: quizId }, { $inc: { rating } });
+  }
+  async editRating(quizId: ObjectId, newRating: number) {
+    await Quiz.findOneAndUpdate(
+      { _id: quizId },
+      { $inc: { rating: newRating * 2 } }
+    );
+  }
+  async deleteRating(quizId: ObjectId, rating: number) {
+    await Quiz.findOneAndUpdate({ _id: quizId }, { $inc: { rating: -rating } });
+  }
 }
 
 export default new QuizRepository();
-
-// async getQuizzesByUserId(userId: string): Promise<IQuiz[]> {
-//   return await Quiz.find({ createdBy: userId });
-// }
-
-// async getQuizzesByCategory(category: string): Promise<IQuiz[]> {
-//   return await Quiz.find({ category });
-// }
-
-// async getQuizzesByTitle(title: string): Promise<IQuiz[]> {
-//   return await Quiz.find({ title });
-// }
-
-// async getQuizzesByDifficulty(difficulty: string): Promise<IQuiz[]> {
-//   return await Quiz.find({ difficulty });
-// }
-
-// async getQuizzesByNumberOfQuestions(
-//   questionNumber: number
-// ): Promise<IQuiz[]> {
-//   return await Quiz.aggregate([
-//     {
-//       $lookup: {
-//         from: "quizdetails",
-//         localField: "_id",
-//         foreignField: "quizId",
-//         as: "details",
-//       },
-//     },
-//     {
-//       $match: {
-//         "details.questions": { $size: questionNumber },
-//       },
-//     },
-//     {
-//       $unwind: "$details",
-//     },
-//     {
-//       $unset: "details",
-//     },
-//   ]);
-// }
-
-// async getAllQuizzes(): Promise<IQuiz[]> {
-//   return await Quiz.find();
-// }

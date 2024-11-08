@@ -8,7 +8,7 @@ const {
 } = require("../controllers/comment.controller");
 
 router.post("/", verifyToken, addComment);
-router.delete("/:commentId", verifyToken, deleteComment); // TO-DO --- verify on postman
-router.get("/", verifyToken, getComments);
+router.delete("/:commentId", verifyToken, deleteComment);
+router.get("/", getComments);
 
 module.exports = router;

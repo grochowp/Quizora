@@ -4,13 +4,24 @@ import CommentRepository from "../repository/comment.repository";
 import QuizRepository from "../repository/quiz.repository";
 import UserRepository from "../repository/user.repository";
 import { CommentFilters } from "../types/interfaces";
+import RatingRepository from "../repository/rating.repository";
 
+const sortComments = (comments: IComment[], sortBy: string): IComment[] => {
+  const sortFunction: Record<string, (a: IComment, b: IComment) => number> = {
+    new: (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    old: (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    ratingAsc: (a, b) => a.rating - b.rating,
+    ratingDesc: (a, b) => b.rating - a.rating,
+  };
+  return sortFunction[sortBy]
+    ? [...comments].sort(sortFunction[sortBy])
+    : comments;
+};
 class CommentService {
   async addComment(
     userId: ObjectId,
     quizId: ObjectId,
-    comment: string,
-    rating: number
+    comment: string
   ): Promise<IComment> {
     if (comment.length < 5)
       throw new Error(
@@ -33,21 +44,28 @@ class CommentService {
       quizId
     );
     if (existingComment) throw new Error("You already commented this Quiz.");
-
+    const rating =
+      (await RatingRepository.findRatingByData(userId, quizId))?.rating || 0;
     return await CommentRepository.addComment(userId, quizId, comment, rating);
   }
 
-  async deleteComment(commentId: ObjectId) {
+  async deleteComment(userId: ObjectId, commentId: ObjectId) {
+    const comment = await CommentRepository.findCommentById(commentId);
+    console.log(userId.toString(), comment.userId.toString());
+    if (userId.toString() !== comment.userId.toString())
+      throw new Error("You can delete only your own comments.");
     await CommentRepository.deleteComment(commentId);
   }
 
   async getComments(
     filters: CommentFilters,
     page: number,
-    limit: number
+    limit: number,
+    sortBy: string
   ): Promise<IComment[]> {
     const aggregationPipeline: any[] = [];
     const matchStage: any = {};
+    let comments = [];
     if (filters.userId)
       matchStage.userId = new mongoose.Types.ObjectId(filters.userId);
     if (filters.quizId)
@@ -65,7 +83,10 @@ class CommentService {
     const skip = (page - 1) * limit;
     aggregationPipeline.push({ $skip: skip });
     aggregationPipeline.push({ $limit: limit });
-    return await CommentRepository.getComments(aggregationPipeline);
+
+    comments = await CommentRepository.getComments(aggregationPipeline);
+
+    return sortComments(comments, sortBy);
   }
 }
 
