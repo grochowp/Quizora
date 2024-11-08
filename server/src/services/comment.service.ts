@@ -36,7 +36,7 @@ class CommentService {
     await validationService.validateUser(userId);
     await validationService.validateQuiz(quizId);
 
-    const existingComment = await CommentRepository.checkExistence(
+    const existingComment = await CommentRepository.checkIfCommentAlreadyExist(
       userId,
       quizId
     );

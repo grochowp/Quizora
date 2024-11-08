@@ -30,8 +30,22 @@ class CommentRepository {
     return await Comment.aggregate(pipeline);
   }
 
-  async checkExistence(userId: ObjectId, quizId: ObjectId): Promise<IComment> {
+  async checkIfCommentAlreadyExist(
+    userId: ObjectId,
+    quizId: ObjectId
+  ): Promise<IComment> {
     return await Comment.findOne({ userId, quizId });
+  }
+
+  async findCommentByData(
+    userId: ObjectId,
+    quizId: ObjectId
+  ): Promise<IComment> {
+    return await Comment.findOne({ userId, quizId });
+  }
+
+  async editRating(commentId: ObjectId, rating: number) {
+    await Comment.findOneAndUpdate({ _id: commentId }, { $set: { rating } });
   }
 }
 
