@@ -10,7 +10,10 @@ const calculatePoints = (time: number, difficulty: string, length: number) => {
   const difficultyModifier =
     difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
 
-  return Math.round((difficultyModifier * (4 + 10 / time) * length) / 3);
+  let points = Math.round((difficultyModifier * (4 + 10 / time) * length) / 3);
+  points = Math.max(5, Math.min(points, 90));
+
+  return points;
 };
 
 const sortQuizzes = (quizzes: IQuiz[], sortBy: string): IQuiz[] => {
@@ -45,11 +48,11 @@ class QuizService {
     difficulty: string,
     category: string
   ): Promise<IQuiz> {
-    if (title.length < 5 || title.length > 30) {
-      throw new Error("Quiz title must be between 5 and 30 characters long.");
+    if (title.length < 5 || title.length > 50) {
+      throw new Error("Quiz title must be between 5 and 50 characters long.");
     }
     if (time < 3 || time > 10) {
-      throw new Error("Quiz time must be between 1 and 10 minutes.");
+      throw new Error("Quiz time must be between 3 and 10 minutes.");
     }
     if (questions.length < 3 || questions.length > 15) {
       throw new Error("Quiz must have between 3 and 15 questions.");

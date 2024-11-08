@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema<IUser>({
   points: { type: Number, required: true, default: 0 },
   profilePicture: { type: String, required: true },
   createdAt: { type: Date, required: true, default: Date.now },
-  activeTitles: { type: [String], required: true, default: [] },
+  activeTitles: { type: [String], required: true, default: [], maxlength: 3 },
   createdQuizes: { type: Number, default: 0 }, // required ?
   finishedQuizes: { type: Number, default: 0 }, // required ?
   likedQuizes: { type: Number, default: 0 }, // required ?

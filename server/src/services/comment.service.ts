@@ -5,6 +5,7 @@ import QuizRepository from "../repository/quiz.repository";
 import UserRepository from "../repository/user.repository";
 import { CommentFilters } from "../types/interfaces";
 import RatingRepository from "../repository/rating.repository";
+import validationService from "./validation.service";
 
 const sortComments = (comments: IComment[], sortBy: string): IComment[] => {
   const sortFunction: Record<string, (a: IComment, b: IComment) => number> = {
@@ -32,28 +33,28 @@ class CommentService {
         "Your comment is too long. It must be maximum of 60 characters"
       );
 
-    const existingUser = await UserRepository.findUserById(userId);
-    if (!existingUser)
-      throw new Error("Invalid data. User with this ID does not exist.");
-    const existingQuiz = await QuizRepository.findQuizById(quizId);
-    if (!existingQuiz)
-      throw new Error("Invalid data. Quiz with this ID does not exist.");
+    await validationService.validateUser(userId);
+    await validationService.validateQuiz(quizId);
 
     const existingComment = await CommentRepository.checkExistence(
       userId,
       quizId
     );
+
     if (existingComment) throw new Error("You already commented this Quiz.");
+
     const rating =
       (await RatingRepository.findRatingByData(userId, quizId))?.rating || 0;
+
     return await CommentRepository.addComment(userId, quizId, comment, rating);
   }
 
   async deleteComment(userId: ObjectId, commentId: ObjectId) {
     const comment = await CommentRepository.findCommentById(commentId);
-    console.log(userId.toString(), comment.userId.toString());
+
     if (userId.toString() !== comment.userId.toString())
       throw new Error("You can delete only your own comments.");
+
     await CommentRepository.deleteComment(commentId);
   }
 

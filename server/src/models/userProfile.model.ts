@@ -7,6 +7,7 @@ export interface IUserProfile extends Document {
   checkpoints: boolean;
   lessAnimations: boolean;
   privateAccount: boolean; // might be deleted later - same record is in "User", because it`s important to have access to this not only on logged account
+  titles: Array<string>;
   achievements: [
     {
       achievementId: mongoose.ObjectId;
@@ -21,15 +22,16 @@ const userProfileSchema = new mongoose.Schema<IUserProfile>({
   theme: {
     type: String,
     required: true,
-    default: "Podstawowy",
+    default: "default",
     enum: {
-      values: ["Podstawowy", "Jasny", "Niebieski"],
-      message: "Motyw musi mieć wartość 'Podstawowy', 'Jasny' lub 'Niebieski'.",
+      values: ["default", "light", "blue"],
+      message: "Theme must have a value of 'Default', 'Light', or 'Blue'.",
     },
   },
   checkpoints: { type: Boolean, default: false },
   lessAnimations: { type: Boolean, default: false },
   privateAccount: { type: Boolean, default: false },
+  titles: { type: [String], required: true, default: [] },
   achievements: [
     {
       achievementId: {

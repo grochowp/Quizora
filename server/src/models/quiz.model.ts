@@ -20,9 +20,15 @@ const quizSchema = new mongoose.Schema<IQuiz>({
     type: String,
     required: true,
     enum: {
-      values: ["Programowanie", "Historia", "Rozrywka", "Geografia", "Sport"],
+      values: [
+        "programming",
+        "history",
+        "entertainment",
+        "geography",
+        "sports",
+      ],
       message:
-        "Dostępne kategorie: 'Programowanie', 'Historia, 'Rozrywka', 'Grografia', 'Sport'.",
+        "Available categories: 'programming', 'history', 'entertainment', 'geography', 'sports'.",
     },
   },
   createdBy: { type: mongoose.Types.ObjectId, ref: "User", required: true },
@@ -30,23 +36,25 @@ const quizSchema = new mongoose.Schema<IQuiz>({
   rating: { type: Number, default: 0 },
   points: {
     type: Number,
-    min: 10,
-    max: 50,
+    min: 5,
+    max: 90,
     required: true,
   },
   difficulty: {
     type: String,
-    enum: ["easy", "medium", "hard"],
+    enum: {
+      values: ["easy", "medium", "hard"],
+      message: "Difficulty must be 'easy', 'medium', or 'hard'.",
+    },
     required: true,
   },
   status: {
     type: String,
     enum: {
-      values: ["Draft", "Opublikowany", "Zarchiwizowany"],
-      message:
-        "Status musi mieć wartość 'Draft', 'Opublikowany', lub 'Zarchiwizowany'.",
+      values: ["draft", "published", "archived"],
+      message: "Status must be 'draft', 'published', or 'archived'.",
     },
-    default: "Opublikowany",
+    default: "published",
   },
 });
 
