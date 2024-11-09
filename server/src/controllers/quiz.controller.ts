@@ -1,8 +1,4 @@
 import { Request, Response } from "express";
-import { IQuiz } from "../models/quiz.model";
-import mongoose, { ObjectId } from "mongoose";
-import { IUser } from "../models/user.model";
-import { IQuizDetails } from "../models/quizDetails.model";
 import { QuizFilters, UserTokenRequest } from "../types/interfaces";
 
 const QuizService = require("../services/quiz.service");
@@ -27,11 +23,11 @@ const createQuiz = async (req: Request & UserTokenRequest, res: Response) => {
 
 const deleteQuiz = async (req: Request & UserTokenRequest, res: Response) => {
   const { _id: userId } = req.user;
-  const { quizId } = req.query;
+  const { quizId } = req.params;
 
   try {
-    const quiz = await QuizService.deleteQuiz(userId, quizId);
-    res.status(200).json(quiz);
+    const message = await QuizService.deleteQuiz(userId, quizId);
+    res.status(200).json({ message });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -61,12 +57,11 @@ const fetchQuizzes = async (req: Request & UserTokenRequest, res: Response) => {
   }
 };
 
-const getLikedQuizzes = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-
+const getQuizDetails = async (req: Request, res: Response) => {
+  const { quizId } = req.params;
   try {
-    const quizzes = await QuizService.getLikedQUizzes(userId);
-    res.status(200).json(quizzes);
+    const quizWithDetails = await QuizService.getQuizDetails(quizId);
+    res.status(200).json(quizWithDetails);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -76,4 +71,5 @@ module.exports = {
   createQuiz,
   deleteQuiz,
   fetchQuizzes,
+  getQuizDetails,
 };

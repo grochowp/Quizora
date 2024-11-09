@@ -1,10 +1,13 @@
 import mongoose, { ObjectId } from "mongoose";
 import { IQuiz } from "../models/quiz.model";
-import { IQuestion } from "../models/quizDetails.model";
+import { IQuestion, IQuizDetails } from "../models/quizDetails.model";
 import QuizRepository from "../repository/quiz.repository";
 import QuizDetailsRepository from "../repository/quizDetails.repository";
 import { QuizFilters } from "../types/interfaces";
 import quizRepository from "../repository/quiz.repository";
+import quizDetailsRepository from "../repository/quizDetails.repository";
+
+const ValidationService = require("./validation.service");
 
 const calculatePoints = (time: number, difficulty: string, length: number) => {
   const difficultyModifier =
@@ -76,7 +79,19 @@ class QuizService {
 
   async editQuiz(): Promise<void> {}
 
-  async deleteQuiz(): Promise<void> {}
+  async deleteQuiz(userId: ObjectId, quizId: ObjectId): Promise<string> {
+    console.log(userId, quizId);
+    await ValidationService.validateUser(userId);
+    await ValidationService.validateQuiz(quizId);
+    const quiz = await QuizRepository.findQuizById(quizId);
+    ValidationService.isAuthorized(
+      userId,
+      quiz.createdBy,
+      "You can delete only your own Quiz."
+    );
+
+    return "Your Quiz has been successfully deleted.";
+  }
 
   async getQuizzes(
     filters: QuizFilters,
@@ -102,16 +117,30 @@ class QuizService {
     }
     if (filters.status) matchStage.status = filters.status;
 
-    if (filters.questionsCount !== undefined) {
-      aggregationPipeline.push(
-        {
-          $lookup: {
-            from: "quizdetails",
-            localField: "_id",
-            foreignField: "quizId",
-            as: "details",
+    aggregationPipeline.push(
+      {
+        $lookup: {
+          from: "quizdetails",
+          localField: "_id",
+          foreignField: "quiz",
+          as: "details",
+        },
+      },
+      {
+        $addFields: {
+          questions: {
+            $cond: {
+              if: { $gt: [{ $size: "$details" }, 0] },
+              then: { $size: { $arrayElemAt: ["$details.questions", 0] } },
+              else: 0,
+            },
           },
         },
+      }
+    );
+
+    if (filters.questionsCount !== undefined) {
+      aggregationPipeline.push(
         {
           $match: {
             "details.questions": { $size: filters.questionsCount },
@@ -121,6 +150,8 @@ class QuizService {
           $unwind: "$details",
         }
       );
+    } else {
+      aggregationPipeline.push({ $unset: "details" });
     }
 
     if (filters.liked === true) {
@@ -157,6 +188,13 @@ class QuizService {
     quizzes = await quizRepository.executeAggregation(aggregationPipeline);
 
     return sortQuizzes(quizzes, sortBy);
+  }
+
+  async getQuizDetails(quizId: ObjectId): Promise<IQuizDetails> {
+    await ValidationService.validateQuiz(quizId);
+    console.log(quizId);
+    const quiz = await quizDetailsRepository.getQuizDetails(quizId);
+    return quiz;
   }
 }
 

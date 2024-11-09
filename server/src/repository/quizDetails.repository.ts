@@ -10,6 +10,11 @@ class QuizDetailsRepository {
   ): Promise<IQuizDetails> {
     return await QuizDetails.create({ quizId, questions });
   }
+
+  async getQuizDetails(quizId: ObjectId): Promise<IQuizDetails> {
+    return await QuizDetails.findOne({ quiz: quizId }); // return only QuizDetails
+    //return await QuizDetails.find({ quiz: quizId }).populate("quiz").lean(); // return Quiz with its details
+  }
 }
 
 export default new QuizDetailsRepository();

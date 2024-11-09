@@ -8,12 +8,12 @@ export interface IQuestion {
 
 export interface IQuizDetails extends Document {
   _id: mongoose.ObjectId;
-  quizId: mongoose.ObjectId;
+  quiz: mongoose.ObjectId;
   questions: Array<IQuestion>;
 }
 
 const quizDetailsSchema = new mongoose.Schema<IQuizDetails>({
-  quizId: { type: mongoose.Types.ObjectId, ref: "Quiz", required: true },
+  quiz: { type: mongoose.Types.ObjectId, ref: "Quiz", required: true },
   questions: {
     type: [
       {
@@ -23,7 +23,7 @@ const quizDetailsSchema = new mongoose.Schema<IQuizDetails>({
           required: true,
           validate: {
             validator: (answers: string[]) => answers.length === 4,
-            message: "Każde pytanie wymaga dokładnie 4 odpowiedzi.",
+            message: "Każde pytanie wymaga dokładnie 4 odpowiedzi.", // eng
           },
         },
         correctAnswerIndex: { type: Number, required: true },
@@ -32,7 +32,7 @@ const quizDetailsSchema = new mongoose.Schema<IQuizDetails>({
     validate: {
       validator: (questions: IQuestion[]) =>
         questions.length >= 3 && questions.length <= 15,
-      message: "Quiz musi zawierać od 3 do 15 pytań.",
+      message: "Quiz musi zawierać od 3 do 15 pytań.", // eng
     },
   },
 });

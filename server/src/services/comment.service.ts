@@ -1,11 +1,10 @@
 import mongoose, { ObjectId } from "mongoose";
 import { IComment } from "../models/comment.model";
 import CommentRepository from "../repository/comment.repository";
-import QuizRepository from "../repository/quiz.repository";
-import UserRepository from "../repository/user.repository";
 import { CommentFilters } from "../types/interfaces";
 import RatingRepository from "../repository/rating.repository";
-import validationService from "./validation.service";
+
+const ValidationService = require("./validation.service");
 
 const sortComments = (comments: IComment[], sortBy: string): IComment[] => {
   const sortFunction: Record<string, (a: IComment, b: IComment) => number> = {
@@ -33,8 +32,8 @@ class CommentService {
         "Your comment is too long. It must be maximum of 60 characters"
       );
 
-    await validationService.validateUser(userId);
-    await validationService.validateQuiz(quizId);
+    await ValidationService.validateUser(userId);
+    await ValidationService.validateQuiz(quizId);
 
     const existingComment = await CommentRepository.checkIfCommentAlreadyExist(
       userId,
@@ -88,6 +87,22 @@ class CommentService {
     comments = await CommentRepository.getComments(aggregationPipeline);
 
     return sortComments(comments, sortBy);
+  }
+
+  async manageCommentRatingIfExist(
+    userId: ObjectId,
+    quizId: ObjectId,
+    value: number
+  ): Promise<void> {
+    const commentData = await CommentRepository.findCommentByData(
+      userId,
+      quizId
+    );
+
+    if (commentData) {
+      const { _id: commentId } = commentData;
+      await CommentRepository.editRating(commentId, value);
+    }
   }
 }
 

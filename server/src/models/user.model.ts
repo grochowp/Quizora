@@ -16,7 +16,11 @@ export interface IUser extends Document {
 const userSchema = new mongoose.Schema<IUser>({
   nickname: { type: String, required: true, minlength: 5, maxlength: 20 },
   points: { type: Number, required: true, default: 0 },
-  profilePicture: { type: String, required: true },
+  profilePicture: {
+    type: String,
+    required: true,
+    default: "https://i.imgur.com/u5PAw8H.png",
+  },
   createdAt: { type: Date, required: true, default: Date.now },
   activeTitles: { type: [String], required: true, default: [], maxlength: 3 },
   createdQuizes: { type: Number, default: 0 }, // required ?

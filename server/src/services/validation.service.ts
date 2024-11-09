@@ -15,9 +15,10 @@ class ValidationService {
       throw new Error("Invalid data. Quiz with this ID does not exist.");
   }
 
-  isAuthorized(userId: ObjectId, ownerId: ObjectId): boolean {
-    return userId.toString() === ownerId.toString();
+  isAuthorized(userId: ObjectId, ownerId: ObjectId, message: string) {
+    const isSameId = userId.toString() === ownerId.toString();
+    if (!isSameId) throw new Error(message);
   }
 }
 
-export default new ValidationService();
+module.exports = new ValidationService();

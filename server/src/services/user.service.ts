@@ -3,6 +3,7 @@ import { IAchievement } from "../models/achievement.model";
 import userRepository from "../repository/user.repository";
 import UserPrivateRepository from "../repository/userPrivate.repository";
 import UserProfileRepository from "../repository/userProfile.repository";
+import userProfileRepository from "../repository/userProfile.repository";
 
 const UserPrivate = require("../models/userPrivate.model");
 const User = require("../models/user.model");
@@ -75,7 +76,7 @@ class UserService {
 
     if (!isPasswordValid) throw new Error("Invalid login or password");
 
-    const user = await userRepository.login(userPrivate.userId);
+    const user = await userProfileRepository.login(userPrivate.userId);
     if (!user) throw new Error("User does not exist");
 
     return {

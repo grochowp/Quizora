@@ -9,12 +9,7 @@ class UserRepository {
   async create(nickname: string): Promise<IUser> {
     return await User.create({
       nickname,
-      profilePicture: process.env.DEFAULT_PROFILE_PICTURE,
     }).lean();
-  }
-
-  async login(userId: ObjectId): Promise<IUser & IUserProfile> {
-    return await UserProfile.find({ userId }).populate("userId").lean();
   }
 
   async findUserById(userId: ObjectId): Promise<IUser | null> {

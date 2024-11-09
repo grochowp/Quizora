@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { IUserProfile } from "../models/userProfile.model";
 import { IAchievement } from "../models/achievement.model";
+import { IUser } from "../models/user.model";
 
 const UserProfile = require("../models/userProfile.model");
 
@@ -13,6 +14,10 @@ class UserProfileRepository {
       userId,
       achievements,
     });
+  }
+
+  async login(userId: ObjectId): Promise<IUser & IUserProfile> {
+    return await UserProfile.find({ userId }).populate("userId").lean();
   }
 }
 
