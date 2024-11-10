@@ -8,7 +8,7 @@ const addComment = async (req: Request & UserTokenRequest, res: Response) => {
     const { _id: userId } = req.user;
     const { quizId, comment } = req.body;
     const newComment = await CommentService.addComment(userId, quizId, comment);
-    res.status(200).json(newComment);
+    res.status(200).json({ message: newComment });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

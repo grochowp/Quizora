@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { ClientSession, ObjectId } from "mongoose";
 import { IComment } from "../models/comment.model";
 
 const Comment = require("../models/comment.model");
@@ -9,8 +9,8 @@ class CommentRepository {
     quizId: ObjectId,
     comment: string,
     rating: number
-  ): Promise<IComment> {
-    return await Comment.create({
+  ) {
+    await Comment.create({
       userId,
       quizId,
       comment,
@@ -19,7 +19,7 @@ class CommentRepository {
   }
 
   async deleteComment(commentId: ObjectId) {
-    await Comment.findOneAndDelete(commentId);
+    await Comment.deleteOne(commentId);
   }
 
   async findCommentById(commentId: ObjectId): Promise<IComment> {
@@ -44,8 +44,22 @@ class CommentRepository {
     return await Comment.findOne({ userId, quizId });
   }
 
-  async editRating(commentId: ObjectId, rating: number) {
-    await Comment.findOneAndUpdate({ _id: commentId }, { $set: { rating } });
+  async editRating(
+    commentId: ObjectId,
+    rating: number,
+    options?: { session: ClientSession }
+  ) {
+    await Comment.findOneAndUpdate(
+      { _id: commentId },
+      { $set: { rating } }
+    ).session(options?.session);
+  }
+
+  async deleteQuizComments(
+    quizId: ObjectId,
+    options: { session: ClientSession }
+  ) {
+    await Comment.deleteMany({ quizId }, options);
   }
 }
 

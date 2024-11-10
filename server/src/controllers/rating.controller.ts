@@ -17,10 +17,10 @@ const addRating = async (req: Request & UserTokenRequest, res: Response) => {
 
 const deleteRating = async (req: Request & UserTokenRequest, res: Response) => {
   const { _id: userId } = req.user;
-  const { ratingId } = req.params;
+  const { quizId } = req.params;
 
   try {
-    const message = await RatingService.deleteRating(userId, ratingId);
+    const message = await RatingService.deleteRating(userId, quizId);
     res.status(200).json({ message });
   } catch (error) {
     res.status(400).json({ message: error.message });

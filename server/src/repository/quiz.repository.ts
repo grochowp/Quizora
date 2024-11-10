@@ -1,11 +1,20 @@
-import { ObjectId } from "mongoose";
+import { ClientSession, ObjectId } from "mongoose";
 import { IQuiz } from "../models/quiz.model";
+import { IRating } from "../models/rating.model";
 
 const Quiz = require("../models/quiz.model");
 const QuizDetails = require("../models/quizDetails.model");
 class QuizRepository {
   async create(quizData: any): Promise<IQuiz> {
     return await Quiz.create(quizData);
+  }
+
+  async deleteQuiz(
+    quizId: ObjectId,
+    options: { session: ClientSession }
+  ): Promise<boolean> {
+    const result = await Quiz.deleteOne({ _id: quizId }, options);
+    return result.deletedCount > 0;
   }
 
   async executeAggregation(pipeline: any[]): Promise<IQuiz[]> {
@@ -19,14 +28,24 @@ class QuizRepository {
   async addRating(quizId: ObjectId, rating: number) {
     await Quiz.findOneAndUpdate({ _id: quizId }, { $inc: { rating } });
   }
+
   async editRating(quizId: ObjectId, newRating: number) {
     await Quiz.findOneAndUpdate(
       { _id: quizId },
       { $inc: { rating: newRating * 2 } }
     );
   }
-  async deleteRating(quizId: ObjectId, rating: number) {
-    await Quiz.findOneAndUpdate({ _id: quizId }, { $inc: { rating: -rating } });
+
+  async deleteRating(
+    quizId: ObjectId,
+    rating: number,
+    options: { session: ClientSession }
+  ): Promise<IRating> {
+    return await Quiz.findOneAndUpdate(
+      { _id: quizId },
+      { $inc: { rating: -rating } },
+      options
+    );
   }
 }
 

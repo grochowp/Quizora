@@ -1,6 +1,6 @@
 import quizRepository from "../repository/quiz.repository";
 import ratingRepository from "../repository/rating.repository";
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 const CommentService = require("./comment.service");
 const ValidationService = require("./validation.service");
@@ -35,21 +35,53 @@ class RatingService {
     return "Your rating has been successfully added.";
   }
 
-  async deleteRating(userId: ObjectId, ratingId: ObjectId) {
-    await ValidationService.validateUser(userId);
+  async deleteRating(userId: ObjectId, quizId: ObjectId) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      await ValidationService.validateUser(userId);
+      await ValidationService.validateQuiz(quizId);
 
-    const rating = await ratingRepository.findRatingById(ratingId);
-    ValidationService.isAuthorized(
-      userId,
-      rating.userId,
-      "You can delete only your own ratings."
-    );
+      const rating = await ratingRepository.findRatingByData(userId, quizId, {
+        session,
+      });
+      if (!rating)
+        throw new Error("Rating with this UserId and QuizId does not exist.");
 
-    await CommentService.manageCommentRatingIfExist(userId, rating.quizId, 0);
+      ValidationService.isAuthorized(
+        userId,
+        rating.userId,
+        "You can delete only your own ratings."
+      );
 
-    await ratingRepository.delete(ratingId);
-    await quizRepository.deleteRating(rating.quizId, rating.rating);
-    return "Your rating has been successfully deleted.";
+      await CommentService.manageCommentRatingIfExist(
+        userId,
+        rating.quizId,
+        0,
+        { session }
+      );
+
+      const ratingDeleted = await ratingRepository.delete(rating._id, {
+        session,
+      });
+
+      if (!ratingDeleted) throw new Error("Failed to delete rating.");
+      const QuizRatingDeleted = await quizRepository.deleteRating(
+        rating.quizId,
+        rating.rating,
+        { session }
+      );
+
+      if (!QuizRatingDeleted)
+        throw new Error("Failed to delete rating from quiz.");
+      session.commitTransaction();
+      return "Your rating has been successfully deleted.";
+    } catch (error) {
+      session.abortTransaction();
+      throw new Error(error.message);
+    } finally {
+      session.endSession();
+    }
   }
 
   // Maybe its useless, depends on approach on finishing Quiz, but for now - its here and possible to use

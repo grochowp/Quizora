@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { ClientSession, ObjectId } from "mongoose";
 import { IQuestion, IQuizDetails } from "../models/quizDetails.model";
 
 const QuizDetails = require("../models/quizDetails.model");
@@ -8,7 +8,15 @@ class QuizDetailsRepository {
     quizId: ObjectId,
     questions: IQuestion[]
   ): Promise<IQuizDetails> {
-    return await QuizDetails.create({ quizId, questions });
+    return await QuizDetails.create({ quiz: quizId, questions });
+  }
+
+  async deleteQuizDetails(
+    quizId: ObjectId,
+    options: { session: ClientSession }
+  ): Promise<boolean> {
+    const result = await QuizDetails.deleteOne({ quiz: quizId }, options);
+    return result.deletedCount === 0;
   }
 
   async getQuizDetails(quizId: ObjectId): Promise<IQuizDetails> {

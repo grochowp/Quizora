@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose, { ClientSession, ObjectId } from "mongoose";
 import { IComment } from "../models/comment.model";
 import CommentRepository from "../repository/comment.repository";
 import { CommentFilters } from "../types/interfaces";
@@ -22,7 +22,7 @@ class CommentService {
     userId: ObjectId,
     quizId: ObjectId,
     comment: string
-  ): Promise<IComment> {
+  ): Promise<string> {
     if (comment.length < 5)
       throw new Error(
         "Your comment is too short. It must be at least 5 characters"
@@ -45,7 +45,8 @@ class CommentService {
     const rating =
       (await RatingRepository.findRatingByData(userId, quizId))?.rating || 0;
 
-    return await CommentRepository.addComment(userId, quizId, comment, rating);
+    await CommentRepository.addComment(userId, quizId, comment, rating);
+    return "Your comment has been successfully added.";
   }
 
   async deleteComment(userId: ObjectId, commentId: ObjectId) {
@@ -92,7 +93,8 @@ class CommentService {
   async manageCommentRatingIfExist(
     userId: ObjectId,
     quizId: ObjectId,
-    value: number
+    value: number,
+    options?: { session: ClientSession }
   ): Promise<void> {
     const commentData = await CommentRepository.findCommentByData(
       userId,
@@ -101,7 +103,7 @@ class CommentService {
 
     if (commentData) {
       const { _id: commentId } = commentData;
-      await CommentRepository.editRating(commentId, value);
+      await CommentRepository.editRating(commentId, value, options);
     }
   }
 }

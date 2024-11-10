@@ -1,7 +1,12 @@
+import { IQuiz } from "../models/quiz.model";
 import { IUser } from "../models/user.model";
 
 export interface UserTokenRequest extends Request {
   user: IUser;
+}
+
+export interface IQuizWithQuestions extends IQuiz {
+  questions?: number;
 }
 
 export interface QuizFilters {

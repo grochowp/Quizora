@@ -3,9 +3,11 @@ import { IQuiz } from "../models/quiz.model";
 import { IQuestion, IQuizDetails } from "../models/quizDetails.model";
 import QuizRepository from "../repository/quiz.repository";
 import QuizDetailsRepository from "../repository/quizDetails.repository";
-import { QuizFilters } from "../types/interfaces";
+import { IQuizWithQuestions, QuizFilters } from "../types/interfaces";
 import quizRepository from "../repository/quiz.repository";
 import quizDetailsRepository from "../repository/quizDetails.repository";
+import CommentRepository from "../repository/comment.repository";
+import RatingRepository from "../repository/rating.repository";
 
 const ValidationService = require("./validation.service");
 
@@ -19,7 +21,10 @@ const calculatePoints = (time: number, difficulty: string, length: number) => {
   return points;
 };
 
-const sortQuizzes = (quizzes: IQuiz[], sortBy: string): IQuiz[] => {
+const sortQuizzes = (
+  quizzes: IQuiz[],
+  sortBy: string
+): IQuizWithQuestions[] => {
   const sortMap: Record<IQuiz["difficulty"], number> = {
     easy: 0,
     medium: 1,
@@ -80,17 +85,44 @@ class QuizService {
   async editQuiz(): Promise<void> {}
 
   async deleteQuiz(userId: ObjectId, quizId: ObjectId): Promise<string> {
-    console.log(userId, quizId);
-    await ValidationService.validateUser(userId);
-    await ValidationService.validateQuiz(quizId);
-    const quiz = await QuizRepository.findQuizById(quizId);
-    ValidationService.isAuthorized(
-      userId,
-      quiz.createdBy,
-      "You can delete only your own Quiz."
-    );
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    return "Your Quiz has been successfully deleted.";
+    try {
+      await ValidationService.validateUser(userId);
+      await ValidationService.validateQuiz(quizId);
+      await ValidationService.validateQuizDetails(quizId);
+
+      const quiz = await QuizRepository.findQuizById(quizId);
+      ValidationService.isAuthorized(
+        userId,
+        quiz.createdBy,
+        "You can delete only your own Quiz."
+      );
+
+      const quizDeleted = await QuizRepository.deleteQuiz(quizId, { session });
+      if (!quizDeleted) throw new Error("Failed to delete the quiz.");
+
+      const detailsDeleted = await QuizDetailsRepository.deleteQuizDetails(
+        quizId,
+        { session }
+      );
+      if (!detailsDeleted) throw new Error("Failed to delete quiz details.");
+
+      await CommentRepository.deleteQuizComments(quizId, { session });
+
+      await RatingRepository.deleteQuizRatings(quizId, {
+        session,
+      });
+
+      await session.commitTransaction();
+      return "Your Quiz has been successfully deleted.";
+    } catch (error) {
+      await session.abortTransaction();
+      throw new Error(error.message);
+    } finally {
+      session.endSession();
+    }
   }
 
   async getQuizzes(
@@ -98,10 +130,9 @@ class QuizService {
     page: number,
     limit: number,
     sortBy: string
-  ): Promise<IQuiz[]> {
+  ): Promise<IQuizWithQuestions[]> {
     const aggregationPipeline: any[] = [];
     const matchStage: any = {};
-    let quizzes = [];
     if (filters.userId)
       matchStage.createdBy = new mongoose.Types.ObjectId(filters.userId);
     if (filters.category) matchStage.category = filters.category;
@@ -183,18 +214,17 @@ class QuizService {
     aggregationPipeline.push({ $skip: skip });
     aggregationPipeline.push({ $limit: limit });
     aggregationPipeline.push({ $unset: "details" });
-    console.log(aggregationPipeline);
 
-    quizzes = await quizRepository.executeAggregation(aggregationPipeline);
+    const quizzes = await quizRepository.executeAggregation(
+      aggregationPipeline
+    );
 
     return sortQuizzes(quizzes, sortBy);
   }
 
   async getQuizDetails(quizId: ObjectId): Promise<IQuizDetails> {
     await ValidationService.validateQuiz(quizId);
-    console.log(quizId);
-    const quiz = await quizDetailsRepository.getQuizDetails(quizId);
-    return quiz;
+    return await quizDetailsRepository.getQuizDetails(quizId);
   }
 }
 
