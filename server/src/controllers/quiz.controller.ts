@@ -33,7 +33,7 @@ const deleteQuiz = async (req: Request & UserTokenRequest, res: Response) => {
   }
 };
 
-const fetchQuizzes = async (req: Request & UserTokenRequest, res: Response) => {
+const fetchQuizzes = async (req: Request, res: Response) => {
   const filters: QuizFilters = {};
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 20;
@@ -67,9 +67,25 @@ const getQuizDetails = async (req: Request, res: Response) => {
   }
 };
 
+const changeQuizStatus = async (
+  req: Request & UserTokenRequest,
+  res: Response
+) => {
+  const { _id: userId } = req.user;
+  const { quizId } = req.params;
+  const { status } = req.body;
+  try {
+    const message = await QuizService.changeQuizStatus(userId, quizId, status);
+    res.status(200).json({ message });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createQuiz,
   deleteQuiz,
   fetchQuizzes,
   getQuizDetails,
+  changeQuizStatus,
 };

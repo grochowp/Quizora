@@ -1,9 +1,12 @@
+import { ClientSession } from "mongoose";
 import { IAchievement } from "../models/achievement.model";
 import AchievementRepository from "../repository/achievement.repository";
 
 class AchievementService {
-  async getAchievements(): Promise<IAchievement> {
-    const achievements = await AchievementRepository.get();
+  async getAchievements(options?: {
+    session: ClientSession;
+  }): Promise<IAchievement> {
+    const achievements = await AchievementRepository.get(options);
     return achievements;
   }
 }

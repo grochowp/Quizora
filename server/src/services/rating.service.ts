@@ -12,12 +12,12 @@ class RatingService {
     rating: number
   ): Promise<string> {
     const session = await mongoose.startSession();
-    session.startTransaction();
     try {
+      session.startTransaction();
       if (rating !== -1 && rating !== 1)
         throw new Error("Rating must be positive or negative");
-      await ValidationService.validateUser(userId);
-      await ValidationService.validateQuiz(quizId);
+      await ValidationService.validateUser(userId, { session });
+      await ValidationService.validateQuiz(quizId, { session });
 
       const ratingExist = await ratingRepository.findRatingByData(
         userId,
@@ -35,17 +35,17 @@ class RatingService {
       if (ratingExist) {
         await ratingRepository.edit(ratingExist._id, rating, { session });
         await quizRepository.editRating(quizId, rating, { session });
-        session.commitTransaction();
+        await session.commitTransaction();
         return "Your rating has been successfully updated.";
       }
 
       await ratingRepository.create(userId, quizId, rating, { session });
       await quizRepository.addRating(quizId, rating, { session });
-      session.commitTransaction();
+      await session.commitTransaction();
 
       return "Your rating has been successfully added.";
     } catch (error) {
-      session.abortTransaction();
+      await session.abortTransaction();
       throw new Error(error.message);
     } finally {
       session.endSession();
@@ -54,10 +54,10 @@ class RatingService {
 
   async deleteRating(userId: ObjectId, quizId: ObjectId) {
     const session = await mongoose.startSession();
-    session.startTransaction();
     try {
-      await ValidationService.validateUser(userId);
-      await ValidationService.validateQuiz(quizId);
+      session.startTransaction();
+      await ValidationService.validateUser(userId, { session });
+      await ValidationService.validateQuiz(quizId, { session });
 
       const rating = await ratingRepository.findRatingByData(userId, quizId, {
         session,
@@ -65,7 +65,7 @@ class RatingService {
       if (!rating)
         throw new Error("Rating with this UserId and QuizId does not exist.");
 
-      ValidationService.isAuthorized(
+      await ValidationService.isAuthorized(
         userId,
         rating.userId,
         "You can delete only your own ratings."
@@ -91,10 +91,10 @@ class RatingService {
 
       if (!QuizRatingDeleted)
         throw new Error("Failed to delete rating from quiz.");
-      session.commitTransaction();
+      await session.commitTransaction();
       return "Your rating has been successfully deleted.";
     } catch (error) {
-      session.abortTransaction();
+      await session.abortTransaction();
       throw new Error(error.message);
     } finally {
       session.endSession();

@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { ClientSession, ObjectId } from "mongoose";
 import { IUserPrivate } from "../models/userPrivate.model";
 
 const UserPrivate = require("../models/userPrivate.model");
@@ -8,22 +8,28 @@ class UserPrivateRepository {
     userId: ObjectId,
     login: string,
     password: string,
-    email: string
+    email: string,
+    options: { session: ClientSession }
   ): Promise<IUserPrivate> {
-    return await UserPrivate.create({
-      userId,
-      login,
-      password,
-      email,
-    });
+    const newUserPrivate = await UserPrivate.create(
+      [{ userId, login, password, email }],
+      options
+    );
+    return newUserPrivate[0];
   }
 
-  async findByLogin(login: string): Promise<IUserPrivate | null> {
-    return await UserPrivate.findOne({ login });
+  async findByLogin(
+    login: string,
+    options?: { session: ClientSession }
+  ): Promise<IUserPrivate | null> {
+    return await UserPrivate.findOne({ login }).session(options?.session);
   }
 
-  async findByEmail(email: string): Promise<IUserPrivate | null> {
-    return await UserPrivate.findOne({ email });
+  async findByEmail(
+    email: string,
+    options?: { session: ClientSession }
+  ): Promise<IUserPrivate | null> {
+    return await UserPrivate.findOne({ email }).session(options?.session);
   }
 }
 

@@ -5,8 +5,12 @@ import { IRating } from "../models/rating.model";
 const Quiz = require("../models/quiz.model");
 const QuizDetails = require("../models/quizDetails.model");
 class QuizRepository {
-  async create(quizData: any): Promise<IQuiz> {
-    return await Quiz.create(quizData);
+  async create(
+    quizData: any,
+    options: { session: ClientSession }
+  ): Promise<IQuiz> {
+    const createdQuiz = await Quiz.create([quizData], options);
+    return createdQuiz[0];
   }
 
   async deleteQuiz(
@@ -21,8 +25,11 @@ class QuizRepository {
     return await Quiz.aggregate(pipeline);
   }
 
-  async findQuizById(quizId: ObjectId): Promise<IQuiz> {
-    return await Quiz.findById(quizId);
+  async findQuizById(
+    quizId: ObjectId,
+    options?: { session: ClientSession }
+  ): Promise<IQuiz> {
+    return await Quiz.findById(quizId).session(options?.session);
   }
 
   async addRating(
@@ -54,6 +61,20 @@ class QuizRepository {
       { _id: quizId },
       { $inc: { rating: -rating } },
       options
+    );
+  }
+
+  async changeQuizStatus(
+    quizId: ObjectId,
+    status: string,
+    options: { session: ClientSession }
+  ) {
+    await Quiz.findOneAndUpdate(
+      { _id: quizId },
+      {
+        $set: { status },
+      },
+      { session: options.session, runValidators: true }
     );
   }
 }

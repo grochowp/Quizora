@@ -1,23 +1,36 @@
-import { ObjectId } from "mongoose";
-import { IUserProfile } from "../models/userProfile.model";
+import { ClientSession, ObjectId } from "mongoose";
+// import { IUserProfile } from "../models/userProfile.model";
 import { IAchievement } from "../models/achievement.model";
 import { IUser } from "../models/user.model";
 
 const UserProfile = require("../models/userProfile.model");
 
+interface IUserProfile {
+  // Other properties
+  user: ObjectId | IUser;
+}
 class UserProfileRepository {
   async create(
     userId: ObjectId,
-    achievements: IAchievement[]
+    achievements: IAchievement[],
+    options: { session: ClientSession }
   ): Promise<IUserProfile> {
-    return await UserProfile.create({
-      userId,
-      achievements,
-    });
+    const newUserProfile = await UserProfile.create(
+      [{ user: userId, achievements }],
+      options
+    );
+    return newUserProfile[0];
   }
 
-  async login(userId: ObjectId): Promise<IUser & IUserProfile> {
-    return await UserProfile.find({ userId }).populate("userId").lean();
+  async login(
+    userId: ObjectId,
+    options: { session: ClientSession }
+  ): Promise<IUser & IUserProfile> {
+    const user = await UserProfile.findOne({ user: userId })
+      .session(options.session)
+      .populate("user")
+      .lean();
+    return user;
   }
 }
 

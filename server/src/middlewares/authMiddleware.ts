@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 import { Request, Response, NextFunction } from "express";
-import mongoose from "mongoose";
 import { IUser } from "../models/user.model";
 
 interface IUserRequest extends Request {
@@ -22,6 +21,7 @@ const verifyToken = async (
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = await User.findById(decoded.id);
+      if (!req.user) throw new Error("Unauthorized");
       next();
     } catch (error) {
       console.error(error);

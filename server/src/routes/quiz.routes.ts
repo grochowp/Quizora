@@ -5,6 +5,7 @@ const {
   deleteQuiz,
   fetchQuizzes,
   getQuizDetails,
+  changeQuizStatus,
 } = require("../controllers/quiz.controller");
 const { verifyToken } = require("../middlewares/authMiddleware");
 
@@ -12,7 +13,8 @@ const { verifyToken } = require("../middlewares/authMiddleware");
 router.post("/", verifyToken, createQuiz);
 router.delete("/:quizId", verifyToken, deleteQuiz);
 // router.put("/:quizId", verifyToken, editQuiz); TO-DO quizId as a param, edit data as a body
-router.get("/:quizId", getQuizDetails); // TO-DO fetch quiz details after opening it, quizId as a params
+router.get("/:quizId", getQuizDetails);
+router.patch("/:quizId", verifyToken, changeQuizStatus);
 
 // Multiple Quizzes
 router.get("/", verifyToken, fetchQuizzes);

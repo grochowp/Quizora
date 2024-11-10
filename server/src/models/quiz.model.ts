@@ -10,7 +10,7 @@ export interface IQuiz extends Document {
   rating: number;
   points: number;
   difficulty: string;
-  status: string;
+  status: "draft" | "archived" | "published";
 }
 
 const quizSchema = new mongoose.Schema<IQuiz>({
@@ -55,6 +55,7 @@ const quizSchema = new mongoose.Schema<IQuiz>({
       message: "Status must be 'draft', 'published', or 'archived'.",
     },
     default: "published",
+    required: true,
   },
 });
 

@@ -56,45 +56,58 @@ class QuizService {
     difficulty: string,
     category: string
   ): Promise<IQuiz> {
-    if (title.length < 5 || title.length > 50) {
-      throw new Error("Quiz title must be between 5 and 50 characters long.");
-    }
-    if (time < 3 || time > 10) {
-      throw new Error("Quiz time must be between 3 and 10 minutes.");
-    }
-    if (questions.length < 3 || questions.length > 15) {
-      throw new Error("Quiz must have between 3 and 15 questions.");
-    }
-    const quizData = {
-      title,
-      time,
-      points: calculatePoints(time, difficulty, questions.length),
-      difficulty,
-      category,
-      createdBy: userId,
-    };
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+      if (title.length < 5 || title.length > 50) {
+        throw new Error("Quiz title must be between 5 and 50 characters long.");
+      }
+      if (time < 3 || time > 10) {
+        throw new Error("Quiz time must be between 3 and 10 minutes.");
+      }
+      if (questions.length < 3 || questions.length > 15) {
+        throw new Error("Quiz must have between 3 and 15 questions.");
+      }
+      const quizData = {
+        title,
+        time,
+        points: calculatePoints(time, difficulty, questions.length),
+        difficulty,
+        category,
+        createdBy: userId,
+      };
 
-    const quiz = await QuizRepository.create(quizData);
-    const quizDetails = await QuizDetailsRepository.create(quiz._id, questions);
+      const quiz = await QuizRepository.create(quizData, { session });
 
-    if (!quiz || !quizDetails) throw new Error("Invalid quiz data.");
+      const quizDetails = await QuizDetailsRepository.create(
+        quiz._id,
+        questions,
+        { session }
+      );
 
-    return quiz;
+      if (!quiz || !quizDetails) throw new Error("Invalid quiz data.");
+      await session.commitTransaction();
+      return quiz;
+    } catch (error) {
+      await session.abortTransaction();
+      throw new Error(error.message);
+    } finally {
+      session.endSession();
+    }
   }
 
   async editQuiz(): Promise<void> {}
 
   async deleteQuiz(userId: ObjectId, quizId: ObjectId): Promise<string> {
     const session = await mongoose.startSession();
-    session.startTransaction();
 
     try {
-      await ValidationService.validateUser(userId);
-      await ValidationService.validateQuiz(quizId);
-      await ValidationService.validateQuizDetails(quizId);
+      session.startTransaction();
+      await ValidationService.validateUser(userId, { session });
+      const quiz = await ValidationService.validateQuiz(quizId, { session }); // Assuming it returns the quiz if valid
+      await ValidationService.validateQuizDetails(quizId, { session });
 
-      const quiz = await QuizRepository.findQuizById(quizId);
-      ValidationService.isAuthorized(
+      await ValidationService.isAuthorized(
         userId,
         quiz.createdBy,
         "You can delete only your own Quiz."
@@ -225,6 +238,36 @@ class QuizService {
   async getQuizDetails(quizId: ObjectId): Promise<IQuizDetails> {
     await ValidationService.validateQuiz(quizId);
     return await quizDetailsRepository.getQuizDetails(quizId);
+  }
+
+  async changeQuizStatus(
+    userId: ObjectId,
+    quizId: ObjectId,
+    status: string
+  ): Promise<string> {
+    const session = await mongoose.startSession();
+
+    try {
+      session.startTransaction();
+      await ValidationService.validateUser(userId, { session });
+      const quiz = await ValidationService.validateQuiz(quizId, { session });
+      await ValidationService.isAuthorized(
+        userId,
+        quiz.createdBy,
+        "Unauthorized"
+      );
+      if (quiz.status === status)
+        throw new Error("You can`t change status to the same value.");
+      await QuizRepository.changeQuizStatus(quizId, status, { session });
+
+      await session.commitTransaction();
+      return "Status has been succesfully changed.";
+    } catch (error) {
+      await session.abortTransaction();
+      throw new Error(error.message);
+    } finally {
+      session.endSession();
+    }
   }
 }
 
