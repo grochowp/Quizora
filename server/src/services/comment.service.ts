@@ -98,7 +98,8 @@ class CommentService {
   ): Promise<void> {
     const commentData = await CommentRepository.findCommentByData(
       userId,
-      quizId
+      quizId,
+      options
     );
 
     if (commentData) {

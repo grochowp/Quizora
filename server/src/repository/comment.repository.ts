@@ -39,9 +39,10 @@ class CommentRepository {
 
   async findCommentByData(
     userId: ObjectId,
-    quizId: ObjectId
+    quizId: ObjectId,
+    options?: { session: ClientSession }
   ): Promise<IComment> {
-    return await Comment.findOne({ userId, quizId });
+    return await Comment.findOne({ userId, quizId }).session(options?.session);
   }
 
   async editRating(

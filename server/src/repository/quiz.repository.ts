@@ -25,14 +25,23 @@ class QuizRepository {
     return await Quiz.findById(quizId);
   }
 
-  async addRating(quizId: ObjectId, rating: number) {
-    await Quiz.findOneAndUpdate({ _id: quizId }, { $inc: { rating } });
+  async addRating(
+    quizId: ObjectId,
+    rating: number,
+    options: { session: ClientSession }
+  ) {
+    await Quiz.findOneAndUpdate({ _id: quizId }, { $inc: { rating } }, options);
   }
 
-  async editRating(quizId: ObjectId, newRating: number) {
+  async editRating(
+    quizId: ObjectId,
+    newRating: number,
+    options: { session: ClientSession }
+  ) {
     await Quiz.findOneAndUpdate(
       { _id: quizId },
-      { $inc: { rating: newRating * 2 } }
+      { $inc: { rating: newRating * 2 } },
+      options
     );
   }
 

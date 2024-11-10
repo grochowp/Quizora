@@ -11,28 +11,45 @@ class RatingService {
     quizId: ObjectId,
     rating: number
   ): Promise<string> {
-    if (rating !== -1 && rating !== 1)
-      throw new Error("Rating must be positive or negative");
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      if (rating !== -1 && rating !== 1)
+        throw new Error("Rating must be positive or negative");
+      await ValidationService.validateUser(userId);
+      await ValidationService.validateQuiz(quizId);
 
-    await ValidationService.validateUser(userId);
-    await ValidationService.validateQuiz(quizId);
+      const ratingExist = await ratingRepository.findRatingByData(
+        userId,
+        quizId,
+        { session }
+      );
 
-    const ratingExist = await ratingRepository.findRatingByData(userId, quizId);
+      if (ratingExist?.rating === rating)
+        return "You can`t edit rating to the same value.";
 
-    if (ratingExist?.rating === rating)
-      return "You can`t edit rating to the same value.";
+      await CommentService.manageCommentRatingIfExist(userId, quizId, rating, {
+        session,
+      });
 
-    await CommentService.manageCommentRatingIfExist(userId, quizId, rating);
+      if (ratingExist) {
+        await ratingRepository.edit(ratingExist._id, rating, { session });
+        await quizRepository.editRating(quizId, rating, { session });
+        session.commitTransaction();
+        return "Your rating has been successfully updated.";
+      }
 
-    if (ratingExist) {
-      await ratingRepository.edit(ratingExist._id, rating);
-      await quizRepository.editRating(quizId, rating);
-      return "Your rating has been successfully updated.";
+      await ratingRepository.create(userId, quizId, rating, { session });
+      await quizRepository.addRating(quizId, rating, { session });
+      session.commitTransaction();
+
+      return "Your rating has been successfully added.";
+    } catch (error) {
+      session.abortTransaction();
+      throw new Error(error.message);
+    } finally {
+      session.endSession();
     }
-
-    await ratingRepository.create(userId, quizId, rating);
-    await quizRepository.addRating(quizId, rating);
-    return "Your rating has been successfully added.";
   }
 
   async deleteRating(userId: ObjectId, quizId: ObjectId) {

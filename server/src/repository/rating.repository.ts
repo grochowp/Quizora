@@ -4,19 +4,32 @@ import { IRating } from "../models/rating.model";
 const Rating = require("../models/rating.model");
 
 class RatingRepository {
-  async create(userId: ObjectId, quizId: ObjectId, rating: number) {
-    await Rating.create({ userId, quizId, rating });
+  async create(
+    userId: ObjectId,
+    quizId: ObjectId,
+    rating: number,
+    options: { session: ClientSession }
+  ) {
+    await Rating.create([{ userId, quizId, rating }], options);
   }
   async findRatingByData(
     userId: ObjectId,
     quizId: ObjectId,
     options?: { session: ClientSession }
   ): Promise<IRating> {
-    return Rating.findOne({ userId, quizId }).session(options?.session);
+    return await Rating.findOne({ userId, quizId }).session(options?.session);
   }
 
-  async edit(ratingId: ObjectId, rating: number) {
-    await Rating.findOneAndUpdate({ _id: ratingId }, { $set: { rating } });
+  async edit(
+    ratingId: ObjectId,
+    rating: number,
+    options: { session: ClientSession }
+  ) {
+    await Rating.findOneAndUpdate(
+      { _id: ratingId },
+      { $set: { rating } },
+      { session: options.session }
+    );
   }
 
   async findRatingById(ratingId: ObjectId): Promise<IRating> {
