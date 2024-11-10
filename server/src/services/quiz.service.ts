@@ -8,6 +8,7 @@ import quizRepository from "../repository/quiz.repository";
 import quizDetailsRepository from "../repository/quizDetails.repository";
 import CommentRepository from "../repository/comment.repository";
 import RatingRepository from "../repository/rating.repository";
+import { withTransaction } from "../utils/transaction";
 
 const ValidationService = require("./validation.service");
 
@@ -56,9 +57,7 @@ class QuizService {
     difficulty: string,
     category: string
   ): Promise<IQuiz> {
-    const session = await mongoose.startSession();
-    try {
-      session.startTransaction();
+    return withTransaction(async (session) => {
       if (title.length < 5 || title.length > 50) {
         throw new Error("Quiz title must be between 5 and 50 characters long.");
       }
@@ -88,23 +87,15 @@ class QuizService {
       if (!quiz || !quizDetails) throw new Error("Invalid quiz data.");
       await session.commitTransaction();
       return quiz;
-    } catch (error) {
-      await session.abortTransaction();
-      throw new Error(error.message);
-    } finally {
-      session.endSession();
-    }
+    });
   }
 
   async editQuiz(): Promise<void> {}
 
   async deleteQuiz(userId: ObjectId, quizId: ObjectId): Promise<string> {
-    const session = await mongoose.startSession();
-
-    try {
-      session.startTransaction();
+    return withTransaction(async (session) => {
       await ValidationService.validateUser(userId, { session });
-      const quiz = await ValidationService.validateQuiz(quizId, { session }); // Assuming it returns the quiz if valid
+      const quiz = await ValidationService.validateQuiz(quizId, { session });
       await ValidationService.validateQuizDetails(quizId, { session });
 
       await ValidationService.isAuthorized(
@@ -130,12 +121,7 @@ class QuizService {
 
       await session.commitTransaction();
       return "Your Quiz has been successfully deleted.";
-    } catch (error) {
-      await session.abortTransaction();
-      throw new Error(error.message);
-    } finally {
-      session.endSession();
-    }
+    });
   }
 
   async getQuizzes(
@@ -245,29 +231,18 @@ class QuizService {
     quizId: ObjectId,
     status: string
   ): Promise<string> {
-    const session = await mongoose.startSession();
+    await ValidationService.validateUser(userId);
+    const quiz = await ValidationService.validateQuiz(quizId);
+    await ValidationService.isAuthorized(
+      userId,
+      quiz.createdBy,
+      "Unauthorized"
+    );
+    if (quiz.status === status)
+      throw new Error("You can`t change status to the same value.");
+    await QuizRepository.changeQuizStatus(quizId, status);
 
-    try {
-      session.startTransaction();
-      await ValidationService.validateUser(userId, { session });
-      const quiz = await ValidationService.validateQuiz(quizId, { session });
-      await ValidationService.isAuthorized(
-        userId,
-        quiz.createdBy,
-        "Unauthorized"
-      );
-      if (quiz.status === status)
-        throw new Error("You can`t change status to the same value.");
-      await QuizRepository.changeQuizStatus(quizId, status, { session });
-
-      await session.commitTransaction();
-      return "Status has been succesfully changed.";
-    } catch (error) {
-      await session.abortTransaction();
-      throw new Error(error.message);
-    } finally {
-      session.endSession();
-    }
+    return "Status has been succesfully changed.";
   }
 }
 

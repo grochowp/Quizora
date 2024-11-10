@@ -64,17 +64,12 @@ class QuizRepository {
     );
   }
 
-  async changeQuizStatus(
-    quizId: ObjectId,
-    status: string,
-    options: { session: ClientSession }
-  ) {
+  async changeQuizStatus(quizId: ObjectId, status: string) {
     await Quiz.findOneAndUpdate(
       { _id: quizId },
       {
         $set: { status },
-      },
-      { session: options.session, runValidators: true }
+      }
     );
   }
 }

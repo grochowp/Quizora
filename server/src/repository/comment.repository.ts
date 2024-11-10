@@ -8,18 +8,24 @@ class CommentRepository {
     userId: ObjectId,
     quizId: ObjectId,
     comment: string,
-    rating: number
+    rating: number,
+    options: { session: ClientSession }
   ) {
-    await Comment.create({
-      userId,
-      quizId,
-      comment,
-      rating,
-    });
+    await Comment.create(
+      [
+        {
+          userId,
+          quizId,
+          comment,
+          rating,
+        },
+      ],
+      options
+    );
   }
 
   async deleteComment(commentId: ObjectId) {
-    await Comment.deleteOne(commentId);
+    await Comment.deleteOne({ _id: commentId });
   }
 
   async findCommentById(commentId: ObjectId): Promise<IComment> {
@@ -32,9 +38,10 @@ class CommentRepository {
 
   async checkIfCommentAlreadyExist(
     userId: ObjectId,
-    quizId: ObjectId
+    quizId: ObjectId,
+    options: { session: ClientSession }
   ): Promise<IComment> {
-    return await Comment.findOne({ userId, quizId });
+    return await Comment.findOne({ userId, quizId }).session(options.session);
   }
 
   async findCommentByData(

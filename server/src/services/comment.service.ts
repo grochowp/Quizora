@@ -3,6 +3,7 @@ import { IComment } from "../models/comment.model";
 import CommentRepository from "../repository/comment.repository";
 import { CommentFilters } from "../types/interfaces";
 import RatingRepository from "../repository/rating.repository";
+import { withTransaction } from "../utils/transaction";
 
 const ValidationService = require("./validation.service");
 
@@ -23,38 +24,45 @@ class CommentService {
     quizId: ObjectId,
     comment: string
   ): Promise<string> {
-    if (comment.length < 5)
-      throw new Error(
-        "Your comment is too short. It must be at least 5 characters"
-      );
-    if (comment.length > 60)
-      throw new Error(
-        "Your comment is too long. It must be maximum of 60 characters"
-      );
+    return withTransaction(async (session) => {
+      if (comment.length < 5)
+        throw new Error(
+          "Your comment is too short. It must be at least 5 characters"
+        );
+      if (comment.length > 60)
+        throw new Error(
+          "Your comment is too long. It must be maximum of 60 characters"
+        );
 
-    await ValidationService.validateUser(userId);
-    await ValidationService.validateQuiz(quizId);
+      await ValidationService.validateUser(userId, { session });
+      await ValidationService.validateQuiz(quizId, { session });
 
-    const existingComment = await CommentRepository.checkIfCommentAlreadyExist(
-      userId,
-      quizId
-    );
+      const existingComment =
+        await CommentRepository.checkIfCommentAlreadyExist(userId, quizId, {
+          session,
+        });
 
-    if (existingComment) throw new Error("You already commented this Quiz.");
+      if (existingComment) throw new Error("You already commented this Quiz.");
 
-    const rating =
-      (await RatingRepository.findRatingByData(userId, quizId))?.rating || 0;
+      const rating =
+        (await RatingRepository.findRatingByData(userId, quizId, { session }))
+          ?.rating || 0;
 
-    await CommentRepository.addComment(userId, quizId, comment, rating);
-    return "Your comment has been successfully added.";
+      await CommentRepository.addComment(userId, quizId, comment, rating, {
+        session,
+      });
+      await session.commitTransaction();
+      return "Your comment has been successfully added.";
+    });
   }
 
   async deleteComment(userId: ObjectId, commentId: ObjectId) {
     const comment = await CommentRepository.findCommentById(commentId);
-
-    if (userId.toString() !== comment.userId.toString())
-      throw new Error("You can delete only your own comments.");
-
+    ValidationService.isAuthorized(
+      userId,
+      comment.userId,
+      "You can delete only your own comments."
+    );
     await CommentRepository.deleteComment(commentId);
   }
 
@@ -66,7 +74,6 @@ class CommentService {
   ): Promise<IComment[]> {
     const aggregationPipeline: any[] = [];
     const matchStage: any = {};
-    let comments = [];
     if (filters.userId)
       matchStage.userId = new mongoose.Types.ObjectId(filters.userId);
     if (filters.quizId)
@@ -85,7 +92,7 @@ class CommentService {
     aggregationPipeline.push({ $skip: skip });
     aggregationPipeline.push({ $limit: limit });
 
-    comments = await CommentRepository.getComments(aggregationPipeline);
+    const comments = await CommentRepository.getComments(aggregationPipeline);
 
     return sortComments(comments, sortBy);
   }

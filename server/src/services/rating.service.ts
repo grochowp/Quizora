@@ -1,6 +1,7 @@
 import quizRepository from "../repository/quiz.repository";
 import ratingRepository from "../repository/rating.repository";
 import mongoose, { ObjectId } from "mongoose";
+import { withTransaction } from "../utils/transaction";
 
 const CommentService = require("./comment.service");
 const ValidationService = require("./validation.service");
@@ -11,9 +12,7 @@ class RatingService {
     quizId: ObjectId,
     rating: number
   ): Promise<string> {
-    const session = await mongoose.startSession();
-    try {
-      session.startTransaction();
+    return withTransaction(async (session) => {
       if (rating !== -1 && rating !== 1)
         throw new Error("Rating must be positive or negative");
       await ValidationService.validateUser(userId, { session });
@@ -44,18 +43,11 @@ class RatingService {
       await session.commitTransaction();
 
       return "Your rating has been successfully added.";
-    } catch (error) {
-      await session.abortTransaction();
-      throw new Error(error.message);
-    } finally {
-      session.endSession();
-    }
+    });
   }
 
   async deleteRating(userId: ObjectId, quizId: ObjectId) {
-    const session = await mongoose.startSession();
-    try {
-      session.startTransaction();
+    return withTransaction(async (session) => {
       await ValidationService.validateUser(userId, { session });
       await ValidationService.validateQuiz(quizId, { session });
 
@@ -81,24 +73,19 @@ class RatingService {
       const ratingDeleted = await ratingRepository.delete(rating._id, {
         session,
       });
-
       if (!ratingDeleted) throw new Error("Failed to delete rating.");
+
       const QuizRatingDeleted = await quizRepository.deleteRating(
         rating.quizId,
         rating.rating,
         { session }
       );
-
       if (!QuizRatingDeleted)
         throw new Error("Failed to delete rating from quiz.");
+
       await session.commitTransaction();
       return "Your rating has been successfully deleted.";
-    } catch (error) {
-      await session.abortTransaction();
-      throw new Error(error.message);
-    } finally {
-      session.endSession();
-    }
+    });
   }
 
   // Maybe its useless, depends on approach on finishing Quiz, but for now - its here and possible to use

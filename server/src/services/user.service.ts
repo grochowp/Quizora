@@ -5,6 +5,7 @@ import UserPrivateRepository from "../repository/userPrivate.repository";
 import UserProfileRepository from "../repository/userProfile.repository";
 import userProfileRepository from "../repository/userProfile.repository";
 import { IUser } from "../models/user.model";
+import { withTransaction } from "../utils/transaction";
 
 const UserPrivate = require("../models/userPrivate.model");
 const User = require("../models/user.model");
@@ -23,10 +24,7 @@ class UserService {
     email: string,
     nickname: string
   ): Promise<any> {
-    const session = await mongoose.startSession();
-
-    try {
-      session.startTransaction();
+    return withTransaction(async (session) => {
       const userExistLogin = await UserPrivateRepository.findByLogin(login, {
         session,
       });
@@ -81,9 +79,12 @@ class UserService {
       if (!user || !userPrivate || !userProfile)
         throw new Error("Invalid user data");
 
-      const loggedUser = await userProfileRepository.login(userPrivate.userId, {
-        session,
-      });
+      const loggedUser = await userProfileRepository.findById(
+        userPrivate.userId,
+        {
+          session,
+        }
+      );
       if (!user) throw new Error("User does not exist");
       const userTokenData = loggedUser.user as IUser;
       await session.commitTransaction();
@@ -91,45 +92,26 @@ class UserService {
         ...loggedUser,
         token: generateToken(userTokenData._id),
       };
-    } catch (error) {
-      session.abortTransaction();
-      throw new Error(error.message);
-    } finally {
-      session.endSession();
-    }
+    });
   }
 
   async loginUser(login: string, password: string): Promise<any> {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    try {
-      const userPrivate = await UserPrivateRepository.findByLogin(login, {
-        session,
-      });
-      if (!userPrivate) throw new Error("Invalid login or password");
-      const isPasswordValid = await bcrypt.compare(
-        password,
-        userPrivate.password
-      );
+    const userPrivate = await UserPrivateRepository.findByLogin(login);
+    if (!userPrivate) throw new Error("Invalid login or password");
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      userPrivate.password
+    );
 
-      if (!isPasswordValid) throw new Error("Invalid login or password");
+    if (!isPasswordValid) throw new Error("Invalid login or password");
 
-      const user = await userProfileRepository.login(userPrivate.userId, {
-        session,
-      });
-      if (!user) throw new Error("User does not exist");
-      const userTokenData = user.user as IUser;
-      await session.commitTransaction();
-      return {
-        ...user,
-        token: generateToken(userTokenData._id),
-      };
-    } catch (error) {
-      await session.abortTransaction();
-      throw new Error(error.message);
-    } finally {
-      session.endSession();
-    }
+    const user = await userProfileRepository.findById(userPrivate.userId);
+    if (!user) throw new Error("User does not exist");
+    const userTokenData = user.user as IUser;
+    return {
+      ...user,
+      token: generateToken(userTokenData._id),
+    };
   }
 
   async editUser() {}

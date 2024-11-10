@@ -12,7 +12,6 @@ router.post("/register", register);
 router.post("/login", login);
 // router.patch("/editProfilePicture/:imgSource", verifyToken, editProfilePicture); TO-DO change profile picture (User)
 // router.patch('/:userId', verifyToken, editProfile); TO-DO profile data as a query/body (User, UserPrivate, UserProfile)
-// router.patch("")
 // router.patch("/addTitle/:userId", verifyToken, addTitle) TO-DO add title after reaching certain achievements level (UserProfile)
 // router.patch('/titles/:userId', verifyToken, changeTitles) TO-DO change titles from settings (User)
 // router.patch('/preferences/:userId', verifyToken, changePreferences) TO-DO change preferences as a filters (UserProfile)

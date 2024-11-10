@@ -17,6 +17,6 @@ router.get("/:quizId", getQuizDetails);
 router.patch("/:quizId", verifyToken, changeQuizStatus);
 
 // Multiple Quizzes
-router.get("/", verifyToken, fetchQuizzes);
+router.get("/", fetchQuizzes);
 
 module.exports = router;

@@ -6,7 +6,6 @@ import { IUser } from "../models/user.model";
 const UserProfile = require("../models/userProfile.model");
 
 interface IUserProfile {
-  // Other properties
   user: ObjectId | IUser;
 }
 class UserProfileRepository {
@@ -22,12 +21,12 @@ class UserProfileRepository {
     return newUserProfile[0];
   }
 
-  async login(
+  async findById(
     userId: ObjectId,
-    options: { session: ClientSession }
-  ): Promise<IUser & IUserProfile> {
+    options?: { session: ClientSession }
+  ): Promise<IUserProfile> {
     const user = await UserProfile.findOne({ user: userId })
-      .session(options.session)
+      .session(options?.session)
       .populate("user")
       .lean();
     return user;
