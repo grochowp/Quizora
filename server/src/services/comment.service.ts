@@ -51,7 +51,6 @@ class CommentService {
       await CommentRepository.addComment(userId, quizId, comment, rating, {
         session,
       });
-      await session.commitTransaction();
       return "Your comment has been successfully added.";
     });
   }

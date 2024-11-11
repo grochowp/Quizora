@@ -7,6 +7,7 @@ import userProfileRepository from "../repository/userProfile.repository";
 import { IUser } from "../models/user.model";
 import { withTransaction } from "../utils/transaction";
 import { PreferencesFilters } from "../types/interfaces";
+import achievementRepository from "../repository/achievement.repository";
 
 const AchievementService = require("./achievement.service");
 const ValidationService = require("./validation.service");
@@ -86,7 +87,6 @@ class UserService {
       );
       if (!user) throw new Error("User does not exist");
       const userTokenData = loggedUser.user as IUser;
-      await session.commitTransaction();
       return {
         ...loggedUser,
         token: generateToken(userTokenData._id),
@@ -135,27 +135,57 @@ class UserService {
     } else throw new Error("No changes selected.");
   }
 
-  async addTitle(
+  async handleAchievementUpdate(
     userId: ObjectId,
-    title: string,
-    options: { session: ClientSession }
-  ) {
+    achievementName: string,
+    achievementIncreaseValue: number,
+    session: ClientSession
+  ): Promise<string | undefined> {
     await ValidationService.validateUser(userId);
-    const achievements = await AchievementService.getAchievements();
-    if (!achievements) throw new Error("No achievements have been found.");
-    const titles = achievements.flatMap((achievement: IAchievement) =>
-      achievement.levels
-        .map((level) => level.title)
-        .filter((t) => t !== undefined)
+
+    const achievementValue = await userProfileRepository.addRatingToAchievement(
+      userId,
+      achievementName,
+      achievementIncreaseValue,
+      { session }
     );
+    if (!achievementValue)
+      throw new Error(
+        `Failed to fetch your ${achievementName} achievement progress.`
+      );
 
-    if (!titles.includes(title)) {
-      throw new Error("The provided title does not exist in the database.");
+    const achievement = await achievementRepository.getSingleAchievement(
+      achievementName,
+      { session }
+    );
+    if (!achievement)
+      throw new Error(`Failed to fetch your ${achievementName} achievement.`);
+
+    for (const level of achievement.levels) {
+      if (level.requirement === achievementValue) {
+        const achievementLevel =
+          await userProfileRepository.changeAchievementLevel(
+            userId,
+            achievementName,
+            { session }
+          );
+        if (!achievementLevel)
+          throw new Error(
+            `Failed to change your ${achievementName} achievement level.`
+          );
+
+        const currentLevel = achievement.levels.find(
+          (lvl: any) => lvl.level === achievementLevel
+        );
+
+        if (currentLevel && currentLevel.title) {
+          await userProfileRepository.addTitle(userId, currentLevel.title, {
+            session,
+          });
+          return `Title ${currentLevel.title} has been granted to your account.`;
+        }
+      }
     }
-
-    await UserProfileRepository.addTitle(userId, title, options);
-
-    return `Title ${title} has been granted to your account.`;
   }
 }
 

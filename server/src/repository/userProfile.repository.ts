@@ -57,8 +57,9 @@ class UserProfileRepository {
   async addRatingToAchievement(
     userId: ObjectId,
     achievementName: string,
+    achievementIncreaseValue: number,
     options: { session: ClientSession }
-  ) {
+  ): Promise<number> {
     const user = await UserProfile.findOneAndUpdate(
       {
         user: userId,
@@ -66,7 +67,7 @@ class UserProfileRepository {
       },
       {
         $inc: {
-          "achievements.$.value": 1,
+          "achievements.$.value": achievementIncreaseValue,
         },
       },
       { new: true, session: options.session }
@@ -82,7 +83,7 @@ class UserProfileRepository {
     userId: ObjectId,
     achievementName: string,
     options: { session: ClientSession }
-  ) {
+  ): Promise<number> {
     const user = await UserProfile.findOneAndUpdate(
       {
         user: userId,

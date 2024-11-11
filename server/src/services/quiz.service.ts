@@ -85,7 +85,6 @@ class QuizService {
       );
 
       if (!quiz || !quizDetails) throw new Error("Invalid quiz data.");
-      await session.commitTransaction();
       return quiz;
     });
   }
@@ -119,7 +118,6 @@ class QuizService {
         session,
       });
 
-      await session.commitTransaction();
       return "Your Quiz has been successfully deleted.";
     });
   }

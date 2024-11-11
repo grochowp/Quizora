@@ -12,6 +12,15 @@ class AchievementRepository {
   async get(options?: { session: ClientSession }): Promise<IAchievement> {
     return await Achievement.find().session(options?.session);
   }
+
+  async getSingleAchievement(
+    achievementName: string,
+    options: { session: ClientSession }
+  ) {
+    return Achievement.findOne({ name: achievementName }).session(
+      options.session
+    );
+  }
 }
 
 export default new AchievementRepository();

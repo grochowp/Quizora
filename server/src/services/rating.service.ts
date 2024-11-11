@@ -1,14 +1,8 @@
 import quizRepository from "../repository/quiz.repository";
 import ratingRepository from "../repository/rating.repository";
-import mongoose, { ObjectId } from "mongoose";
+import { ObjectId } from "mongoose";
 import { withTransaction } from "../utils/transaction";
 import userRepository from "../repository/user.repository";
-import userProfileRepository from "../repository/userProfile.repository";
-import {
-  achievementLikedQuizzesRequirements,
-  achievementsLikedQuizzesTitles,
-  handleAchievementUpdate,
-} from "../utils/achievementUtils";
 
 const CommentService = require("./comment.service");
 const ValidationService = require("./validation.service");
@@ -43,7 +37,6 @@ class RatingService {
         await ratingRepository.edit(ratingExist._id, rating, { session });
         await quizRepository.editRating(quizId, rating, { session });
 
-        await session.commitTransaction();
         return { message: "Your rating has been successfully updated." };
       }
 
@@ -51,15 +44,12 @@ class RatingService {
       await quizRepository.manageRating(quizId, rating, { session });
       await userRepository.manageRating(userId, 1, { session });
 
-      const titleMessage = await handleAchievementUpdate(
+      const titleMessage = await userService.handleAchievementUpdate(
         userId,
         "Oceń Quizy",
-        achievementLikedQuizzesRequirements,
-        achievementsLikedQuizzesTitles,
+        1,
         session
       );
-
-      await session.commitTransaction();
 
       return {
         message: "Your rating has been successfully added.",
@@ -106,7 +96,6 @@ class RatingService {
         throw new Error("Failed to delete rating from quiz.");
       await userRepository.manageRating(userId, -1, { session });
 
-      await session.commitTransaction();
       return "Your rating has been successfully deleted.";
     });
   }
