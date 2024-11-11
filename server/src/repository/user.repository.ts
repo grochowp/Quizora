@@ -28,6 +28,20 @@ class UserRepository {
     return await User.findOne({ nickname }).session(options?.session);
   }
 
+  async getMultipleUsers(
+    query: string,
+    skip: number,
+    limit: number,
+    sortOptions: Record<string, 1 | -1>
+  ) {
+    return await User.find({
+      nickname: { $regex: query, $options: "i" },
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort(sortOptions);
+  }
+
   async manageRating(
     userId: ObjectId,
     rating: number,

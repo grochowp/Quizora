@@ -102,6 +102,20 @@ class UserProfileRepository {
     );
     return achievement.level;
   }
+
+  async verifyUserTitle(
+    userId: ObjectId,
+    title: string,
+    options: { session: ClientSession }
+  ): Promise<boolean> {
+    const user = await UserProfile.findOne(
+      { user: userId },
+      { titles: 1 },
+      { session: options.session }
+    );
+
+    return user.titles.includes(title);
+  }
 }
 
 export default new UserProfileRepository();

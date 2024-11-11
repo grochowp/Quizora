@@ -71,23 +71,40 @@ const editPreferences = async (
     res.status(400).json({ message: error.message });
   }
 };
+const getUser = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  try {
+    const user = await UserService.findUserById(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
-// const addTitle = async (req: Request & UserTokenRequest, res: Response) => {
-//   const { _id: userId } = req.user;
-//   const { title } = req.body;
+const getMultipleUsers = async (req: Request, res: Response) => {
+  const query = req.query.query || "";
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+  const sortBy = req.query.sortBy || "points";
 
-//   try {
-//     const message = await UserService.addTitle(userId, title);
-//     res.status(200).json({ message });
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// };
+  try {
+    const users = await UserService.getMultipleUsers(
+      query,
+      page,
+      limit,
+      sortBy
+    );
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 module.exports = {
   register,
   login,
   editProfilePicture,
   editPreferences,
-  // addTitle,
+  getUser,
+  getMultipleUsers,
 };

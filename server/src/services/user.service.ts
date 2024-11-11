@@ -113,6 +113,31 @@ class UserService {
     };
   }
 
+  async findUserById(userId: ObjectId) {
+    await ValidationService.validateUser(userId);
+    return userRepository.findUserById(userId);
+  }
+
+  async getMultipleUsers(
+    query: string,
+    page: number,
+    limit: number,
+    sortBy: "points" | "finishedQuizzes" | "createdQuizzes"
+  ) {
+    const skip = (page - 1) * limit;
+    const sortOptions: Record<string, 1 | -1> = {};
+    if (sortBy) {
+      sortOptions[sortBy] = -1;
+    }
+    const users = await userRepository.getMultipleUsers(
+      query,
+      skip,
+      limit,
+      sortOptions
+    );
+    return users;
+  }
+
   async editUser() {}
 
   async editProfilePicture() {}
@@ -177,6 +202,14 @@ class UserService {
         const currentLevel = achievement.levels.find(
           (lvl: any) => lvl.level === achievementLevel
         );
+
+        const existingTitle = await userProfileRepository.verifyUserTitle(
+          userId,
+          currentLevel.title,
+          { session }
+        );
+        if (existingTitle)
+          return `Title ${currentLevel.title} has been already at your account.`;
 
         if (currentLevel && currentLevel.title) {
           await userProfileRepository.addTitle(userId, currentLevel.title, {

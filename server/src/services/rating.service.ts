@@ -27,7 +27,7 @@ class RatingService {
       );
 
       if (ratingExist?.rating === rating)
-        return "You can`t edit rating to the same value.";
+        return { message: "You can`t edit rating to the same value." };
 
       await CommentService.manageCommentRatingIfExist(userId, quizId, rating, {
         session,
