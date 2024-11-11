@@ -27,6 +27,19 @@ class UserRepository {
   ): Promise<IUser | null> {
     return await User.findOne({ nickname }).session(options?.session);
   }
+
+  async manageRating(
+    userId: ObjectId,
+    rating: number,
+    options: { session: ClientSession }
+  ) {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $inc: { likedQuizzes: rating },
+      }
+    );
+  }
 }
 
 export default new UserRepository();

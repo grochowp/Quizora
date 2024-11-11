@@ -4,6 +4,11 @@ import { IAchievement } from "../models/achievement.model";
 const Achievement = require("../models/achievement.model");
 
 class AchievementRepository {
+  async create(achievementData: IAchievement): Promise<IAchievement> {
+    console.log(achievementData);
+    return await Achievement.create(achievementData);
+  }
+
   async get(options?: { session: ClientSession }): Promise<IAchievement> {
     return await Achievement.find().session(options?.session);
   }

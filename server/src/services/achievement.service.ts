@@ -9,6 +9,10 @@ class AchievementService {
     const achievements = await AchievementRepository.get(options);
     return achievements;
   }
+
+  async addAchievements(achievementData: IAchievement) {
+    return await AchievementRepository.create(achievementData);
+  }
 }
 
 module.exports = new AchievementService();

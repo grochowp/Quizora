@@ -7,9 +7,9 @@ export interface IUser extends Document {
   profilePicture: string;
   createdAt: Date;
   activeTitles: Array<string>;
-  createdQuizes: number;
-  finishedQuizes: number;
-  likedQuizes: number;
+  createdQuizzes: number;
+  finishedQuizzes: number;
+  likedQuizzes: number;
   privateAccount: boolean;
 }
 
@@ -23,9 +23,9 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   createdAt: { type: Date, required: true, default: Date.now },
   activeTitles: { type: [String], required: true, default: [], maxlength: 3 },
-  createdQuizes: { type: Number, default: 0 }, // required ?
-  finishedQuizes: { type: Number, default: 0 }, // required ?
-  likedQuizes: { type: Number, default: 0 }, // required ?
+  createdQuizzes: { type: Number, default: 0 }, // required ?
+  finishedQuizzes: { type: Number, default: 0 }, // required ?
+  likedQuizzes: { type: Number, default: 0 }, // required ?
   privateAccount: { type: Boolean, default: false },
 });
 

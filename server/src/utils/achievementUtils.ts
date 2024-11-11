@@ -47,15 +47,15 @@ export async function handleAchievementUpdate(
 
 export const achievementLikedQuizzesRequirements: Record<number, number> = {
   1: 0,
-  2: 1,
-  3: 2,
+  2: 5,
+  3: 10,
   4: 25,
   5: 50,
 };
 
 export const achievementsLikedQuizzesTitles: Record<number, string> = {
-  3: "Wielbiciel",
-  5: "Wielbiciel",
+  3: "Krytyk",
+  5: "Recenzent",
 };
 
 export const achievementCreatedQuizzesRequirements: Record<number, number> = {

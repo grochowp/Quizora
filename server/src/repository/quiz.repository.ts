@@ -32,12 +32,16 @@ class QuizRepository {
     return await Quiz.findById(quizId).session(options?.session);
   }
 
-  async addRating(
+  async manageRating(
     quizId: ObjectId,
     rating: number,
     options: { session: ClientSession }
-  ) {
-    await Quiz.findOneAndUpdate({ _id: quizId }, { $inc: { rating } }, options);
+  ): Promise<IRating> {
+    return await Quiz.findOneAndUpdate(
+      { _id: quizId },
+      { $inc: { rating } },
+      options
+    );
   }
 
   async editRating(
@@ -48,18 +52,6 @@ class QuizRepository {
     await Quiz.findOneAndUpdate(
       { _id: quizId },
       { $inc: { rating: newRating * 2 } },
-      options
-    );
-  }
-
-  async deleteRating(
-    quizId: ObjectId,
-    rating: number,
-    options: { session: ClientSession }
-  ): Promise<IRating> {
-    return await Quiz.findOneAndUpdate(
-      { _id: quizId },
-      { $inc: { rating: -rating } },
       options
     );
   }

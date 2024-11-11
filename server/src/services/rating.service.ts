@@ -44,11 +44,12 @@ class RatingService {
         await quizRepository.editRating(quizId, rating, { session });
 
         await session.commitTransaction();
-        return "Your rating has been successfully updated.";
+        return { message: "Your rating has been successfully updated." };
       }
 
       await ratingRepository.create(userId, quizId, rating, { session });
-      await quizRepository.addRating(quizId, rating, { session });
+      await quizRepository.manageRating(quizId, rating, { session });
+      await userRepository.manageRating(userId, 1, { session });
 
       const titleMessage = await handleAchievementUpdate(
         userId,
@@ -96,13 +97,14 @@ class RatingService {
       });
       if (!ratingDeleted) throw new Error("Failed to delete rating.");
 
-      const QuizRatingDeleted = await quizRepository.deleteRating(
+      const QuizRatingDeleted = await quizRepository.manageRating(
         rating.quizId,
-        rating.rating,
+        -rating.rating,
         { session }
       );
       if (!QuizRatingDeleted)
         throw new Error("Failed to delete rating from quiz.");
+      await userRepository.manageRating(userId, -1, { session });
 
       await session.commitTransaction();
       return "Your rating has been successfully deleted.";
