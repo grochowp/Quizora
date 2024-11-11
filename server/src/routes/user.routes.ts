@@ -3,7 +3,9 @@ const router = express.Router();
 const {
   register,
   login,
-  editProfilePicture,
+  // editProfilePicture,
+  addTitle,
+  editPreferences,
 } = require("../controllers/user.controller");
 const { verifyToken } = require("../middlewares/authMiddleware");
 
@@ -12,10 +14,10 @@ router.post("/register", register);
 router.post("/login", login);
 // router.patch("/editProfilePicture/:imgSource", verifyToken, editProfilePicture); TO-DO change profile picture (User)
 // router.patch('/:userId', verifyToken, editProfile); TO-DO profile data as a query/body (User, UserPrivate, UserProfile)
-// router.patch("/addTitle/:userId", verifyToken, addTitle) TO-DO add title after reaching certain achievements level (UserProfile)
+// router.patch("/addTitle", verifyToken, addTitle); // SELF-NOTE maybe its not needed? changed approaches
+
 // router.patch('/titles/:userId', verifyToken, changeTitles) TO-DO change titles from settings (User)
-// router.patch('/preferences/:userId', verifyToken, changePreferences) TO-DO change preferences as a filters (UserProfile)
-// router.patch('/theme/:userId', verifyToken, changeTheme) TO-DO change theme onClick (UserProfile) (maybe with )
+router.patch("/preferences", verifyToken, editPreferences);
 // router.patch("finishQuiz/:userId", verifyToken, addFinishedQuizData); TO-DO add points, finishedQuizzes+1
 
 // Other people profiles

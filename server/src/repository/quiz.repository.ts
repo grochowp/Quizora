@@ -69,7 +69,8 @@ class QuizRepository {
       { _id: quizId },
       {
         $set: { status },
-      }
+      },
+      { runValidators: true }
     );
   }
 }

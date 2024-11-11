@@ -20,6 +20,13 @@ export interface QuizFilters {
   status?: string;
 }
 
+export interface PreferencesFilters {
+  theme?: string;
+  checkpoints?: boolean;
+  lessAnimations?: boolean;
+  privateAccount?: boolean;
+}
+
 export interface CommentFilters {
   userId?: string;
   quizId?: string;

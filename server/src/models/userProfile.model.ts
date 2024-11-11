@@ -1,8 +1,9 @@
 import mongoose, { Document } from "mongoose";
+import { IUser } from "./user.model";
 
 export interface IUserProfile extends Document {
   _id: mongoose.ObjectId;
-  user: mongoose.ObjectId;
+  user: mongoose.ObjectId | IUser;
   theme: string;
   checkpoints: boolean;
   lessAnimations: boolean;
@@ -13,6 +14,7 @@ export interface IUserProfile extends Document {
       achievementId: mongoose.ObjectId;
       name: string;
       level: number;
+      value: number;
     }
   ];
 }
@@ -41,6 +43,7 @@ const userProfileSchema = new mongoose.Schema<IUserProfile>({
       },
       name: { type: String, required: true },
       level: { type: Number, default: 1 },
+      value: { type: Number, default: 0 },
     },
   ],
 });

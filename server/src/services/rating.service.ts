@@ -2,9 +2,17 @@ import quizRepository from "../repository/quiz.repository";
 import ratingRepository from "../repository/rating.repository";
 import mongoose, { ObjectId } from "mongoose";
 import { withTransaction } from "../utils/transaction";
+import userRepository from "../repository/user.repository";
+import userProfileRepository from "../repository/userProfile.repository";
+import {
+  achievementLikedQuizzesRequirements,
+  achievementsLikedQuizzesTitles,
+  handleAchievementUpdate,
+} from "../utils/achievementUtils";
 
 const CommentService = require("./comment.service");
 const ValidationService = require("./validation.service");
+const userService = require("./user.service");
 
 class RatingService {
   async addRating(
@@ -34,15 +42,28 @@ class RatingService {
       if (ratingExist) {
         await ratingRepository.edit(ratingExist._id, rating, { session });
         await quizRepository.editRating(quizId, rating, { session });
+
         await session.commitTransaction();
         return "Your rating has been successfully updated.";
       }
 
       await ratingRepository.create(userId, quizId, rating, { session });
       await quizRepository.addRating(quizId, rating, { session });
+
+      const titleMessage = await handleAchievementUpdate(
+        userId,
+        "Oceń Quizy",
+        achievementLikedQuizzesRequirements,
+        achievementsLikedQuizzesTitles,
+        session
+      );
+
       await session.commitTransaction();
 
-      return "Your rating has been successfully added.";
+      return {
+        message: "Your rating has been successfully added.",
+        titleMessage,
+      };
     });
   }
 

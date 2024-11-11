@@ -8,8 +8,12 @@ const addRating = async (req: Request & UserTokenRequest, res: Response) => {
   const { quizId, rating } = req.body;
 
   try {
-    const message = await RatingService.addRating(userId, quizId, rating);
-    res.status(200).json({ message });
+    const { message, titleMessage } = await RatingService.addRating(
+      userId,
+      quizId,
+      rating
+    );
+    res.status(200).json({ message, titleMessage });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

@@ -73,7 +73,7 @@ const changeQuizStatus = async (
 ) => {
   const { _id: userId } = req.user;
   const { quizId } = req.params;
-  const { status } = req.body;
+  const { status } = req.query;
   try {
     const message = await QuizService.changeQuizStatus(userId, quizId, status);
     res.status(200).json({ message });
