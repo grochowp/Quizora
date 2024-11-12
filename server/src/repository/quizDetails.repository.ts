@@ -35,6 +35,18 @@ class QuizDetailsRepository {
   ) {
     await QuizDetails.deleteMany({ quiz: { $in: quizIds } }, options);
   }
+
+  async editQuizDetails(
+    quizId: ObjectId,
+    questions: IQuizDetails["questions"],
+    options: { session: ClientSession }
+  ): Promise<IQuizDetails> {
+    return await QuizDetails.findOneAndUpdate(
+      { quiz: quizId },
+      { $set: { questions } },
+      { new: true, session: options.session, runValidators: true }
+    );
+  }
 }
 
 export default new QuizDetailsRepository();

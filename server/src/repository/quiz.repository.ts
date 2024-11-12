@@ -1,6 +1,7 @@
 import { ClientSession, ObjectId } from "mongoose";
 import { IQuiz } from "../models/quiz.model";
 import { IRating } from "../models/rating.model";
+import { EditQuizFilters } from "../types/interfaces";
 
 const Quiz = require("../models/quiz.model");
 const QuizDetails = require("../models/quizDetails.model");
@@ -78,6 +79,18 @@ class QuizRepository {
     options: { session: ClientSession }
   ) {
     await Quiz.deleteMany({ _id: { $in: quizIds } }, options);
+  }
+
+  async editQuiz(
+    quizId: ObjectId,
+    quiz: EditQuizFilters,
+    options: { session: ClientSession }
+  ): Promise<IQuiz> {
+    return await Quiz.findByIdAndUpdate(
+      quizId,
+      { $set: quiz },
+      { new: true, session: options.session, runValidators: true }
+    );
   }
 }
 

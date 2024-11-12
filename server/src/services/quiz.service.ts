@@ -3,7 +3,11 @@ import { IQuiz } from "../models/quiz.model";
 import { IQuestion, IQuizDetails } from "../models/quizDetails.model";
 import QuizRepository from "../repository/quiz.repository";
 import QuizDetailsRepository from "../repository/quizDetails.repository";
-import { IQuizWithQuestions, QuizFilters } from "../types/interfaces";
+import {
+  EditQuizFilters,
+  IQuizWithQuestions,
+  QuizFilters,
+} from "../types/interfaces";
 import quizRepository from "../repository/quiz.repository";
 import quizDetailsRepository from "../repository/quizDetails.repository";
 import CommentRepository from "../repository/comment.repository";
@@ -28,6 +32,7 @@ class QuizService {
   async createQuiz(
     userId: ObjectId,
     title: string,
+    description: string,
     time: number,
     questions: IQuestion[],
     difficulty: string,
@@ -45,6 +50,7 @@ class QuizService {
       }
       const quizData = {
         title,
+        description,
         time,
         points: calculatePoints(time, difficulty, questions.length),
         difficulty,
@@ -59,6 +65,7 @@ class QuizService {
         questions,
         { session }
       );
+      if (!quiz || !quizDetails) throw new Error("Invalid quiz data.");
 
       await userRepository.addOrSubstractCreatedQuizzes(userId, 1, { session });
       const createdQuizzesMessage = await UserService.handleAchievementUpdate(
@@ -68,12 +75,73 @@ class QuizService {
         session
       );
 
-      if (!quiz || !quizDetails) throw new Error("Invalid quiz data.");
       return { quiz, createdQuizzesMessage };
     });
   }
 
-  async editQuiz(): Promise<void> {}
+  async editQuiz(
+    userId: ObjectId,
+    quizId: ObjectId,
+    quizData: IQuiz,
+    questions: IQuizDetails["questions"]
+  ): Promise<void> {
+    return withTransaction(async (session) => {
+      const editFilter: EditQuizFilters = {};
+
+      if (Object.keys(quizData).length === 0 && questions.length === 0)
+        throw new Error("You need to change at least 1 parameter or question.");
+
+      editFilter.updatedAt = new Date();
+      if (quizData.title) editFilter.title = quizData.title;
+      if (quizData.description) editFilter.description = quizData.description;
+      if (quizData.time) editFilter.time = Number(quizData.time);
+      if (quizData.difficulty) editFilter.difficulty = quizData.difficulty;
+      if (quizData.category) editFilter.category = quizData.category;
+      if (quizData.points) throw new Error("You can`t set points manually.");
+
+      await ValidationService.validateUser(userId, { session });
+      const quizBeforeEdit = await ValidationService.validateQuiz(quizId, {
+        session,
+      });
+      const quizDetaileBeforeEdit = await ValidationService.validateQuizDetails(
+        quizId,
+        { session }
+      );
+      await ValidationService.isAuthorized(
+        userId,
+        quizBeforeEdit.createdBy,
+        "You can edit only your own Quizzes.",
+        { session }
+      );
+      const pointsParameters = {
+        time: quizData.time || quizBeforeEdit.time,
+        difficulty: quizData.difficulty || quizBeforeEdit.difficulty,
+        questionsLength:
+          questions.length || quizDetaileBeforeEdit.questions.length,
+      };
+
+      editFilter.points = calculatePoints(
+        pointsParameters.time,
+        pointsParameters.difficulty,
+        pointsParameters.questionsLength
+      );
+
+      const newQuiz = await QuizRepository.editQuiz(quizId, editFilter, {
+        session,
+      });
+
+      let quizDetails;
+
+      if (questions.length !== 0)
+        quizDetails = await QuizDetailsRepository.editQuizDetails(
+          quizId,
+          questions,
+          { session }
+        );
+
+      return { newQuiz, quizDetails, message: "Quiz edited succesfully." };
+    });
+  }
 
   async deleteQuiz(userId: ObjectId, quizId: ObjectId): Promise<string> {
     return withTransaction(async (session) => {

@@ -29,6 +29,16 @@ export interface EditProfileFilters {
   newPasswordRepeat?: string;
 }
 
+export interface EditQuizFilters {
+  title?: string;
+  description?: string;
+  category?: string;
+  time?: number;
+  difficulty?: string;
+  points?: number;
+  updatedAt?: Date;
+}
+
 export interface UserPrivateFilters {
   login?: string;
   email?: string;

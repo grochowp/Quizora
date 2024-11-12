@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   createQuiz,
   deleteQuiz,
+  editQuiz,
   fetchQuizzes,
   getQuizDetails,
   changeQuizStatus,
@@ -12,7 +13,7 @@ const { verifyToken } = require("../middlewares/authMiddleware");
 // Single Quiz
 router.post("/", verifyToken, createQuiz);
 router.delete("/:quizId", verifyToken, deleteQuiz);
-// router.put("/:quizId", verifyToken, editQuiz); TO-DO quizId as a param, edit data as a body
+router.put("/:quizId", verifyToken, editQuiz);
 router.get("/:quizId", getQuizDetails);
 router.patch("/:quizId", verifyToken, changeQuizStatus);
 

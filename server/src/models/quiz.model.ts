@@ -3,6 +3,7 @@ import mongoose, { Document } from "mongoose";
 export interface IQuiz extends Document {
   _id: mongoose.ObjectId;
   title: string;
+  description: string;
   time: number;
   category: string;
   createdBy: mongoose.ObjectId;
@@ -15,6 +16,7 @@ export interface IQuiz extends Document {
 
 const quizSchema = new mongoose.Schema<IQuiz>({
   title: { type: String, minlength: 5, maxlength: 30, required: true },
+  description: { type: String, minlength: 5, maxlength: 60, required: true },
   time: { type: Number, min: 1, max: 10, required: true },
   category: {
     type: String,

@@ -1,21 +1,42 @@
 import { Request, Response } from "express";
 import { QuizFilters, UserTokenRequest } from "../types/interfaces";
+import { IQuiz } from "../models/quiz.model";
 
 const QuizService = require("../services/quiz.service");
 
 const createQuiz = async (req: Request & UserTokenRequest, res: Response) => {
   const { _id: userId } = req.user;
-  const { title, time, questions, difficulty, category } = req.body;
+  const { title, description, time, questions, difficulty, category } =
+    req.body;
   try {
     const { quiz, createdQuizzesMessage } = await QuizService.createQuiz(
       userId,
       title,
+      description,
       time,
       questions,
       difficulty,
       category
     );
     res.status(201).json({ quiz, createdQuizzesMessage });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const editQuiz = async (req: Request & UserTokenRequest, res: Response) => {
+  const { _id: userId } = req.user;
+  const { quizId } = req.params;
+  const { quiz, questions } = req.body;
+
+  try {
+    const { newQuiz, quizDetails, message } = await QuizService.editQuiz(
+      userId,
+      quizId,
+      quiz,
+      questions
+    );
+    res.status(200).json({ quiz: newQuiz, quizDetails, message });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -91,6 +112,7 @@ const changeQuizStatus = async (
 
 module.exports = {
   createQuiz,
+  editQuiz,
   deleteQuiz,
   fetchQuizzes,
   getQuizDetails,
