@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import { IUser } from "../models/user.model";
-import { IUserPrivate } from "../models/userPrivate.model";
-import { PreferencesFilters, UserTokenRequest } from "../types/interfaces";
+import {
+  EditProfileFilters,
+  PreferencesFilters,
+  UserTokenRequest,
+} from "../types/interfaces";
 
 const UserService = require("../services/user.service");
 
@@ -37,10 +39,10 @@ const editProfilePicture = async (
   res: Response
 ) => {
   const { _id: userId } = req.user;
-  const { imgSource } = req.params;
+  const { imgQuery } = req.body;
 
   try {
-    const user = await UserService.editProfilePicture(userId, imgSource);
+    const user = await UserService.editProfilePicture(userId, imgQuery);
     res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -99,12 +101,72 @@ const getMultipleUsers = async (req: Request, res: Response) => {
     res.status(400).json({ message: error.message });
   }
 };
+const addFinishedQuizData = async (
+  req: Request & UserTokenRequest,
+  res: Response
+) => {
+  const { _id: userId } = req.user;
+  const { quizId } = req.params;
+  const { points } = req.query;
+
+  try {
+    const { finishQuizMessage, addPointsMessage } =
+      await UserService.addFinishedQuizData(userId, quizId, points);
+    res.status(200).json({ finishQuizMessage, addPointsMessage });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const changeDisplayedTitles = async (
+  req: Request & UserTokenRequest,
+  res: Response
+) => {
+  const { _id: userId } = req.user;
+  const { titles } = req.body;
+
+  try {
+    const { user, message } = await UserService.changeDisplayedTitles(
+      userId,
+      titles
+    );
+    res.status(200).json({ user, message });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const editProfile = async (req: Request & UserTokenRequest, res: Response) => {
+  const { _id: userId } = req.user;
+  const {
+    login,
+    email,
+    nickname,
+    oldPassword,
+    newPassword,
+    newPasswordRepeat,
+  } = req.body;
+
+  try {
+    const { user, userPrivate } = await UserService.editProfile(
+      userId,
+      nickname,
+      { login, email, nickname, oldPassword, newPassword, newPasswordRepeat }
+    );
+    res.status(200).json({ user, userPrivate });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 module.exports = {
   register,
   login,
   editProfilePicture,
   editPreferences,
+  editProfile,
   getUser,
   getMultipleUsers,
+  addFinishedQuizData,
+  changeDisplayedTitles,
 };

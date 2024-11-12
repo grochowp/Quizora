@@ -18,6 +18,7 @@ const userPrivateSchema = new mongoose.Schema<IUserPrivate>({
     type: String,
     required: true,
     unique: true,
+    minlength: 5,
     maxlength: 20,
   },
   email: {

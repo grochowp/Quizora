@@ -59,7 +59,7 @@ class UserProfileRepository {
     achievementName: string,
     achievementIncreaseValue: number,
     options: { session: ClientSession }
-  ): Promise<number> {
+  ): Promise<any> {
     const user = await UserProfile.findOneAndUpdate(
       {
         user: userId,
@@ -76,7 +76,7 @@ class UserProfileRepository {
     const achievement = user.achievements.find(
       (achievement: IAchievement) => achievement.name === achievementName
     );
-    return achievement.value;
+    return achievement;
   }
 
   async changeAchievementLevel(
@@ -106,12 +106,12 @@ class UserProfileRepository {
   async verifyIfUserHaveTitle(
     userId: ObjectId,
     title: string,
-    options: { session: ClientSession }
+    options?: { session: ClientSession }
   ): Promise<boolean> {
     const user = await UserProfile.findOne(
       { user: userId },
       { titles: 1 },
-      { session: options.session }
+      { session: options?.session }
     );
 
     return user.titles.includes(title);

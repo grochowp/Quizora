@@ -9,8 +9,10 @@ import quizDetailsRepository from "../repository/quizDetails.repository";
 import CommentRepository from "../repository/comment.repository";
 import RatingRepository from "../repository/rating.repository";
 import { withTransaction } from "../utils/transaction";
+import userRepository from "../repository/user.repository";
 
 const ValidationService = require("./validation.service");
+const UserService = require("./user.service");
 
 const calculatePoints = (time: number, difficulty: string, length: number) => {
   const difficultyModifier =
@@ -58,8 +60,16 @@ class QuizService {
         { session }
       );
 
+      await userRepository.addOrSubstractCreatedQuizzes(userId, 1, { session });
+      const createdQuizzesMessage = await UserService.handleAchievementUpdate(
+        userId,
+        "Stwórz Quizy",
+        1,
+        session
+      );
+
       if (!quiz || !quizDetails) throw new Error("Invalid quiz data.");
-      return quiz;
+      return { quiz, createdQuizzesMessage };
     });
   }
 
@@ -89,6 +99,9 @@ class QuizService {
       await CommentRepository.deleteQuizComments(quizId, { session });
 
       await RatingRepository.deleteQuizRatings(quizId, {
+        session,
+      });
+      await userRepository.addOrSubstractCreatedQuizzes(userId, -1, {
         session,
       });
 
@@ -211,7 +224,7 @@ class QuizService {
     await ValidationService.isAuthorized(
       userId,
       quiz.createdBy,
-      "Unauthorized"
+      "You can change status only in your Quizzes."
     );
     if (quiz.status === status)
       throw new Error("You can`t change status to the same value.");

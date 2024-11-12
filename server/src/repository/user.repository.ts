@@ -44,16 +44,76 @@ class UserRepository {
 
   async addOrSubstractLikedQuizzes(
     userId: ObjectId,
-    rating: number,
+    value: number,
     options: { session: ClientSession }
   ) {
     await User.findOneAndUpdate(
       { _id: userId },
       {
-        $inc: { likedQuizzes: rating },
+        $inc: { likedQuizzes: value },
       },
       options
     );
+  }
+
+  async addOrSubstractCreatedQuizzes(
+    userId: ObjectId,
+    value: number,
+    options: { session: ClientSession }
+  ) {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $inc: { createdQuizzes: value },
+      },
+      options
+    );
+  }
+
+  async addFinishedQuizData(
+    userId: ObjectId,
+    points: number,
+    options: { session: ClientSession }
+  ) {
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        $inc: { finishedQuizzes: 1, points },
+      },
+      options
+    );
+  }
+
+  async editProfilePicture(userId: ObjectId, imgQuery: string): Promise<IUser> {
+    return await User.findByIdAndUpdate(
+      userId,
+      { profilePicture: imgQuery },
+      { new: true }
+    );
+  }
+  async changeDisplayedTitles(
+    userId: ObjectId,
+    titles: Array<string>
+  ): Promise<IUser> {
+    return await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: { activeTitles: titles },
+      },
+      { new: true }
+    );
+  }
+
+  async changeNickname(
+    userId: ObjectId,
+    nickname: string,
+    options: { session: ClientSession }
+  ): Promise<IUser> {
+    return await User.findByIdAndUpdate(
+      userId,
+      { $set: { nickname } },
+      { new: true, session: options.session }
+    ).select("-_id nickname");
   }
 }
 

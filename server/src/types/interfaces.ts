@@ -20,6 +20,21 @@ export interface QuizFilters {
   status?: string;
 }
 
+export interface EditProfileFilters {
+  login?: string;
+  email?: string;
+  nickname?: string;
+  oldPassword?: string;
+  newPassword?: string;
+  newPasswordRepeat?: string;
+}
+
+export interface UserPrivateFilters {
+  login?: string;
+  email?: string;
+  password?: string;
+}
+
 export interface PreferencesFilters {
   theme?: string;
   checkpoints?: boolean;

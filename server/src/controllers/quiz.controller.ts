@@ -7,7 +7,7 @@ const createQuiz = async (req: Request & UserTokenRequest, res: Response) => {
   const { _id: userId } = req.user;
   const { title, time, questions, difficulty, category } = req.body;
   try {
-    const quiz = await QuizService.createQuiz(
+    const { quiz, createdQuizzesMessage } = await QuizService.createQuiz(
       userId,
       title,
       time,
@@ -15,7 +15,7 @@ const createQuiz = async (req: Request & UserTokenRequest, res: Response) => {
       difficulty,
       category
     );
-    res.status(201).json(quiz);
+    res.status(201).json({ quiz, createdQuizzesMessage });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -51,7 +51,7 @@ const fetchQuizzes = async (req: Request, res: Response) => {
     filters.questionsCount = +req.query.questionsCount;
 
   try {
-    const quizzes = await QuizService.getQuizzes(
+    const { quizzes, createdQuizzesMessage } = await QuizService.getQuizzes(
       filters,
       page,
       limit,
