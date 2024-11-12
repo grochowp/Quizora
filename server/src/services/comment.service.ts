@@ -7,17 +7,6 @@ import { withTransaction } from "../utils/transaction";
 
 const ValidationService = require("./validation.service");
 
-const sortComments = (comments: IComment[], sortBy: string): IComment[] => {
-  const sortFunction: Record<string, (a: IComment, b: IComment) => number> = {
-    new: (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-    old: (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    ratingAsc: (a, b) => a.rating - b.rating,
-    ratingDesc: (a, b) => b.rating - a.rating,
-  };
-  return sortFunction[sortBy]
-    ? [...comments].sort(sortFunction[sortBy])
-    : comments;
-};
 class CommentService {
   async addComment(
     userId: ObjectId,
@@ -69,14 +58,19 @@ class CommentService {
     filters: CommentFilters,
     page: number,
     limit: number,
-    sortBy: string
+    sortBy: string,
+    order: string
   ): Promise<IComment[]> {
     const aggregationPipeline: any[] = [];
     const matchStage: any = {};
-    if (filters.userId)
+    if (filters.userId) {
+      await ValidationService.validateUser(filters.userId);
       matchStage.userId = new mongoose.Types.ObjectId(filters.userId);
-    if (filters.quizId)
+    }
+    if (filters.quizId) {
+      await ValidationService.validateQuiz(filters.quizId);
       matchStage.quizId = new mongoose.Types.ObjectId(filters.quizId);
+    }
 
     if (!filters.quizId && !filters.userId)
       throw new Error(
@@ -90,10 +84,9 @@ class CommentService {
     const skip = (page - 1) * limit;
     aggregationPipeline.push({ $skip: skip });
     aggregationPipeline.push({ $limit: limit });
+    aggregationPipeline.push({ $sort: { [sortBy]: order } });
 
-    const comments = await CommentRepository.getComments(aggregationPipeline);
-
-    return sortComments(comments, sortBy);
+    return await CommentRepository.getComments(aggregationPipeline);
   }
 
   async manageCommentRatingIfExist(

@@ -79,7 +79,7 @@ class UserService {
       if (!user || !userPrivate || !userProfile)
         throw new Error("Invalid user data");
 
-      const loggedUser = await userProfileRepository.findById(
+      const loggedUser = await userProfileRepository.findUserProfileById(
         userPrivate.userId,
         {
           session,
@@ -104,7 +104,9 @@ class UserService {
 
     if (!isPasswordValid) throw new Error("Invalid login or password");
 
-    const user = await userProfileRepository.findById(userPrivate.userId);
+    const user = await userProfileRepository.findUserProfileById(
+      userPrivate.userId
+    );
     if (!user) throw new Error("User does not exist");
     const userTokenData = user.user as IUser;
     return {
@@ -122,7 +124,7 @@ class UserService {
     query: string,
     page: number,
     limit: number,
-    sortBy: "points" | "finishedQuizzes" | "createdQuizzes"
+    sortBy: string
   ) {
     const skip = (page - 1) * limit;
     const sortOptions: Record<string, 1 | -1> = {};
@@ -145,7 +147,7 @@ class UserService {
   async editPreferences(userId: ObjectId, filters: PreferencesFilters) {
     const updateFields: Partial<PreferencesFilters> = {};
     await ValidationService.validateUser(userId);
-    const userProfile = await UserProfileRepository.findById(userId);
+    const userProfile = await UserProfileRepository.findUserProfileById(userId);
 
     (Object.keys(filters) as (keyof PreferencesFilters)[]).forEach((key) => {
       const value = filters[key];
@@ -168,7 +170,7 @@ class UserService {
   ): Promise<string | undefined> {
     await ValidationService.validateUser(userId);
 
-    const achievementValue = await userProfileRepository.addRatingToAchievement(
+    const achievementValue = await userProfileRepository.addValueToAchievement(
       userId,
       achievementName,
       achievementIncreaseValue,
@@ -203,7 +205,7 @@ class UserService {
           (lvl: any) => lvl.level === achievementLevel
         );
 
-        const existingTitle = await userProfileRepository.verifyUserTitle(
+        const existingTitle = await userProfileRepository.verifyIfUserHaveTitle(
           userId,
           currentLevel.title,
           { session }

@@ -30,10 +30,10 @@ const deleteComment = async (
 
 const getComments = async (req: Request, res: Response) => {
   const filters: CommentFilters = {};
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 4;
-  const sortBy = req.query.sortBy || "new";
-
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 4;
+  const sortBy = req.query.sortBy || "noSort";
+  const order = Number(req.query.order) || -1;
   if (req.query.userId) filters.userId = req.query.userId as string;
   if (req.query.quizId) filters.quizId = req.query.quizId as string;
 
@@ -42,7 +42,8 @@ const getComments = async (req: Request, res: Response) => {
       filters,
       page,
       limit,
-      sortBy
+      sortBy,
+      order
     );
     res.status(200).json(comments);
   } catch (error) {

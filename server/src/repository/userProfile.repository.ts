@@ -20,7 +20,7 @@ class UserProfileRepository {
     return newUserProfile[0];
   }
 
-  async findById(
+  async findUserProfileById(
     userId: ObjectId,
     options?: { session: ClientSession }
   ): Promise<IUserProfile> {
@@ -54,7 +54,7 @@ class UserProfileRepository {
     );
   }
 
-  async addRatingToAchievement(
+  async addValueToAchievement(
     userId: ObjectId,
     achievementName: string,
     achievementIncreaseValue: number,
@@ -103,7 +103,7 @@ class UserProfileRepository {
     return achievement.level;
   }
 
-  async verifyUserTitle(
+  async verifyIfUserHaveTitle(
     userId: ObjectId,
     title: string,
     options: { session: ClientSession }

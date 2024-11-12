@@ -22,32 +22,6 @@ const calculatePoints = (time: number, difficulty: string, length: number) => {
   return points;
 };
 
-const sortQuizzes = (
-  quizzes: IQuiz[],
-  sortBy: string
-): IQuizWithQuestions[] => {
-  const sortMap: Record<IQuiz["difficulty"], number> = {
-    easy: 0,
-    medium: 1,
-    hard: 2,
-  };
-
-  const sortFunctions: Record<string, (a: IQuiz, b: IQuiz) => number> = {
-    new: (a, b) =>
-      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-    old: (a, b) =>
-      new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
-    pointsAsc: (a, b) => a.points - b.points,
-    pointsDesc: (a, b) => b.points - a.points,
-    difficultyAsc: (a, b) => sortMap[a.difficulty] - sortMap[b.difficulty],
-    difficultyDesc: (a, b) => sortMap[b.difficulty] - sortMap[a.difficulty],
-  };
-
-  return sortFunctions[sortBy]
-    ? [...quizzes].sort(sortFunctions[sortBy])
-    : quizzes;
-};
-
 class QuizService {
   async createQuiz(
     userId: ObjectId,
@@ -126,7 +100,8 @@ class QuizService {
     filters: QuizFilters,
     page: number,
     limit: number,
-    sortBy: string
+    sortBy: string,
+    order: number
   ): Promise<IQuizWithQuestions[]> {
     const aggregationPipeline: any[] = [];
     const matchStage: any = {};
@@ -170,12 +145,12 @@ class QuizService {
     if (filters.questionsCount !== undefined) {
       aggregationPipeline.push(
         {
+          $unwind: "$details",
+        },
+        {
           $match: {
             "details.questions": { $size: filters.questionsCount },
           },
-        },
-        {
-          $unwind: "$details",
         }
       );
     } else {
@@ -193,12 +168,17 @@ class QuizService {
           },
         },
         {
+          $unwind: "$ratings",
+        },
+        {
           $match: {
             "ratings.rating": 1,
           },
         },
         {
-          $unwind: "$ratings",
+          $project: {
+            ratings: 0,
+          },
         }
       );
     }
@@ -211,12 +191,9 @@ class QuizService {
     aggregationPipeline.push({ $skip: skip });
     aggregationPipeline.push({ $limit: limit });
     aggregationPipeline.push({ $unset: "details" });
+    aggregationPipeline.push({ $sort: { [sortBy]: order } });
 
-    const quizzes = await quizRepository.executeAggregation(
-      aggregationPipeline
-    );
-
-    return sortQuizzes(quizzes, sortBy);
+    return await quizRepository.executeAggregation(aggregationPipeline);
   }
 
   async getQuizDetails(quizId: ObjectId): Promise<IQuizDetails> {

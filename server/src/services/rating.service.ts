@@ -41,8 +41,8 @@ class RatingService {
       }
 
       await ratingRepository.create(userId, quizId, rating, { session });
-      await quizRepository.manageRating(quizId, rating, { session });
-      await userRepository.manageRating(userId, 1, { session });
+      await quizRepository.addOrSubstractRating(quizId, rating, { session });
+      await userRepository.addOrSubstractLikedQuizzes(userId, 1, { session });
 
       const titleMessage = await userService.handleAchievementUpdate(
         userId,
@@ -87,14 +87,14 @@ class RatingService {
       });
       if (!ratingDeleted) throw new Error("Failed to delete rating.");
 
-      const QuizRatingDeleted = await quizRepository.manageRating(
+      const QuizRatingDeleted = await quizRepository.addOrSubstractRating(
         rating.quizId,
         -rating.rating,
         { session }
       );
       if (!QuizRatingDeleted)
         throw new Error("Failed to delete rating from quiz.");
-      await userRepository.manageRating(userId, -1, { session });
+      await userRepository.addOrSubstractLikedQuizzes(userId, -1, { session });
 
       return "Your rating has been successfully deleted.";
     });

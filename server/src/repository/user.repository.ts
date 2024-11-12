@@ -42,7 +42,7 @@ class UserRepository {
       .sort(sortOptions);
   }
 
-  async manageRating(
+  async addOrSubstractLikedQuizzes(
     userId: ObjectId,
     rating: number,
     options: { session: ClientSession }
@@ -51,7 +51,8 @@ class UserRepository {
       { _id: userId },
       {
         $inc: { likedQuizzes: rating },
-      }
+      },
+      options
     );
   }
 }

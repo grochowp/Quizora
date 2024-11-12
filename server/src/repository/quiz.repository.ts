@@ -32,7 +32,7 @@ class QuizRepository {
     return await Quiz.findById(quizId).session(options?.session);
   }
 
-  async manageRating(
+  async addOrSubstractRating(
     quizId: ObjectId,
     rating: number,
     options: { session: ClientSession }

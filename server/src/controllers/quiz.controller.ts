@@ -35,9 +35,10 @@ const deleteQuiz = async (req: Request & UserTokenRequest, res: Response) => {
 
 const fetchQuizzes = async (req: Request, res: Response) => {
   const filters: QuizFilters = {};
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 20;
-  const sortBy = req.query.sortBy || "new";
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 20;
+  const sortBy = req.query.sortBy || "noSort";
+  const order = Number(req.query.order) || -1;
 
   if (req.query.userId) filters.userId = req.query.userId as string;
   if (req.query.difficulty) filters.difficulty = req.query.difficulty as string;
@@ -50,7 +51,13 @@ const fetchQuizzes = async (req: Request, res: Response) => {
     filters.questionsCount = +req.query.questionsCount;
 
   try {
-    const quizzes = await QuizService.getQuizzes(filters, page, limit, sortBy);
+    const quizzes = await QuizService.getQuizzes(
+      filters,
+      page,
+      limit,
+      sortBy,
+      order
+    );
     res.status(200).json(quizzes);
   } catch (error) {
     res.status(400).json({ message: error.message });
