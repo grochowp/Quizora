@@ -11,6 +11,10 @@ import {
   PreferencesFilters,
   UserPrivateFilters,
 } from "../types/interfaces";
+import commentRepository from "../repository/comment.repository";
+import ratingRepository from "../repository/rating.repository";
+import quizRepository from "../repository/quiz.repository";
+import quizDetailsRepository from "../repository/quizDetails.repository";
 
 const AchievementService = require("./achievement.service");
 const ValidationService = require("./validation.service");
@@ -192,6 +196,41 @@ class UserService {
       ...user,
       token: generateToken(userTokenData._id),
     };
+  }
+
+  async deleteUser(userId: ObjectId, password: string) {
+    return withTransaction(async (session) => {
+      await ValidationService.validateUser(userId, { session });
+
+      const userPassword = await UserPrivateRepository.getOldPassword(userId, {
+        session,
+      });
+      const isPasswordValid = await bcrypt.compare(password, userPassword);
+      if (!isPasswordValid) throw new Error("Invalid password.");
+
+      await commentRepository.deleteUserComments(userId, { session });
+      await ratingRepository.deleteUserRatings(userId, { session });
+      const quizzesIds = await quizRepository.findUserQuizzesIds(userId, {
+        session,
+      });
+      if (quizzesIds) {
+        await quizRepository.deleteUserQuizzes(quizzesIds, { session });
+        await commentRepository.deleteCommentsFromMultipleQuizzes(quizzesIds, {
+          session,
+        });
+        await ratingRepository.deleteRatingsFromMultipleQuizzes(quizzesIds, {
+          session,
+        });
+        await quizDetailsRepository.deleteQuizDetailsFromMultipleQuizzes(
+          quizzesIds,
+          { session }
+        );
+      }
+      await UserProfileRepository.deleteUserProfile(userId, { session });
+      await UserPrivateRepository.deleteUserPrivate(userId, { session });
+      await UserRepository.deleteUser(userId, { session });
+      return "User has been deleted succesfully.";
+    });
   }
 
   async findUserById(userId: ObjectId) {

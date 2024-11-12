@@ -116,6 +116,13 @@ class UserProfileRepository {
 
     return user.titles.includes(title);
   }
+
+  async deleteUserProfile(
+    userId: ObjectId,
+    options: { session: ClientSession }
+  ) {
+    await UserProfile.deleteOne({ user: userId }, { session: options.session });
+  }
 }
 
 export default new UserProfileRepository();

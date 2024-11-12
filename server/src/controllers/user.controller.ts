@@ -49,7 +49,16 @@ const editProfilePicture = async (
   }
 };
 
-const deleteAccount = async (req: Request, res: Response) => {};
+const deleteUser = async (req: Request & UserTokenRequest, res: Response) => {
+  const { _id: userId } = req.user;
+  const { password } = req.body;
+  try {
+    const message = await UserService.deleteUser(userId, password);
+    res.status(200).json({ message });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 const editPreferences = async (
   req: Request & UserTokenRequest,
@@ -162,6 +171,7 @@ const editProfile = async (req: Request & UserTokenRequest, res: Response) => {
 module.exports = {
   register,
   login,
+  deleteUser,
   editProfilePicture,
   editPreferences,
   editProfile,

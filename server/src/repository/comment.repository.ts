@@ -28,6 +28,13 @@ class CommentRepository {
     await Comment.deleteOne({ _id: commentId });
   }
 
+  async deleteUserComments(
+    userId: ObjectId,
+    options: { session: ClientSession }
+  ) {
+    await Comment.deleteMany({ userId }, options);
+  }
+
   async findCommentById(commentId: ObjectId): Promise<IComment> {
     return await Comment.findOne({ _id: commentId });
   }
@@ -68,6 +75,13 @@ class CommentRepository {
     options: { session: ClientSession }
   ) {
     await Comment.deleteMany({ quizId }, options);
+  }
+
+  async deleteCommentsFromMultipleQuizzes(
+    quizIds: ObjectId[],
+    options: { session: ClientSession }
+  ) {
+    await Comment.deleteMany({ quizId: { $in: quizIds } }, options);
   }
 }
 

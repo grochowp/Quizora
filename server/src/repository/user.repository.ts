@@ -1,6 +1,5 @@
 import { ClientSession, ObjectId } from "mongoose";
 import { IUser } from "../models/user.model";
-import { IUserProfile } from "../models/userProfile.model";
 
 const User = require("../models/user.model");
 const UserProfile = require("../models/userProfile.model");
@@ -114,6 +113,10 @@ class UserRepository {
       { $set: { nickname } },
       { new: true, session: options.session }
     ).select("-_id nickname");
+  }
+
+  async deleteUser(userId: ObjectId, options: { session: ClientSession }) {
+    await User.deleteOne({ _id: userId }, { session: options.session });
   }
 }
 

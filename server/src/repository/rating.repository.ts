@@ -50,6 +50,19 @@ class RatingRepository {
   ) {
     return await Rating.deleteMany({ quizId }, options);
   }
+  async deleteUserRatings(
+    userId: ObjectId,
+    options: { session: ClientSession }
+  ) {
+    return await Rating.deleteMany({ userId }, options);
+  }
+
+  async deleteRatingsFromMultipleQuizzes(
+    quizIds: ObjectId[],
+    options: { session: ClientSession }
+  ) {
+    await Rating.deleteMany({ quizId: { $in: quizIds } }, options);
+  }
 }
 
 export default new RatingRepository();

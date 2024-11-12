@@ -65,6 +65,20 @@ class QuizRepository {
       { runValidators: true }
     );
   }
+
+  async findUserQuizzesIds(
+    userId: ObjectId,
+    options: { session: ClientSession }
+  ) {
+    return await Quiz.find({ createdBy: userId }, null, options).select("_id");
+  }
+
+  async deleteUserQuizzes(
+    quizIds: ObjectId[],
+    options: { session: ClientSession }
+  ) {
+    await Quiz.deleteMany({ _id: { $in: quizIds } }, options);
+  }
 }
 
 export default new QuizRepository();

@@ -29,6 +29,12 @@ class QuizDetailsRepository {
     ); // return only QuizDetails
     //return await QuizDetails.find({ quiz: quizId }).populate("quiz").lean(); // return Quiz with its details
   }
+  async deleteQuizDetailsFromMultipleQuizzes(
+    quizIds: ObjectId[],
+    options: { session: ClientSession }
+  ) {
+    await QuizDetails.deleteMany({ quiz: { $in: quizIds } }, options);
+  }
 }
 
 export default new QuizDetailsRepository();

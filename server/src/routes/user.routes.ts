@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   register,
   login,
+  deleteUser,
   editProfilePicture,
   editPreferences,
   editProfile,
@@ -16,6 +17,7 @@ const { verifyToken } = require("../middlewares/authMiddleware");
 // User profile
 router.post("/register", register);
 router.post("/login", login);
+router.delete("/", verifyToken, deleteUser);
 router.patch("/preferences", verifyToken, editPreferences);
 router.patch("/editProfilePicture/", verifyToken, editProfilePicture);
 router.patch("/", verifyToken, editProfile);

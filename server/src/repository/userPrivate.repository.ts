@@ -54,6 +54,13 @@ class UserPrivateRepository {
       { new: true, session: options.session, runValidators: true }
     ).select("-_id login email");
   }
+
+  async deleteUserPrivate(
+    userId: ObjectId,
+    options: { session: ClientSession }
+  ) {
+    await UserPrivate.deleteOne({ userId }, { session: options.session });
+  }
 }
 
 export default new UserPrivateRepository();
