@@ -5,7 +5,6 @@ const Achievement = require("../models/achievement.model");
 
 class AchievementRepository {
   async create(achievementData: IAchievement): Promise<IAchievement> {
-    console.log(achievementData);
     return await Achievement.create(achievementData);
   }
 

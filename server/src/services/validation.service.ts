@@ -28,11 +28,11 @@ class ValidationService {
   }
 
   async validateQuizDetails(
-    quizId: ObjectId,
+    quizDetailsId: ObjectId,
     options?: { session: ClientSession }
   ): Promise<IQuizDetails> {
     const quizDetailsExist = await quizDetailsRepository.getQuizDetails(
-      quizId,
+      quizDetailsId,
       options
     );
     if (!quizDetailsExist)

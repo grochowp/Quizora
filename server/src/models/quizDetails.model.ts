@@ -8,12 +8,10 @@ export interface IQuestion {
 
 export interface IQuizDetails extends Document {
   _id: mongoose.ObjectId;
-  quiz: mongoose.ObjectId;
   questions: Array<IQuestion>;
 }
 
 const quizDetailsSchema = new mongoose.Schema<IQuizDetails>({
-  quiz: { type: mongoose.Types.ObjectId, ref: "Quiz", required: true },
   questions: {
     type: [
       {

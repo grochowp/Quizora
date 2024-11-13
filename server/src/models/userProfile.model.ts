@@ -3,7 +3,6 @@ import { IUser } from "./user.model";
 
 export interface IUserProfile extends Document {
   _id: mongoose.ObjectId;
-  user: mongoose.ObjectId | IUser;
   theme: string;
   checkpoints: boolean;
   lessAnimations: boolean;
@@ -20,7 +19,6 @@ export interface IUserProfile extends Document {
 }
 
 const userProfileSchema = new mongoose.Schema<IUserProfile>({
-  user: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   theme: {
     type: String,
     required: true,

@@ -48,6 +48,11 @@ class QuizService {
       if (questions.length < 3 || questions.length > 15) {
         throw new Error("Quiz must have between 3 and 15 questions.");
       }
+
+      const quizDetails = await QuizDetailsRepository.create(questions, {
+        session,
+      });
+
       const quizData = {
         title,
         description,
@@ -56,15 +61,11 @@ class QuizService {
         difficulty,
         category,
         createdBy: userId,
+        quizDetails: quizDetails._id,
       };
 
       const quiz = await QuizRepository.create(quizData, { session });
 
-      const quizDetails = await QuizDetailsRepository.create(
-        quiz._id,
-        questions,
-        { session }
-      );
       if (!quiz || !quizDetails) throw new Error("Invalid quiz data.");
 
       await userRepository.addOrSubstractCreatedQuizzes(userId, 1, { session });
@@ -104,7 +105,7 @@ class QuizService {
         session,
       });
       const quizDetaileBeforeEdit = await ValidationService.validateQuizDetails(
-        quizId,
+        quizBeforeEdit.quizDetails,
         { session }
       );
       await ValidationService.isAuthorized(
@@ -134,7 +135,7 @@ class QuizService {
 
       if (questions.length !== 0)
         quizDetails = await QuizDetailsRepository.editQuizDetails(
-          quizId,
+          quizBeforeEdit.quizDetails,
           questions,
           { session }
         );
@@ -147,7 +148,9 @@ class QuizService {
     return withTransaction(async (session) => {
       await ValidationService.validateUser(userId, { session });
       const quiz = await ValidationService.validateQuiz(quizId, { session });
-      await ValidationService.validateQuizDetails(quizId, { session });
+      await ValidationService.validateQuizDetails(quiz.quizDetails, {
+        session,
+      });
 
       await ValidationService.isAuthorized(
         userId,
@@ -159,16 +162,14 @@ class QuizService {
       if (!quizDeleted) throw new Error("Failed to delete the quiz.");
 
       const detailsDeleted = await QuizDetailsRepository.deleteQuizDetails(
-        quizId,
+        quiz.quizDetails,
         { session }
       );
       if (!detailsDeleted) throw new Error("Failed to delete quiz details.");
 
       await CommentRepository.deleteQuizComments(quizId, { session });
 
-      await RatingRepository.deleteQuizRatings(quizId, {
-        session,
-      });
+      await RatingRepository.deleteQuizRatings(quizId, { session });
       await userRepository.addOrSubstractCreatedQuizzes(userId, -1, {
         session,
       });
@@ -183,7 +184,7 @@ class QuizService {
     limit: number,
     sortBy: string,
     order: number
-  ): Promise<IQuizWithQuestions[]> {
+  ) {
     const aggregationPipeline: any[] = [];
     const matchStage: any = {};
     if (filters.userId)
@@ -200,13 +201,12 @@ class QuizService {
       matchStage.updatedAt = { $gte: oneWeekAgo };
     }
     if (filters.status) matchStage.status = filters.status;
-
     aggregationPipeline.push(
       {
         $lookup: {
           from: "quizdetails",
-          localField: "_id",
-          foreignField: "quiz",
+          localField: "quizDetails",
+          foreignField: "_id",
           as: "details",
         },
       },
@@ -274,12 +274,16 @@ class QuizService {
     aggregationPipeline.push({ $unset: "details" });
     aggregationPipeline.push({ $sort: { [sortBy]: order } });
 
-    return await quizRepository.executeAggregation(aggregationPipeline);
+    const quizzes = await quizRepository.executeAggregation(
+      aggregationPipeline
+    );
+    return { quizzes, message: `${quizzes.length} has been found.` };
   }
 
-  async getQuizDetails(quizId: ObjectId): Promise<IQuizDetails> {
-    await ValidationService.validateQuiz(quizId);
-    return await quizDetailsRepository.getQuizDetails(quizId);
+  async getQuizWithDetails(quizId: ObjectId): Promise<IQuiz> {
+    const quiz = await ValidationService.validateQuiz(quizId);
+    await ValidationService.validateQuizDetails(quiz.quizDetails);
+    return await quizRepository.getQuizWithDetails(quizId);
   }
 
   async changeQuizStatus(

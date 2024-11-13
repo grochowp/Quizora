@@ -5,7 +5,7 @@ const {
   deleteQuiz,
   editQuiz,
   fetchQuizzes,
-  getQuizDetails,
+  getQuizWithDetails,
   changeQuizStatus,
 } = require("../controllers/quiz.controller");
 const { verifyToken } = require("../middlewares/authMiddleware");
@@ -14,7 +14,7 @@ const { verifyToken } = require("../middlewares/authMiddleware");
 router.post("/", verifyToken, createQuiz);
 router.delete("/:quizId", verifyToken, deleteQuiz);
 router.put("/:quizId", verifyToken, editQuiz);
-router.get("/:quizId", getQuizDetails);
+router.get("/:quizId", getQuizWithDetails);
 router.patch("/:quizId", verifyToken, changeQuizStatus);
 
 // Multiple Quizzes

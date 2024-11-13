@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose";
+import { IQuizDetails } from "./quizDetails.model";
 
 export interface IQuiz extends Document {
   _id: mongoose.ObjectId;
@@ -12,6 +13,7 @@ export interface IQuiz extends Document {
   points: number;
   difficulty: string;
   status: "draft" | "archived" | "published";
+  quizDetails: IQuizDetails | mongoose.ObjectId;
 }
 
 const quizSchema = new mongoose.Schema<IQuiz>({
@@ -59,6 +61,7 @@ const quizSchema = new mongoose.Schema<IQuiz>({
     default: "published",
     required: true,
   },
+  quizDetails: { type: mongoose.Types.ObjectId, ref: "QuizDetails" },
 });
 
 module.exports = mongoose.model("Quiz", quizSchema);

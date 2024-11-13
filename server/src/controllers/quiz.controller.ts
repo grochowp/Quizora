@@ -79,16 +79,16 @@ const fetchQuizzes = async (req: Request, res: Response) => {
       sortBy,
       order
     );
-    res.status(200).json(quizzes);
+    res.status(200).json({ quizzes, createdQuizzesMessage });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-const getQuizDetails = async (req: Request, res: Response) => {
+const getQuizWithDetails = async (req: Request, res: Response) => {
   const { quizId } = req.params;
   try {
-    const quizWithDetails = await QuizService.getQuizDetails(quizId);
+    const quizWithDetails = await QuizService.getQuizWithDetails(quizId);
     res.status(200).json(quizWithDetails);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -115,6 +115,6 @@ module.exports = {
   editQuiz,
   deleteQuiz,
   fetchQuizzes,
-  getQuizDetails,
+  getQuizWithDetails,
   changeQuizStatus,
 };

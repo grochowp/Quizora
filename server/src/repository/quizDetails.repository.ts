@@ -5,29 +5,28 @@ const QuizDetails = require("../models/quizDetails.model");
 
 class QuizDetailsRepository {
   async create(
-    quizId: ObjectId,
     questions: IQuestion[],
     options: { session: ClientSession }
   ): Promise<IQuizDetails> {
-    return await QuizDetails.create([{ quiz: quizId, questions }], options);
+    return await QuizDetails.create([{ questions }], options);
   }
 
   async deleteQuizDetails(
-    quizId: ObjectId,
+    quizDetailsId: ObjectId,
     options: { session: ClientSession }
   ): Promise<boolean> {
-    const result = await QuizDetails.deleteOne({ quiz: quizId }, options);
+    const result = await QuizDetails.deleteOne({ _id: quizDetailsId }, options);
     return result.deletedCount > 0;
   }
 
   async getQuizDetails(
-    quizId: ObjectId,
+    quizDetailsId: ObjectId,
     options?: { session: ClientSession }
   ): Promise<IQuizDetails> {
-    return await QuizDetails.findOne({ quiz: quizId }).session(
+    return await QuizDetails.findOne({ _id: quizDetailsId }).session(
       options?.session
     ); // return only QuizDetails
-    //return await QuizDetails.find({ quiz: quizId }).populate("quiz").lean(); // return Quiz with its details
+    //return await QuizDetails.find({ _id: quizDetailsId }).populate("quiz").lean(); // return Quiz with its details
   }
   async deleteQuizDetailsFromMultipleQuizzes(
     quizIds: ObjectId[],
@@ -37,12 +36,12 @@ class QuizDetailsRepository {
   }
 
   async editQuizDetails(
-    quizId: ObjectId,
+    quizDetailsId: ObjectId,
     questions: IQuizDetails["questions"],
     options: { session: ClientSession }
   ): Promise<IQuizDetails> {
     return await QuizDetails.findOneAndUpdate(
-      { quiz: quizId },
+      { _id: quizDetailsId },
       { $set: { questions } },
       { new: true, session: options.session, runValidators: true }
     );

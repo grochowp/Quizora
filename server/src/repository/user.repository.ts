@@ -7,9 +7,13 @@ const UserProfile = require("../models/userProfile.model");
 class UserRepository {
   async create(
     nickname: string,
+    userProfileId: ObjectId,
     options: { session: ClientSession }
   ): Promise<IUser> {
-    const newUser = await User.create([{ nickname }], options);
+    const newUser = await User.create(
+      [{ nickname, userProfile: userProfileId }],
+      options
+    );
     return newUser[0];
   }
 
@@ -117,6 +121,25 @@ class UserRepository {
 
   async deleteUser(userId: ObjectId, options: { session: ClientSession }) {
     await User.deleteOne({ _id: userId }, { session: options.session });
+  }
+
+  async findUserWithUserProfileById(
+    userId: ObjectId,
+    options?: { session: ClientSession }
+  ): Promise<IUser> {
+    const user = await User.findById(userId)
+      .populate("userProfile")
+      .session(options?.session)
+      .lean();
+    return user;
+  }
+
+  async editPrivateAccount(
+    userId: ObjectId,
+    privateAccount: boolean,
+    options: { session: ClientSession }
+  ) {
+    await User.findByIdAndUpdate(userId, { $set: { privateAccount } }, options);
   }
 }
 

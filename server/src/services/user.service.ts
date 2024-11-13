@@ -4,7 +4,6 @@ import UserRepository from "../repository/user.repository";
 import UserPrivateRepository from "../repository/userPrivate.repository";
 import UserProfileRepository from "../repository/userProfile.repository";
 import AchievementRepository from "../repository/achievement.repository";
-import { IUser } from "../models/user.model";
 import { withTransaction } from "../utils/transaction";
 import {
   EditProfileFilters,
@@ -33,10 +32,10 @@ class UserService {
     achievementIncreaseValue: number,
     session: ClientSession
   ): Promise<string | undefined> {
-    await ValidationService.validateUser(userId);
+    const user = await ValidationService.validateUser(userId);
 
     const userAchievement = await UserProfileRepository.addValueToAchievement(
-      userId,
+      user.userProfile,
       achievementName,
       achievementIncreaseValue,
       { session }
@@ -65,7 +64,7 @@ class UserService {
     if (achievementLevel !== userAchievement.level) {
       const updatedAchievementLevel =
         await UserProfileRepository.changeAchievementLevel(
-          userId,
+          user.userProfile,
           achievementName,
           { session }
         );
@@ -81,7 +80,7 @@ class UserService {
       );
 
       const existingTitle = await UserProfileRepository.verifyIfUserHaveTitle(
-        userId,
+        user.userProfile,
         currentLevel.title,
         { session }
       );
@@ -91,9 +90,13 @@ class UserService {
       }
 
       if (currentLevel && currentLevel.title) {
-        await UserProfileRepository.addTitle(userId, currentLevel.title, {
-          session,
-        });
+        await UserProfileRepository.addTitle(
+          user.userProfile,
+          currentLevel.title,
+          {
+            session,
+          }
+        );
         return `Title ${currentLevel.title} has been granted to your account.`;
       }
       return `You reached ${achievementLevel} level at ${achievementName} achievement.`;
@@ -143,7 +146,12 @@ class UserService {
         name: achievement.name,
         level: 1,
       }));
-      const user = await UserRepository.create(nickname, { session });
+      const userProfile = await UserProfileRepository.create(achievements, {
+        session,
+      });
+      const user = await UserRepository.create(nickname, userProfile._id, {
+        session,
+      });
 
       const userPrivate = await UserPrivateRepository.create(
         user._id,
@@ -153,26 +161,17 @@ class UserService {
         { session }
       );
 
-      const userProfile = await UserProfileRepository.create(
-        user._id,
-        achievements,
-        { session }
-      );
-
       if (!user || !userPrivate || !userProfile)
         throw new Error("Invalid user data");
 
-      const loggedUser = await UserProfileRepository.findUserProfileById(
+      const loggedUser = await UserRepository.findUserWithUserProfileById(
         userPrivate.userId,
-        {
-          session,
-        }
+        { session }
       );
       if (!user) throw new Error("User does not exist");
-      const userTokenData = loggedUser.user as IUser;
       return {
         ...loggedUser,
-        token: generateToken(userTokenData._id),
+        token: generateToken(loggedUser._id),
       };
     });
   }
@@ -187,20 +186,19 @@ class UserService {
 
     if (!isPasswordValid) throw new Error("Invalid login or password");
 
-    const user = await UserProfileRepository.findUserProfileById(
+    const user = await UserRepository.findUserWithUserProfileById(
       userPrivate.userId
     );
     if (!user) throw new Error("User does not exist");
-    const userTokenData = user.user as IUser;
     return {
       ...user,
-      token: generateToken(userTokenData._id),
+      token: generateToken(user._id),
     };
   }
 
   async deleteUser(userId: ObjectId, password: string) {
     return withTransaction(async (session) => {
-      await ValidationService.validateUser(userId, { session });
+      const user = await ValidationService.validateUser(userId, { session });
 
       const userPassword = await UserPrivateRepository.getOldPassword(userId, {
         session,
@@ -226,7 +224,9 @@ class UserService {
           { session }
         );
       }
-      await UserProfileRepository.deleteUserProfile(userId, { session });
+      await UserProfileRepository.deleteUserProfile(user.userProfile, {
+        session,
+      });
       await UserPrivateRepository.deleteUserPrivate(userId, { session });
       await UserRepository.deleteUser(userId, { session });
       return "User has been deleted succesfully.";
@@ -352,21 +352,33 @@ class UserService {
   }
 
   async editPreferences(userId: ObjectId, filters: PreferencesFilters) {
-    const updateFields: Partial<PreferencesFilters> = {};
-    await ValidationService.validateUser(userId);
-    const userProfile = await UserProfileRepository.findUserProfileById(userId);
+    return withTransaction(async (session) => {
+      const updateFields: Partial<PreferencesFilters> = {};
+      const user = await ValidationService.validateUser(userId);
+      const userProfile = await UserProfileRepository.findUserProfileById(
+        user.userProfile
+      );
 
-    (Object.keys(filters) as (keyof PreferencesFilters)[]).forEach((key) => {
-      const value = filters[key];
-      if (value !== undefined && value !== userProfile[key]) {
-        updateFields[key] = value as any;
-      }
+      (Object.keys(filters) as (keyof PreferencesFilters)[]).forEach((key) => {
+        const value = filters[key];
+        if (value !== undefined && value !== userProfile[key]) {
+          updateFields[key] = value as any;
+        }
+      });
+      if (Object.keys(updateFields).length > 0) {
+        if (filters.privateAccount)
+          await UserRepository.editPrivateAccount(
+            userId,
+            filters.privateAccount,
+            { session }
+          );
+        await UserProfileRepository.editPreferences(
+          user.userProfile,
+          updateFields
+        );
+        return "Preferences updated.";
+      } else throw new Error("No changes selected.");
     });
-
-    if (Object.keys(updateFields).length > 0) {
-      await UserProfileRepository.editPreferences(userId, updateFields);
-      return "Preferences updated.";
-    } else throw new Error("No changes selected.");
   }
 
   async addFinishedQuizData(
@@ -398,10 +410,10 @@ class UserService {
   }
 
   async changeDisplayedTitles(userId: ObjectId, titles: Array<string>) {
-    await ValidationService.validateUser(userId);
+    const oldUser = await ValidationService.validateUser(userId);
     for (const title of titles) {
       const availableTitle = await UserProfileRepository.verifyIfUserHaveTitle(
-        userId,
+        oldUser.userProfile,
         title
       );
       if (!availableTitle) throw new Error(`Title ${title} is not avaiable.`);

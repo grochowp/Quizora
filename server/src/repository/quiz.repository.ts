@@ -92,6 +92,10 @@ class QuizRepository {
       { new: true, session: options.session, runValidators: true }
     );
   }
+
+  async getQuizWithDetails(quizId: ObjectId): Promise<IQuiz> {
+    return Quiz.findById(quizId).populate("quizDetails");
+  }
 }
 
 export default new QuizRepository();

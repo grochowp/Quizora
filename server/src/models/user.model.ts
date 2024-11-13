@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose";
+import { IUserProfile } from "./userProfile.model";
 
 export interface IUser extends Document {
   _id: mongoose.ObjectId;
@@ -11,6 +12,7 @@ export interface IUser extends Document {
   finishedQuizzes: number;
   likedQuizzes: number;
   privateAccount: boolean;
+  userProfile: IUserProfile;
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -27,6 +29,7 @@ const userSchema = new mongoose.Schema<IUser>({
   finishedQuizzes: { type: Number, default: 0 }, // required ?
   likedQuizzes: { type: Number, default: 0 }, // required ?
   privateAccount: { type: Boolean, default: false },
+  userProfile: { type: mongoose.Types.ObjectId, ref: "UserProfile" },
 });
 
 module.exports = mongoose.model<IUser>("User", userSchema);
