@@ -1,7 +1,5 @@
 import { ClientSession, ObjectId } from "mongoose";
-// import { IUserProfile } from "../models/userProfile.model";
 import { IAchievement } from "../models/achievement.model";
-import { IUser } from "../models/user.model";
 import { PreferencesFilters } from "../types/interfaces";
 import { IUserProfile } from "../models/userProfile.model";
 
@@ -116,10 +114,13 @@ class UserProfileRepository {
   }
 
   async deleteUserProfile(
-    userId: ObjectId,
+    userProfileId: ObjectId,
     options: { session: ClientSession }
   ) {
-    await UserProfile.deleteOne({ userId }, { session: options.session });
+    await UserProfile.deleteOne(
+      { _id: userProfileId },
+      { session: options.session }
+    );
   }
 }
 

@@ -8,7 +8,8 @@ class QuizDetailsRepository {
     questions: IQuestion[],
     options: { session: ClientSession }
   ): Promise<IQuizDetails> {
-    return await QuizDetails.create([{ questions }], options);
+    const quizDetails = await QuizDetails.create([{ questions }], options);
+    return quizDetails[0];
   }
 
   async deleteQuizDetails(
@@ -25,14 +26,13 @@ class QuizDetailsRepository {
   ): Promise<IQuizDetails> {
     return await QuizDetails.findOne({ _id: quizDetailsId }).session(
       options?.session
-    ); // return only QuizDetails
-    //return await QuizDetails.find({ _id: quizDetailsId }).populate("quiz").lean(); // return Quiz with its details
+    );
   }
   async deleteQuizDetailsFromMultipleQuizzes(
     quizIds: ObjectId[],
     options: { session: ClientSession }
   ) {
-    await QuizDetails.deleteMany({ quiz: { $in: quizIds } }, options);
+    await QuizDetails.deleteMany({ _id: { $in: quizIds } }, options);
   }
 
   async editQuizDetails(

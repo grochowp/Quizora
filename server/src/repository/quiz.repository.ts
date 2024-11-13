@@ -71,7 +71,9 @@ class QuizRepository {
     userId: ObjectId,
     options: { session: ClientSession }
   ) {
-    return await Quiz.find({ createdBy: userId }, null, options).select("_id");
+    return await Quiz.find({ createdBy: userId }, null, options).select(
+      "_id quizDetails"
+    );
   }
 
   async deleteUserQuizzes(

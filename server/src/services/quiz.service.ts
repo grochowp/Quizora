@@ -104,6 +104,7 @@ class QuizService {
       const quizBeforeEdit = await ValidationService.validateQuiz(quizId, {
         session,
       });
+      console.log(quizBeforeEdit);
       const quizDetaileBeforeEdit = await ValidationService.validateQuizDetails(
         quizBeforeEdit.quizDetails,
         { session }

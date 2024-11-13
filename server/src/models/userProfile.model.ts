@@ -6,7 +6,7 @@ export interface IUserProfile extends Document {
   theme: string;
   checkpoints: boolean;
   lessAnimations: boolean;
-  privateAccount: boolean; // might be deleted later - same record is in "User", because it`s important to have access to this not only on logged account
+  privateAccount: boolean;
   titles: Array<string>;
   achievements: [
     {

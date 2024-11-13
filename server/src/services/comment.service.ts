@@ -45,7 +45,9 @@ class CommentService {
   }
 
   async deleteComment(userId: ObjectId, commentId: ObjectId) {
+    console.log(userId, commentId);
     const comment = await CommentRepository.findCommentById(commentId);
+    console.log(comment);
     ValidationService.isAuthorized(
       userId,
       comment.userId,

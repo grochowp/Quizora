@@ -208,10 +208,16 @@ class UserService {
 
       await commentRepository.deleteUserComments(userId, { session });
       await ratingRepository.deleteUserRatings(userId, { session });
-      const quizzesIds = await quizRepository.findUserQuizzesIds(userId, {
+      const quizzesToDelete = await quizRepository.findUserQuizzesIds(userId, {
         session,
       });
-      if (quizzesIds) {
+      const quizzesIds = quizzesToDelete.map((quiz: any) => quiz._id);
+      const quizDetailsIds = quizzesToDelete.map(
+        (quiz: any) => quiz.quizDetails
+      );
+      console.log(quizzesIds, quizDetailsIds);
+
+      if (quizzesIds && quizDetailsIds) {
         await quizRepository.deleteUserQuizzes(quizzesIds, { session });
         await commentRepository.deleteCommentsFromMultipleQuizzes(quizzesIds, {
           session,
@@ -220,7 +226,7 @@ class UserService {
           session,
         });
         await quizDetailsRepository.deleteQuizDetailsFromMultipleQuizzes(
-          quizzesIds,
+          quizDetailsIds,
           { session }
         );
       }

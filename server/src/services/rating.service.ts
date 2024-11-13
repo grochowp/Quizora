@@ -100,7 +100,7 @@ class RatingService {
     });
   }
 
-  // Maybe its useless, depends on approach on finishing Quiz, but for now - its here and possible to use
+  // SELF-NOTE Maybe its useless, depends on approach on finishing Quiz, but for now - its here and possible to use
   async checkIfRated(userId: ObjectId, quizId: ObjectId): Promise<number> {
     await ValidationService.validateUser(userId);
     await ValidationService.validateQuiz(quizId);
