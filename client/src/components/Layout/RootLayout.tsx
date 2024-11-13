@@ -1,23 +1,30 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "../Navigation/Navbar";
 import { SearchBar } from "../Navigation/SearchBar";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Spinner from "../Spinner/Spinner";
 
 const RootLayout = () => {
+  const [theme, setTheme] = useState("default");
+
   return (
-    <div className="flex h-screen w-screen flex-col bg-gradient-to-br from-[#181818] to-[#0C1622] md:flex-row">
+    <main
+      className={`flex h-screen w-screen flex-col bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-gradient-secondary)] md:flex-row theme-${theme}`}
+    >
       <Navbar />
 
       <div className="flex flex-grow flex-col">
         <SearchBar />
-        <main className="flex-grow p-4">
+        <section className="flex-grow p-4">
+          <button onClick={() => setTheme("default")}>Default</button>
+          <button onClick={() => setTheme("light")}>Light</button>
+          <button onClick={() => setTheme("blue")}>Blue</button>
           <Suspense fallback={<Spinner />}>
             <Outlet />
           </Suspense>
-        </main>
+        </section>
       </div>
-    </div>
+    </main>
   );
 };
 

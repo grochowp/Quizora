@@ -1,5 +1,5 @@
 function Quizzes() {
-  return <div>aaaaa</div>;
+  return <div></div>;
 }
 
 export default Quizzes;
