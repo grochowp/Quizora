@@ -33,26 +33,28 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="mr-16 hidden w-56 flex-col gap-44 p-4 md:flex">
-      <RxHamburgerMenu
-        className="text-baseText relative left-2 top-2 h-10 w-10 cursor-pointer"
-        onClick={() => setShowLocations(!showLocations)}
-      />
+    <nav className="mr-5 hidden min-w-56 p-4 md:flex">
+      <div className="fixed flex flex-col gap-28">
+        <RxHamburgerMenu
+          className="relative left-[6px] top-2 h-10 w-10 cursor-pointer text-baseText"
+          onClick={() => setShowLocations(!showLocations)}
+        />
 
-      <ul className="flex flex-col gap-3">
-        {navItems.map((item: INavItems) => (
-          <li
-            key={item.path}
-            className={` ${showLocations || "list-item-short"} ${currentLocation === item.path ? "list-item-selected list-item" : "list-item"}`}
-            onClick={() => changeSubPage(item.path)}
-          >
-            {item.icon}{" "}
-            {showLocations && (
-              <span className="text-textBase">{item.name}</span>
-            )}
-          </li>
-        ))}
-      </ul>
+        <ul className="flex flex-col gap-3">
+          {navItems.map((item: INavItems) => (
+            <li
+              key={item.path}
+              className={` ${showLocations || "list-item-short"} ${currentLocation === item.path ? "list-item-selected list-item" : "list-item"}`}
+              onClick={() => changeSubPage(item.path)}
+            >
+              {item.icon}{" "}
+              {showLocations && (
+                <span className="text-textBase">{item.name}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   );
 };

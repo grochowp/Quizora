@@ -5,23 +5,24 @@ import { Suspense, useState } from "react";
 import Spinner from "../Spinner/Spinner";
 
 const RootLayout = () => {
-  const [theme, setTheme] = useState("default");
+  const [theme, setTheme] = useState("blue");
 
   return (
     <main
-      className={`flex h-screen w-screen flex-col bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-gradient-secondary)] md:flex-row theme-${theme}`}
+      className={`flex min-h-screen flex-col bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-gradient-secondary)] md:flex-row theme-${theme}`}
     >
       <Navbar />
 
-      <div className="flex flex-grow flex-col">
+      <div className="ml-2 flex flex-grow flex-col">
         <SearchBar />
-        <section className="flex-grow p-4">
-          <button onClick={() => setTheme("default")}>Default</button>
-          <button onClick={() => setTheme("light")}>Light</button>
-          <button onClick={() => setTheme("blue")}>Blue</button>
-          <Suspense fallback={<Spinner />}>
-            <Outlet />
-          </Suspense>
+        <section className="flex max-w-[85vw] flex-1">
+          <div className="flex h-full w-full max-w-[85vw] justify-center">
+            <div className="flex h-[max-content] w-full max-w-[1600px] flex-wrap justify-center gap-10">
+              <Suspense fallback={<Spinner />}>
+                <Outlet />
+              </Suspense>
+            </div>
+          </div>
         </section>
       </div>
     </main>
