@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { lazy } from "react";
 import { profileLoader } from "./loaders/profileLoader";
+import { homeLoader } from "./loaders/homeLoader";
 
 const Error = lazy(() => import("./views/Error/Error"));
 const Home = lazy(() => import("./views/Home/Home"));
@@ -16,7 +17,7 @@ const App = () => {
       element: <RootLayout />,
       errorElement: <Error />,
       children: [
-        { index: true, element: <Home /> },
+        { index: true, element: <Home />, loader: homeLoader },
         {
           path: "profile/:userId",
           element: <Profile />,

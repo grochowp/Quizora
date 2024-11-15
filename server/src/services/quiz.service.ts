@@ -202,6 +202,7 @@ class QuizService {
       matchStage.updatedAt = { $gte: oneWeekAgo };
     }
     if (filters.status) matchStage.status = filters.status;
+
     aggregationPipeline.push(
       {
         $lookup: {
@@ -222,6 +223,28 @@ class QuizService {
           },
         },
       }
+    );
+
+    aggregationPipeline.push(
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $addFields: {
+          user: {
+            nickname: { $arrayElemAt: ["$userDetails.nickname", 0] },
+            profilePicture: {
+              $arrayElemAt: ["$userDetails.profilePicture", 0],
+            },
+          },
+        },
+      },
+      { $unset: "userDetails" }
     );
 
     if (filters.questionsCount !== undefined) {

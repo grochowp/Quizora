@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -8,7 +8,7 @@
   :root {
     --color-primary: #181818;
     --color-gradient-secondary: #0c1622;
-    --color-secondary: #232323;
+    --color-secondary: #232323bf;
     --color-text-base: #d9d9d9;
     --color-extras: #fca311;
     --color-extras-secondary: #292929;
@@ -19,7 +19,7 @@
 .theme-blue {
   --color-primary: #0a092d;
   --color-gradient-secondary: #14123f;
-  --color-secondary: #2e3856;
+  --color-secondary: #2e3856bf;
   --color-text-base: #d9d9d9;
   --color-extras: #00adb5;
   /* --color-extras-secondary: #292929;
@@ -29,7 +29,7 @@
 .theme-light {
   --color-primary: #ede0d4;
   --color-gradient-secondary: #8a8a8f;
-  --color-secondary: #e6ccb2;
+  --color-secondary: #e6ccb2bf;
   --color-text-base: #212121;
   --color-extras: #7f5539;
   /* --color-extras-secondary: #292929;
@@ -52,7 +52,7 @@ body,
 }
 
 .list-item {
-  @apply flex h-10 w-48 cursor-pointer items-center gap-1 space-x-2 rounded-lg pl-3 font-poppins transition-shadow duration-1000;
+  @apply flex h-10 w-48 cursor-pointer items-center gap-1 space-x-2 rounded-lg pl-3 font-poppins transition-all duration-1000;
 }
 
 .list-item-short {
@@ -60,10 +60,14 @@ body,
 }
 
 .list-item:hover {
-  @apply shadow-custom-inner;
+  @apply shadow-custom-inner bg-extras;
 }
 
 .list-item-selected {
+  @apply shadow-custom-inner bg-extras;
+}
+
+.list-item-selected:hover {
   @apply shadow-custom-inner bg-extras;
 }
 

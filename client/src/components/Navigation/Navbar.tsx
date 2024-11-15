@@ -28,7 +28,7 @@ export const Navbar = () => {
   }, [location]);
 
   const changeSubPage = (query: string) => {
-    if (!query) navigate("/home");
+    if (!query) navigate("/");
     navigate(`/${query}`);
   };
 
@@ -44,10 +44,10 @@ export const Navbar = () => {
           {navItems.map((item: INavItems) => (
             <li
               key={item.path}
-              className={` ${showLocations || "list-item-short"} ${currentLocation === item.path ? "list-item-selected list-item" : "list-item"}`}
+              className={`${showLocations || "list-item-short"} ${currentLocation === item.path ? "list-item-selected list-item" : "list-item"}`}
               onClick={() => changeSubPage(item.path)}
             >
-              {item.icon}{" "}
+              {item.icon}
               {showLocations && (
                 <span className="text-textBase">{item.name}</span>
               )}

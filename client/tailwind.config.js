@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         poppins: ["Poppins", "serif"],
+        roboto: ["Roboto", "sans-serif"],
       },
       colors: {
         primary: "var(--color-primary)",

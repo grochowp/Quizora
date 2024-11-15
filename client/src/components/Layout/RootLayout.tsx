@@ -5,7 +5,7 @@ import { Suspense, useState } from "react";
 import Spinner from "../Spinner/Spinner";
 
 const RootLayout = () => {
-  const [theme, setTheme] = useState("blue");
+  const [theme, setTheme] = useState("default");
 
   return (
     <main
