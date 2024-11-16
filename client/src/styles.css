@@ -43,6 +43,9 @@ body,
   margin: 0;
   color: #d9d9d9;
   max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
 }
 
 @layer utilities {
@@ -52,7 +55,7 @@ body,
 }
 
 .list-item {
-  @apply flex h-10 w-48 cursor-pointer items-center gap-1 space-x-2 rounded-lg pl-3 font-poppins transition-all duration-1000;
+  @apply flex h-10 w-48 cursor-pointer items-center gap-1 space-x-2 rounded-lg pl-3 font-poppins transition-colors duration-1000;
 }
 
 .list-item-short {

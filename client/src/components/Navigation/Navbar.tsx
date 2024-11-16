@@ -33,7 +33,11 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="mr-5 hidden min-w-56 p-4 md:flex">
+    <nav
+      className={`mr-5 hidden p-4 md:flex ${
+        showLocations ? "w-[200px]" : "w-[100px]"
+      } transition-width duration-300`}
+    >
       <div className="fixed flex flex-col gap-28">
         <RxHamburgerMenu
           className="relative left-[6px] top-2 h-10 w-10 cursor-pointer text-baseText"

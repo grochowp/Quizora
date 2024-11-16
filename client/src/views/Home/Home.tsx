@@ -1,60 +1,60 @@
-import { Quiz } from "../../components/Quiz/Quiz";
-import { useLoaderData } from "react-router-dom";
 import { IQuiz } from "../../interfaces";
 
-interface HomeLoaderData {
-  popular: IQuiz[];
-  recently: IQuiz[];
-  difficulty: IQuiz[];
-}
+import { difficultyQuizzesLoader, homeLoader } from "../../loaders/homeLoader";
+import { QuizSection } from "./components/QuizSection";
+import { useEffect, useState } from "react";
 
 const Home = () => {
-  const { popular, recently, difficulty } = useLoaderData() as HomeLoaderData;
-  return (
-    <>
-      <div className="flex h-full max-w-[1000px] flex-col">
-        <article className="mb-8">
-          <h1 className="mb-3 pl-2 font-poppins text-xl tracking-widest text-baseText">
-            Popularne
-          </h1>
+  const [quizDifficulty, setQuizDifficulty] = useState<string>("easy");
+  const [popularQuizzes, setPopularQuizzes] = useState<Array<IQuiz>>([]);
+  const [recentlyQuizzes, setRecentlyQuizzes] = useState<Array<IQuiz>>([]);
+  const [difficultyQuizzes, setDifficultyQuizzes] = useState<Array<IQuiz>>([]);
 
-          <div className="flex flex-wrap gap-4">
-            {popular.map((quiz: IQuiz) => (
-              <>
-                <Quiz quiz={quiz} />
-                <Quiz quiz={quiz} />
-                <Quiz quiz={quiz} />
-              </>
-            ))}
-          </div>
-        </article>
-        <article className="mb-8">
-          <h1 className="mb-3 pl-2 font-poppins text-xl tracking-widest text-baseText">
-            Niedawno dodane
-          </h1>
-          <div className="flex flex-wrap gap-4">
-            {recently.map((quiz: IQuiz) => (
-              <Quiz quiz={quiz} />
-            ))}
-          </div>
-        </article>
-        <article className="mb-8">
-          <h1 className="mb-3 flex gap-8 pl-2 font-poppins text-xl tracking-widest text-baseText">
-            <button>Łatwe</button>
-            <button>Średnie</button>
-            <button>Trudne</button>
-          </h1>
-          <div className="flex flex-wrap gap-4">
-            {difficulty.map((quiz: IQuiz) => (
-              <Quiz quiz={quiz} />
-            ))}
-          </div>
-        </article>
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { popularQuizzes, recentlyQuizzes, difficultyQuizzes } =
+          await homeLoader();
+        setPopularQuizzes(popularQuizzes);
+        setRecentlyQuizzes(recentlyQuizzes);
+        setDifficultyQuizzes(difficultyQuizzes);
+      } catch (error) {
+        console.error("Error fetching quizzes", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleDifficultyChange = async (difficulty: string) => {
+    setQuizDifficulty(difficulty);
+    const quizzes = await difficultyQuizzesLoader(difficulty);
+    setDifficultyQuizzes(quizzes);
+  };
+
+  return (
+    <div className="flex w-full flex-col justify-center gap-8 2xl:flex-row">
+      <div className="flex max-w-[300px] flex-col sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[1000px]">
+        <QuizSection
+          title="Popularne"
+          quizzes={popularQuizzes}
+          maxQuizzes={6}
+        />
+        <QuizSection title="Ostatnio Dodane" quizzes={recentlyQuizzes} />
+        <QuizSection
+          quizzes={difficultyQuizzes}
+          difficultyFilter={quizDifficulty}
+          handleDifficultyChange={handleDifficultyChange}
+        />
       </div>
-      <div className="flex h-72 w-96 max-w-[30%] rounded-xl border-l-[6px] border-extras bg-secondary opacity-75">
-        a
+      <div className="flex h-[300px] w-full max-w-[320px] flex-col rounded-xl border-l-4 border-extras bg-secondary shadow-md lg:max-w-[600px] xl:max-w-[1000px] 2xl:w-[300px]">
+        <div className="p-4">
+          <p className="text-center text-white">
+            Tutaj może być dodatkowa treść lub widget.
+          </p>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
