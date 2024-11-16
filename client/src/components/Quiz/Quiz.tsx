@@ -1,7 +1,7 @@
 import { BiSolidLike } from "react-icons/bi";
 import { IQuiz } from "../../interfaces";
 
-export const Quiz = ({ quiz }: { quiz: IQuiz }) => {
+const Quiz = ({ quiz }: { quiz: IQuiz }) => {
   return (
     <div
       className={`duration-250 h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} bg-secondary text-baseText transition-all hover:scale-105`}
@@ -39,6 +39,7 @@ export const Quiz = ({ quiz }: { quiz: IQuiz }) => {
   );
 };
 
+export default Quiz;
 /**
  * import { BiSolidLike } from "react-icons/bi";
 import { IQuiz } from "../../interfaces";

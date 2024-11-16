@@ -38,25 +38,30 @@
 
 import { GrPowerReset } from "react-icons/gr";
 import { IQuiz } from "../../../interfaces";
-import { Quiz } from "../../../components/Quiz/Quiz";
-import { useCallback, useEffect, useState } from "react";
+import { lazy, useCallback, useEffect, useState } from "react";
+import Spinner from "../../../components/Spinner/Spinner";
+import { useQuiz } from "../../../hooks/useQuiz";
+
+const Quiz = lazy(() => import("../../../components/Quiz/Quiz"));
 
 interface IQuizSectionProps {
   title?: string;
-  quizzes: IQuiz[];
+  query: string;
   difficultyFilter?: string;
   handleDifficultyChange?: (difficulty: string) => void;
   maxQuizzes?: number;
 }
 
-export const QuizSection: React.FC<IQuizSectionProps> = ({
+const QuizSection: React.FC<IQuizSectionProps> = ({
   title,
-  quizzes,
+  query,
   difficultyFilter,
   handleDifficultyChange,
   maxQuizzes = 3,
 }) => {
   const [randomQuizzes, setRandomQuizzes] = useState<IQuiz[]>([]);
+  const { quizzes, isLoading, error } = useQuiz(query);
+
   const shuffleQuizzes = useCallback(() => {
     const shuffledQuizzes = [...quizzes];
 
@@ -80,7 +85,7 @@ export const QuizSection: React.FC<IQuizSectionProps> = ({
     <article className="mb-4">
       <div className="flex items-center justify-between">
         {title && (
-          <h1 className="pl-2 font-poppins tracking-widest text-baseText sm:text-xl">
+          <h1 className="pl-2 font-poppins tracking-widest text-baseText md:text-xl">
             {title}
           </h1>
         )}
@@ -90,8 +95,9 @@ export const QuizSection: React.FC<IQuizSectionProps> = ({
               <h1
                 key={difficulty}
                 className={`${
-                  difficultyFilter !== difficulty && "opacity-50"
-                } cursor-pointer pl-2 font-poppins tracking-widest text-baseText sm:text-xl`}
+                  difficultyFilter !== difficulty &&
+                  "relative top-[2px] text-[16px] opacity-50"
+                } cursor-pointer pl-2 font-poppins text-xl tracking-widest text-baseText`}
                 onClick={() => handleDifficultyChange(difficulty)}
               >
                 {difficulty === "easy"
@@ -104,16 +110,31 @@ export const QuizSection: React.FC<IQuizSectionProps> = ({
           </div>
         )}
         <GrPowerReset
-          className="m-4 mr-4 h-4 cursor-pointer sm:h-6 sm:w-6 xl:mr-4"
+          className="m-4 mr-4 h-5 cursor-pointer md:h-6 md:w-6 xl:mr-4"
           onClick={shuffleQuizzes}
         />
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        {randomQuizzes.map((quiz: IQuiz) => (
-          <Quiz key={quiz._id} quiz={quiz} />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="flex flex-wrap gap-3">
+          {Array.from({ length: maxQuizzes }, (_, index) => (
+            <div
+              key={index}
+              className="h-[132px] w-[300px] sm:h-[148px] sm:w-80"
+            >
+              <Spinner />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-3">
+          {randomQuizzes.map((quiz: IQuiz) => (
+            <Quiz key={quiz._id} quiz={quiz} />
+          ))}
+        </div>
+      )}
     </article>
   );
 };
+
+export default QuizSection;

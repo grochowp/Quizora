@@ -23,11 +23,11 @@ const RootLayout = () => {
         </div>
       </main>
       <img
-        src="public/assets/book-left.png"
+        src="/assets/book-left.png"
         className="fixed left-1/2 top-1/2 translate-x-[-850px] translate-y-[200px]"
       />
       <img
-        src="public/assets/book-right.png"
+        src="/assets/book-right.png"
         className="fixed left-1/2 top-1/2 translate-x-[500px] translate-y-[200px]"
       />
     </>
