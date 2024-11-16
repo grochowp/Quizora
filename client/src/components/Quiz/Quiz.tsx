@@ -1,9 +1,16 @@
 import { BiSolidLike } from "react-icons/bi";
 import { IQuiz } from "../../interfaces";
+import { motion } from "framer-motion";
+
+const itemVariants = {
+  hidden: { y: 0, opacity: 0 },
+  visible: { y: 0, opacity: 1 },
+};
 
 const Quiz = ({ quiz }: { quiz: IQuiz }) => {
   return (
-    <div
+    <motion.div
+      variants={itemVariants}
       className={`duration-250 h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} bg-secondary text-baseText transition-all hover:scale-105`}
     >
       <div className="m-2 mx-3 mb-2 flex justify-between sm:m-3">
@@ -35,7 +42,7 @@ const Quiz = ({ quiz }: { quiz: IQuiz }) => {
           <BiSolidLike className="relative bottom-[1px] text-green-500" />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

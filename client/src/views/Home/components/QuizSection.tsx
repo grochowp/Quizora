@@ -3,6 +3,19 @@ import { useMemo, useState } from "react";
 import Spinner from "../../../components/Spinner/Spinner";
 import { useQuiz } from "../../../hooks/useQuiz";
 import Quiz from "../../../components/Quiz/Quiz";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 1, scale: 0 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.2,
+    },
+  },
+};
 
 interface IQuizSectionProps {
   title?: string;
@@ -77,11 +90,16 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
           ))}
         </div>
       ) : (
-        <div className="flex flex-wrap gap-3">
-          {quizzes.map((quiz) => (
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-wrap gap-3"
+        >
+          {quizzes.slice(0, maxQuizzes).map((quiz) => (
             <Quiz key={quiz._id} quiz={quiz} />
           ))}
-        </div>
+        </motion.div>
       )}
     </article>
   );
