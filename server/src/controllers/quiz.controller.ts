@@ -68,6 +68,7 @@ const fetchQuizzes = async (req: Request, res: Response) => {
   if (req.query.status) filters.status = req.query.status as string;
   if (req.query.recently) filters.recently = req.query.recently === "true";
   if (req.query.liked) filters.liked = req.query.liked === "true";
+  if (req.query.shuffle) filters.shuffle = req.query.shuffle === "true";
   if (req.query.questionsCount)
     filters.questionsCount = +req.query.questionsCount;
 

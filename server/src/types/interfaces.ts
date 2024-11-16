@@ -18,6 +18,7 @@ export interface QuizFilters {
   recently?: boolean;
   liked?: boolean;
   status?: string;
+  shuffle?: boolean;
 }
 
 export interface EditProfileFilters {

@@ -15,7 +15,7 @@ const RootLayout = () => {
         <Navbar />
         <div className="ml-0 flex flex-grow flex-col items-center justify-center">
           <SearchBar />
-          <section className="flex max-w-[1600px] flex-1">
+          <section className="z-10 flex max-w-[1600px] flex-1">
             <Suspense fallback={<Spinner />}>
               <Outlet />
             </Suspense>
@@ -24,11 +24,11 @@ const RootLayout = () => {
       </main>
       <img
         src="/assets/book-left.png"
-        className="fixed left-1/2 top-1/2 translate-x-[-850px] translate-y-[200px]"
+        className="fixed left-1/2 top-1/2 z-0 translate-x-[-850px] translate-y-[200px]"
       />
       <img
         src="/assets/book-right.png"
-        className="fixed left-1/2 top-1/2 translate-x-[500px] translate-y-[200px]"
+        className="fixed left-1/2 top-1/2 z-0 translate-x-[500px] translate-y-[200px]"
       />
     </>
   );

@@ -28,6 +28,13 @@ const calculatePoints = (time: number, difficulty: string, length: number) => {
   return points;
 };
 
+const shuffleQuizzes = (quizzes: any[]): void => {
+  for (let i = quizzes.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [quizzes[i], quizzes[j]] = [quizzes[j], quizzes[i]];
+  }
+};
+
 class QuizService {
   async createQuiz(
     userId: ObjectId,
@@ -301,6 +308,9 @@ class QuizService {
     const quizzes = await quizRepository.executeAggregation(
       aggregationPipeline
     );
+
+    if (filters.shuffle) shuffleQuizzes(quizzes);
+
     return { quizzes, message: `${quizzes.length} has been found.` };
   }
 
