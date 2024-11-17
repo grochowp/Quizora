@@ -10,6 +10,7 @@ export default {
       colors: {
         primary: "var(--color-primary)",
         secondary: "var(--color-secondary)",
+        secondaryNoAlpha: "var(--color-secondary-no-alpha)",
         baseText: "var(--color-text-base)",
         extras: "var(--color-extras)",
         extrasSecondary: "var(--color-extras-secondary)",

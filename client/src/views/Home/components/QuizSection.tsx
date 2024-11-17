@@ -59,8 +59,8 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
                 key={difficulty}
                 className={`${
                   difficultyFilter !== difficulty &&
-                  "relative top-[2px] text-[16px] opacity-50"
-                } cursor-pointer pl-2 font-poppins text-xl tracking-widest text-baseText`}
+                  "relative top-[2px] text-[14px] opacity-50 md:text-[14px]"
+                } cursor-pointer pl-2 font-poppins tracking-widest text-baseText md:text-xl`}
                 onClick={() => handleDifficultyChange(difficulty)}
               >
                 {difficulty === "easy"

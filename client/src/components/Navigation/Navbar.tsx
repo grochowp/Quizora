@@ -4,17 +4,20 @@ import { GoTrophy } from "react-icons/go";
 import { FaRegNewspaper } from "react-icons/fa6";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { LuUser2 } from "react-icons/lu";
 
 interface INavItems {
   name: string;
   icon: React.ReactNode;
   path: string;
+  border?: boolean;
 }
 
 const navItems: INavItems[] = [
   { name: "Strona główna", icon: <GrHome />, path: "" },
   { name: "Ranking", icon: <GoTrophy />, path: "ranking" },
-  { name: "Quizy", icon: <FaRegNewspaper />, path: "quizzes" },
+  { name: "Quizy", icon: <FaRegNewspaper />, path: "quizzes", border: true },
+  { name: "Logowanie", icon: <LuUser2 />, path: "login" },
 ];
 
 export const Navbar = () => {
@@ -34,7 +37,7 @@ export const Navbar = () => {
 
   return (
     <nav
-      className={`mr-5 hidden p-4 md:flex ${
+      className={`mr-5 hidden pl-4 pt-4 md:flex ${
         showLocations ? "w-[200px]" : "w-[100px]"
       } transition-width duration-300`}
     >
@@ -48,7 +51,7 @@ export const Navbar = () => {
           {navItems.map((item: INavItems) => (
             <li
               key={item.path}
-              className={`${showLocations || "list-item-short"} ${currentLocation === item.path ? "list-item-selected list-item" : "list-item"}`}
+              className={`${item.border && "border-bottom mb-1"} ${showLocations || "max-w-12"} ${currentLocation === item.path ? "list-item-selected" : ""} relative list-item`}
               onClick={() => changeSubPage(item.path)}
             >
               {item.icon}

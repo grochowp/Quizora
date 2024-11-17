@@ -7,6 +7,7 @@ const RootLayout = lazy(() => import("./components/Layout/RootLayout"));
 const Profile = lazy(() => import("./views/Profile/Profile"));
 const Quizzes = lazy(() => import("./views/Quizzes/Quizzes"));
 const Ranking = lazy(() => import("./views/Ranking/Ranking"));
+const LoginPage = lazy(() => import("./views/Login/LoginPage"));
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="profile/:userId" element={<Profile />} />
           <Route path="quizzes" element={<Quizzes />} />
           <Route path="ranking" element={<Ranking />} />
+          <Route path="login" element={<LoginPage />} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
