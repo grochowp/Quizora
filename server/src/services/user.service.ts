@@ -43,7 +43,7 @@ class UserService {
 
     if (!userAchievement.value)
       throw new Error(
-        `Failed to fetch your ${achievementName} achievement progress.`
+        `Próba pobrania szczegółów postępu osiągnięcia "${achievementName}" zakończona niepowodzeniem.`
       );
 
     const achievement = await AchievementRepository.getSingleAchievement(
@@ -51,7 +51,9 @@ class UserService {
       { session }
     );
     if (!achievement)
-      throw new Error(`Failed to fetch your ${achievementName} achievement.`);
+      throw new Error(
+        `Próba pobrania informacji o osiągnięciu "${achievementName}" zakończona niepowodzeniem.`
+      );
 
     let achievementLevel;
 
@@ -71,7 +73,7 @@ class UserService {
 
       if (!updatedAchievementLevel) {
         throw new Error(
-          `Failed to change your ${achievementName} achievement level.`
+          `Niepowodzenie w zaktualizowaniu postępów osiągnięcia "${achievementName}".`
         );
       }
 
@@ -86,7 +88,7 @@ class UserService {
       );
 
       if (existingTitle) {
-        return `Title ${currentLevel.title} has been already at your account.`;
+        return `Posiadasz już tytuł "${currentLevel.title}".`;
       }
 
       if (currentLevel && currentLevel.title) {
@@ -97,11 +99,11 @@ class UserService {
             session,
           }
         );
-        return `Title ${currentLevel.title} has been granted to your account.`;
+        return `Tytuł "${currentLevel.title}" został przyznany do Twojego konta.`;
       }
-      return `You reached ${achievementLevel} level at ${achievementName} achievement.`;
+      return `Osiągnąłeś ${achievementLevel} poziom w osiągnieciu "${achievementName}".`;
     }
-    return `${achievementName} achievement progress granted.`;
+    return `Postęp w osiągnieciu "${achievementName}" został przyznany`;
   }
 
   async registerUser(
@@ -115,25 +117,26 @@ class UserService {
         session,
       });
       if (userExistLogin)
-        throw new Error("User with this login already exists.");
+        throw new Error("Użytownik z tym loginem juz istnieje.");
       const userExistEmail = await UserPrivateRepository.findByEmail(email, {
         session,
       });
       if (userExistEmail)
-        throw new Error("User with this email already exists.");
+        throw new Error("Użytownik z tym emailem juz istnieje.");
       const userExistNickname = await UserRepository.findByNickname(nickname, {
         session,
       });
       if (userExistNickname)
-        throw new Error("User with this nickname already exists.");
+        throw new Error("Użytownik o tej nazwie juz istnieje.");
+
+      if (nickname.length < 5)
+        throw new Error("Pseudonim musi zawierać minimum 5 znaków.");
 
       if (password.length < 8)
-        throw new Error("Password must be at least 8 characters long.");
+        throw new Error("Hasło musi zawierać minimum 8 znaków.");
 
       if (!passwordRegex.test(password))
-        throw new Error(
-          "Password must be at least 8 characters long and include at least one letter and one digit."
-        );
+        throw new Error("Hasło musi zawierać minimum jedną cyfrę.");
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -162,13 +165,13 @@ class UserService {
       );
 
       if (!user || !userPrivate || !userProfile)
-        throw new Error("Invalid user data");
+        throw new Error("Błędne dane użytkownika.");
 
       const loggedUser = await UserRepository.findUserWithUserProfileById(
         userPrivate.userId,
         { session }
       );
-      if (!user) throw new Error("User does not exist");
+      if (!user) throw new Error("Użytkownik nie istnieje.");
       return {
         ...loggedUser,
         token: generateToken(loggedUser._id),
@@ -178,18 +181,18 @@ class UserService {
 
   async loginUser(login: string, password: string): Promise<any> {
     const userPrivate = await UserPrivateRepository.findByLogin(login);
-    if (!userPrivate) throw new Error("Invalid login or password");
+    if (!userPrivate) throw new Error("Błędny login lub hasło.");
     const isPasswordValid = await bcrypt.compare(
       password,
       userPrivate.password
     );
 
-    if (!isPasswordValid) throw new Error("Invalid login or password");
+    if (!isPasswordValid) throw new Error("Błędny login lub hasło.");
 
     const user = await UserRepository.findUserWithUserProfileById(
       userPrivate.userId
     );
-    if (!user) throw new Error("User does not exist");
+    if (!user) throw new Error("Użytkownik nie istnieje.");
     return {
       ...user,
       token: generateToken(user._id),
@@ -204,7 +207,7 @@ class UserService {
         session,
       });
       const isPasswordValid = await bcrypt.compare(password, userPassword);
-      if (!isPasswordValid) throw new Error("Invalid password.");
+      if (!isPasswordValid) throw new Error("Błędne hasło.");
 
       await commentRepository.deleteUserComments(userId, { session });
       await ratingRepository.deleteUserRatings(userId, { session });
@@ -235,7 +238,7 @@ class UserService {
       });
       await UserPrivateRepository.deleteUserPrivate(userId, { session });
       await UserRepository.deleteUser(userId, { session });
-      return "User has been deleted succesfully.";
+      return "Użytkownik usunięty pomyślnie.";
     });
   }
 
@@ -285,7 +288,7 @@ class UserService {
 
       if (isPasswordUpdate) {
         if (newPassword !== newPasswordRepeat)
-          throw new Error("New password values are different.");
+          throw new Error("Hasła różnią się.");
 
         const oldFetchedPassword = await UserPrivateRepository.getOldPassword(
           userId,
@@ -297,14 +300,14 @@ class UserService {
           oldFetchedPassword
         );
 
-        if (!isPasswordValid) throw new Error("Wrong password.");
+        if (!isPasswordValid) throw new Error("Błędne hasło");
         const isPasswordSame = await bcrypt.compare(
           newPassword,
           oldFetchedPassword
         );
 
         if (isPasswordSame)
-          throw new Error("Password must be different than current one.");
+          throw new Error("Hasło nie może być takie samo jak poprzednie.");
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
@@ -314,7 +317,7 @@ class UserService {
       if (nickname) {
         const nicknameExist = await UserRepository.findByNickname(nickname);
         if (nicknameExist)
-          throw new Error("User with this nickname already exist.");
+          throw new Error("Użytkownik z tym pseudonimem juz istnieje.");
         user = await UserRepository.changeNickname(userId, nickname, {
           session,
         });
@@ -324,7 +327,8 @@ class UserService {
         const loginExist = await UserPrivateRepository.findByLogin(
           filters.login
         );
-        if (loginExist) throw new Error("User with this login already exist.");
+        if (loginExist)
+          throw new Error("Użytkownik z tym loginem juz istnieje.");
         userPrivateFilter.login = filters.login;
       }
 
@@ -332,7 +336,8 @@ class UserService {
         const emailExist = await UserPrivateRepository.findByEmail(
           filters.email
         );
-        if (emailExist) throw new Error("User with this email already exist.");
+        if (emailExist)
+          throw new Error("Użytkownik z tym emailem juz istnieje.");
         userPrivateFilter.email = filters.email;
       }
 
@@ -350,9 +355,9 @@ class UserService {
   async editProfilePicture(userId: ObjectId, imgQuery: string) {
     const user = await ValidationService.validateUser(userId);
     if (user.profilePicture === imgQuery)
-      throw new Error("You can`t change profile picture to the same image.");
+      throw new Error("Nie możesz zmienić zdjęcia na to samo.");
     if (!profilePictureRegex.test(imgQuery))
-      throw new Error("You must provide a link in imgQuery.");
+      throw new Error("Błedny typ przekazywanego zdjęcia.");
 
     return await UserRepository.editProfilePicture(userId, imgQuery);
   }
@@ -382,8 +387,8 @@ class UserService {
           user.userProfile,
           updateFields
         );
-        return "Preferences updated.";
-      } else throw new Error("No changes selected.");
+        return "Preferencje zaktualizowane.";
+      } else throw new Error("Brak wybranych zmian.");
     });
   }
 
@@ -395,7 +400,7 @@ class UserService {
     return withTransaction(async (session) => {
       await ValidationService.validateUser(userId, { session });
       await ValidationService.validateQuiz(quizId, { session });
-      if (!points) throw new Error("No points provided.");
+      if (!points) throw new Error("Nie przyznano punktów.");
 
       await UserRepository.addFinishedQuizData(userId, points, { session });
       const finishQuizMessage = await this.handleAchievementUpdate(
@@ -425,7 +430,7 @@ class UserService {
       if (!availableTitle) throw new Error(`Title ${title} is not avaiable.`);
     }
     const user = await UserRepository.changeDisplayedTitles(userId, titles);
-    return { user, message: "Titles has been updated." };
+    return { user, message: "Tytuły zostały zaktualizowane." };
   }
 }
 

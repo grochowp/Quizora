@@ -63,6 +63,7 @@ body,
     color: var(--color-text-base);
     transform: translate(15px, -22px);
     font-size: 0.75rem;
+    opacity: 1;
   }
 
   .shadow-custom-inner {

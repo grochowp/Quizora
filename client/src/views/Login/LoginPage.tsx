@@ -1,45 +1,157 @@
 import { useState } from "react";
-import { Login } from "./components/Login";
-import { Register } from "./components/Register";
-import { ButtonEmpty } from "../../components/Button/ButtonEmpty";
-import { ButtonFill } from "../../components/Button/ButtonFill";
+import { Button } from "../../components/Button/Button";
+import FormInput from "./components/FormInput";
+import { LuUser2 } from "react-icons/lu";
+import { IoLockClosedOutline } from "react-icons/io5";
+import { MdOutlineEmail } from "react-icons/md";
+import { useForm } from "react-hook-form";
+import axios, { AxiosError } from "axios";
+
+interface IFormData {
+  login: string;
+  nickname: string;
+  email: string;
+  password: string;
+  passwordRepeat: string;
+}
 
 const LoginPage = () => {
   const [selectedAction, setSelectedAction] = useState<string>("login");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
-  console.log(rememberMe);
+  const [resErrors, setResErrors] = useState<string>("");
+  const { register, handleSubmit, reset } = useForm<IFormData>();
+
+  const onSubmit = async (data: IFormData) => {
+    try {
+      setResErrors("");
+      const endpoint =
+        selectedAction === "login"
+          ? "http://localhost:3000/api/user/login"
+          : "http://localhost:3000/api/user/register";
+
+      const response = await axios.post(endpoint, data);
+      console.log(response.data);
+      const { user } = response.data;
+      console.log(user);
+      reset();
+    } catch (err: unknown) {
+      if (err instanceof AxiosError) {
+        console.log(err.response?.data?.message);
+        setResErrors(err.response?.data?.message || "Something went wrong");
+      } else {
+        setResErrors("An unknown error occurred");
+      }
+    }
+  };
+
   const handleRememberMe = () => {
     setRememberMe(!rememberMe);
   };
+
   const handleChangeAction = () => {
+    reset();
+    setResErrors("");
+    setRememberMe(false);
     setSelectedAction(selectedAction === "login" ? "register" : "login");
   };
 
   return (
-    <div className="shadow-custom absolute left-1/2 top-1/2 h-[600px] w-[300px] -translate-x-1/2 -translate-y-1/2 transform rounded-md bg-primary font-poppins sm:w-[374px]">
-      <div className="flex h-5/6 flex-col items-center">
-        <h1 className="mt-5 flex h-10 items-center gap-1 text-xl">
-          <img src="/assets/logo.png" /> Quizora
-        </h1>
+    <div className="shadow-custom absolute left-1/2 top-1/2 flex h-[620px] w-[320px] -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-center rounded-xl bg-primary font-poppins md:w-[374px]">
+      <h1 className="mt-5 flex h-10 items-center gap-1 text-xl">
+        <img src="/assets/logo.png" alt="Logo" /> Quizora
+      </h1>
 
-        {selectedAction === "login" ? <Login /> : <Register />}
-        <div className="ml-3 mt-3 flex w-4/5 gap-2">
-          <input
-            type="checkbox"
-            checked={rememberMe}
-            onChange={handleRememberMe}
+      <h2 className="flex h-16 items-center text-3xl">
+        {selectedAction === "login" ? "Zaloguj się" : "Zarejestruj się"}
+      </h2>
+      <p className="mb-6 text-center text-[10px]">
+        {selectedAction === "login"
+          ? "Rozwiązuj i twórz Quizy z każdego miejsca na świecie"
+          : "Utwórz konto aby korzystać z wszystkich funkcji"}
+      </p>
+
+      <form
+        className="flex h-full w-full flex-col justify-between"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="inputBox flex flex-col items-center gap-4">
+          <FormInput
+            label="Login"
+            icon={<LuUser2 />}
+            type="text"
+            register={register("login", {
+              required: "Login jest wymagany",
+            })}
           />
-          <span>Pamiętaj mnie</span>
+
+          {selectedAction === "register" && (
+            <>
+              <FormInput
+                label="Pseudonim"
+                icon={<LuUser2 />}
+                type="text"
+                register={register("nickname", {
+                  required: "Pseudonim jest wymagany",
+                  value: "",
+                })}
+              />
+              <FormInput
+                label="Email"
+                icon={<MdOutlineEmail />}
+                type="email"
+                register={register("email", {
+                  required: "Email jest wymagany",
+                })}
+              />
+            </>
+          )}
+          <FormInput
+            label="Hasło"
+            icon={<IoLockClosedOutline />}
+            type="password"
+            register={register("password", {
+              required: "Hasło jest wymagane",
+            })}
+          />
+          {selectedAction === "register" && (
+            <FormInput
+              label="Powtórz hasło"
+              icon={<IoLockClosedOutline />}
+              type="password"
+              register={register("passwordRepeat", {
+                required: "Powtórzenie hasłą jest wymagane",
+              })}
+            />
+          )}
+
+          <div className="ml-3 flex w-4/5 gap-2">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={handleRememberMe}
+            />
+            <p className="cursor-pointer" onClick={handleRememberMe}>
+              Pamiętaj mnie
+            </p>
+          </div>
+          {resErrors && (
+            <p className="text-center text-sm text-red-600">{resErrors}</p>
+          )}
         </div>
-      </div>
-      <div className="flex h-1/6 items-center justify-around">
-        <ButtonEmpty onClick={handleChangeAction}>
-          {selectedAction === "login" ? "Rejestracja" : "Logowanie"}
-        </ButtonEmpty>
-        <ButtonFill onClick={() => 1}>
-          {selectedAction === "login" ? "Zaloguj" : "Zarejestruj"}
-        </ButtonFill>
-      </div>
+
+        <div className="mb-6 flex w-full justify-around">
+          <Button variant="outline" type="button" onClick={handleChangeAction}>
+            {selectedAction === "login" ? "Rejestracja" : "Logowanie"}
+          </Button>
+          <Button
+            variant="fill"
+            type="submit"
+            onClick={() => handleSubmit(onSubmit)}
+          >
+            {selectedAction === "login" ? "Zaloguj" : "Zarejestruj"}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };
