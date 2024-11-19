@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IQuiz } from "../interfaces";
-import axios from "axios";
+import { fetchQuizzesByQuery } from "../services/homeService";
 
 export function useQuiz(query: string, resetKey: number) {
   const [quizzes, setQuizzes] = useState<IQuiz[]>([]);
@@ -12,10 +12,8 @@ export function useQuiz(query: string, resetKey: number) {
       console.log(query, resetKey);
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          `http://localhost:3000/api/quiz${query}`,
-        );
-        setQuizzes(response.data.quizzes);
+        const response = await fetchQuizzesByQuery(query);
+        setQuizzes(response);
       } catch (err) {
         if (err instanceof Error && err.name !== "AbortError") {
           setError(err.message);

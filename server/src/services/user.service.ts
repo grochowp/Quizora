@@ -101,7 +101,7 @@ class UserService {
         );
         return `Tytuł "${currentLevel.title}" został przyznany do Twojego konta.`;
       }
-      return `Osiągnąłeś ${achievementLevel} poziom w osiągnieciu "${achievementName}".`;
+      return `Zdobyto ${achievementLevel} poziom w osiągnieciu "${achievementName}".`;
     }
     return `Postęp w osiągnieciu "${achievementName}" został przyznany`;
   }

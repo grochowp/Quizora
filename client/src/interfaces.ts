@@ -9,7 +9,7 @@ export interface IUser {
   finishedQuizzes: number;
   likedQuizzes: number;
   privateAccount: boolean;
-  userProfile: IUserProfile;
+  userProfile?: IUserProfile;
 }
 
 export interface IUserProfile {
@@ -61,4 +61,12 @@ export interface IQuestion {
 export interface IQuizDetails {
   _id: string;
   questions: Array<IQuestion>;
+}
+
+export interface IFormData {
+  login: string;
+  nickname: string;
+  email: string;
+  password: string;
+  passwordRepeat: string;
 }

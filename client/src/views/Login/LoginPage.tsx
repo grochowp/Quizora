@@ -5,38 +5,29 @@ import { LuUser2 } from "react-icons/lu";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { useForm } from "react-hook-form";
-import axios, { AxiosError } from "axios";
-
-interface IFormData {
-  login: string;
-  nickname: string;
-  email: string;
-  password: string;
-  passwordRepeat: string;
-}
+import { AxiosError } from "axios";
+import { useLoggedUserContext } from "../../contexts/loggedUserContext";
+import { loginOrRegister } from "../../services/userService";
+import { IFormData } from "../../interfaces";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [selectedAction, setSelectedAction] = useState<string>("login");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [resErrors, setResErrors] = useState<string>("");
   const { register, handleSubmit, reset } = useForm<IFormData>();
+  const { setLoggedUserData } = useLoggedUserContext();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: IFormData) => {
     try {
       setResErrors("");
-      const endpoint =
-        selectedAction === "login"
-          ? "http://localhost:3000/api/user/login"
-          : "http://localhost:3000/api/user/register";
-
-      const response = await axios.post(endpoint, data);
-      console.log(response.data);
-      const { user } = response.data;
-      console.log(user);
+      const response = await loginOrRegister(selectedAction, data);
+      navigate("/");
+      setLoggedUserData(response);
       reset();
     } catch (err: unknown) {
       if (err instanceof AxiosError) {
-        console.log(err.response?.data?.message);
         setResErrors(err.response?.data?.message || "Something went wrong");
       } else {
         setResErrors("An unknown error occurred");
