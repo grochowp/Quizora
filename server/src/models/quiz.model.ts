@@ -24,15 +24,9 @@ const quizSchema = new mongoose.Schema<IQuiz>({
     type: String,
     required: true,
     enum: {
-      values: [
-        "programming",
-        "history",
-        "entertainment",
-        "geography",
-        "sports",
-      ],
+      values: ["programming", "history", "entertainment", "geography", "sport"],
       message:
-        "Available categories: 'programming', 'history', 'entertainment', 'geography', 'sports'.",
+        "Available categories: 'programming', 'history', 'entertainment', 'geography', 'sport'.",
     },
   },
   createdBy: { type: mongoose.Types.ObjectId, ref: "User", required: true },

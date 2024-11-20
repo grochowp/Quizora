@@ -218,7 +218,6 @@ class UserService {
       const quizDetailsIds = quizzesToDelete.map(
         (quiz: any) => quiz.quizDetails
       );
-      console.log(quizzesIds, quizDetailsIds);
 
       if (quizzesIds && quizDetailsIds) {
         await quizRepository.deleteUserQuizzes(quizzesIds, { session });

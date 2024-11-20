@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Navbar } from "../Navigation/Navbar";
 import { SearchBar } from "../Navigation/SearchBar";
 import { Suspense, useState } from "react";
-import Spinner from "../Spinner/Spinner";
+import Spinner from "../reusable/Spinner";
 
 const RootLayout = () => {
   const [theme] = useState("default");

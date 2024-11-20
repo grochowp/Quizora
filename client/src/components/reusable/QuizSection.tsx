@@ -1,8 +1,8 @@
 import { GrPowerReset } from "react-icons/gr";
 import { useMemo, useState } from "react";
-import Spinner from "../../../components/Spinner/Spinner";
-import { useQuiz } from "../../../hooks/useQuiz";
-import Quiz from "../../../components/Quiz/Quiz";
+import Spinner from "./Spinner";
+import { useQuiz } from "../../hooks/useQuiz";
+import Quiz from "./Quiz";
 import { motion } from "framer-motion";
 
 const containerVariants = {
@@ -22,6 +22,7 @@ interface IQuizSectionProps {
   query: string;
   difficultyFilter?: string;
   handleDifficultyChange?: (difficulty: string) => void;
+  reset?: boolean;
   maxQuizzes?: number;
 }
 
@@ -30,6 +31,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   query,
   difficultyFilter,
   handleDifficultyChange,
+  reset = true,
   maxQuizzes = 3,
 }) => {
   const [resetKey, setResetKey] = useState(0);
@@ -72,10 +74,12 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
             ))}
           </div>
         )}
-        <GrPowerReset
-          className="m-4 mr-4 h-5 cursor-pointer md:h-6 md:w-6 xl:mr-4"
-          onClick={handleResetClick}
-        />
+        {reset && (
+          <GrPowerReset
+            className="m-4 mr-4 h-5 cursor-pointer md:h-6 md:w-6 xl:mr-4"
+            onClick={handleResetClick}
+          />
+        )}
       </div>
 
       {isLoading ? (
@@ -96,6 +100,9 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
           animate="visible"
           className="flex flex-wrap gap-3"
         >
+          {quizzes.length === 0 && (
+            <h1 className="text-xl">Brak Quizów o podanych kryteriach</h1>
+          )}
           {quizzes.slice(0, maxQuizzes).map((quiz) => (
             <Quiz key={quiz._id} quiz={quiz} />
           ))}

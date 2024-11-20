@@ -1,5 +1,5 @@
 import { useState } from "react";
-import QuizSection from "./components/QuizSection";
+import QuizSection from "../../components/reusable/QuizSection";
 
 const Home = () => {
   const [quizDifficulty, setQuizDifficulty] = useState<string>("easy");

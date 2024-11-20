@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "../../components/Button/Button";
-import FormInput from "./components/FormInput";
+import { Button } from "../../components/reusable/Button";
+import CustomInput from "../../components/reusable/CustomInput";
 import { LuUser2 } from "react-icons/lu";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
@@ -47,7 +47,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="shadow-custom absolute left-1/2 top-1/2 flex h-[620px] w-[320px] -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-center rounded-xl bg-primary font-poppins md:w-[374px]">
+    <div className="shadow-custom absolute left-1/2 top-1/2 flex h-[620px] w-[320px] -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-center rounded-xl bg-primary font-poppins text-baseText md:w-[374px]">
       <h1 className="mt-5 flex h-10 items-center gap-1 text-xl">
         <img src="/assets/logo.png" alt="Logo" /> Quizora
       </h1>
@@ -66,7 +66,7 @@ const LoginPage = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="inputBox flex flex-col items-center gap-4">
-          <FormInput
+          <CustomInput
             label="Login"
             icon={<LuUser2 />}
             type="text"
@@ -77,7 +77,7 @@ const LoginPage = () => {
 
           {selectedAction === "register" && (
             <>
-              <FormInput
+              <CustomInput
                 label="Pseudonim"
                 icon={<LuUser2 />}
                 type="text"
@@ -86,7 +86,7 @@ const LoginPage = () => {
                   value: "",
                 })}
               />
-              <FormInput
+              <CustomInput
                 label="Email"
                 icon={<MdOutlineEmail />}
                 type="email"
@@ -96,7 +96,7 @@ const LoginPage = () => {
               />
             </>
           )}
-          <FormInput
+          <CustomInput
             label="Hasło"
             icon={<IoLockClosedOutline />}
             type="password"
@@ -105,7 +105,7 @@ const LoginPage = () => {
             })}
           />
           {selectedAction === "register" && (
-            <FormInput
+            <CustomInput
               label="Powtórz hasło"
               icon={<IoLockClosedOutline />}
               type="password"

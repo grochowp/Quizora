@@ -40,7 +40,9 @@ const Quiz = ({ quiz }: { quiz: IQuiz }) => {
         </div>
         <div className="flex items-center gap-1">
           <span className="text-[13px]">{quiz.rating}</span>
-          <BiSolidLike className="relative bottom-[1px] text-green-500" />
+          <BiSolidLike
+            className={`relative bottom-[1px] ${quiz.rating >= 0 ? "text-green-500" : "rotate-180 text-red-600"}`}
+          />
         </div>
       </div>
     </motion.div>

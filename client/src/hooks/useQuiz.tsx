@@ -9,7 +9,6 @@ export function useQuiz(query: string, resetKey: number) {
 
   useEffect(() => {
     (async function () {
-      console.log(query, resetKey);
       try {
         setIsLoading(true);
         const response = await fetchQuizzesByQuery(query);

@@ -10,7 +10,6 @@ export const loginOrRegister = async (
       `http://localhost:3000/api/user/${action}`,
       body,
     );
-    console.log(response);
     return response.data;
   } catch (err) {
     throw new Error(err);
