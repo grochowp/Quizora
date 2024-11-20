@@ -24,6 +24,7 @@ interface IQuizSectionProps {
   handleDifficultyChange?: (difficulty: string) => void;
   reset?: boolean;
   maxQuizzes?: number;
+  userId?: string;
 }
 
 const QuizSection: React.FC<IQuizSectionProps> = ({
@@ -33,8 +34,10 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   handleDifficultyChange,
   reset = true,
   maxQuizzes = 3,
+  userId,
 }) => {
   const [resetKey, setResetKey] = useState(0);
+  if (userId) query = query.concat(`${query && "&"}userId=${userId}`);
   const { quizzes, error, isLoading } = useQuiz(query, resetKey);
   const handleResetClick = () => {
     setResetKey((prevKey) => prevKey + 1);

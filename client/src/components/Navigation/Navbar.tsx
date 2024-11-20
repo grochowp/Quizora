@@ -104,7 +104,9 @@ export const Navbar = () => {
                 className={`${item.border ? "border-bottom mb-1" : ""} ${
                   showLocations ? "" : "max-w-12"
                 } ${
-                  currentLocation === item.path ? "list-item-selected" : ""
+                  currentLocation === item.path.split("/")[0]
+                    ? "list-item-selected"
+                    : ""
                 } relative list-item`}
                 onClick={() => changeSubPage(item.path)}
               >

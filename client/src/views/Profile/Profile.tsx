@@ -1,5 +1,14 @@
+import { useParams } from "react-router-dom";
+import { QuizSelection } from "../../components/reusable/QuizSelection";
+
 function Profile() {
-  return <div></div>;
+  const { userId } = useParams();
+
+  return (
+    <div>
+      <QuizSelection userId={userId} />
+    </div>
+  );
 }
 
 export default Profile;
