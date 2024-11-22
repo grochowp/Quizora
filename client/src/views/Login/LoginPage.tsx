@@ -5,36 +5,24 @@ import { LuUser2 } from "react-icons/lu";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { useForm } from "react-hook-form";
-import { AxiosError } from "axios";
 import { useLoggedUserContext } from "../../contexts/loggedUserContext";
-import { loginOrRegister } from "../../services/userService";
 import { IFormData } from "../../interfaces";
-import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [selectedAction, setSelectedAction] = useState<string>("login");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [resErrors, setResErrors] = useState<string>("");
   const { register, handleSubmit, reset } = useForm<IFormData>();
-  const { setLoggedUserData } = useLoggedUserContext();
-  const navigate = useNavigate();
+  const { loginUser } = useLoggedUserContext();
 
   const onSubmit = async (data: IFormData) => {
     try {
       setResErrors("");
-      const response = await loginOrRegister(selectedAction, data);
-      navigate("/");
-      setLoggedUserData(response);
-      reset();
-    } catch (err: unknown) {
-      if (err instanceof AxiosError) {
-        setResErrors(err.response?.data?.message || "Something went wrong");
-      } else {
-        setResErrors("An unknown error occurred");
-      }
+      await loginUser(data, selectedAction);
+    } catch (err) {
+      setResErrors(err.message);
     }
   };
-
   const handleRememberMe = () => {
     setRememberMe(!rememberMe);
   };
