@@ -1,7 +1,7 @@
 import { GrPowerReset } from "react-icons/gr";
 import { useMemo, useState } from "react";
-import Spinner from "./Spinner";
-import { useQuiz } from "../../hooks/useQuiz";
+import Spinner from "../Spinner";
+import { useQuiz } from "../../../hooks/useQuiz";
 import Quiz from "./Quiz";
 import { motion } from "framer-motion";
 
@@ -57,7 +57,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   }
 
   return (
-    <article className="mb-4">
+    <article className={`${quizzes.length === 0 && "flex justify-center"}`}>
       <div className="flex items-center justify-between">
         {title && (
           <h1 className="pl-2 font-poppins tracking-widest text-baseText md:text-xl">

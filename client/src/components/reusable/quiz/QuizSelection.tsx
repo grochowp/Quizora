@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import CustomInput from "./CustomInput";
-import CustomSelect from "./CustomSelect";
+import CustomInput from "../elements/CustomInput";
+import CustomSelect from "../elements/CustomSelect";
 import {
   categoryOptions,
   difficultyOptions,
   orderOptions,
   questionCountOptions,
-} from "../../utils/selectOptions";
-import { Button } from "./Button";
+} from "../../../utils/selectOptions";
+import { Button } from "../elements/Button";
 import QuizSection from "./QuizSection";
 
 export const QuizSelection = ({
@@ -114,7 +114,7 @@ export const QuizSelection = ({
         </article>
       </section>
 
-      <section className="flex max-w-[300px] flex-col items-center sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[984px] 2xl:max-w-[1316px]">
+      <section className="flex max-w-[300px] flex-col sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[984px] 2xl:max-w-[1316px]">
         <QuizSection
           reset={false}
           query={query}

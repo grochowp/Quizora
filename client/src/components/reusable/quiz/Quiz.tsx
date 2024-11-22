@@ -1,5 +1,5 @@
 import { BiSolidLike } from "react-icons/bi";
-import { IQuiz } from "../../interfaces";
+import { IQuiz } from "../../../interfaces";
 import { motion } from "framer-motion";
 
 const itemVariants = {

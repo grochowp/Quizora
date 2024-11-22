@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "../../components/reusable/Button";
-import CustomInput from "../../components/reusable/CustomInput";
+import { Button } from "../../components/reusable/elements/Button";
+import CustomInput from "../../components/reusable/elements/CustomInput";
 import { LuUser2 } from "react-icons/lu";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";

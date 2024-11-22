@@ -11,6 +11,7 @@ export function useQuiz(query: string, resetKey: number) {
     (async function () {
       try {
         setIsLoading(true);
+
         const response = await fetchQuizzesByQuery(query);
         setQuizzes(response);
       } catch (err) {

@@ -1,5 +1,15 @@
+import { UserCard } from "../../components/reusable/UserCard";
+import { useLoggedUserContext } from "../../contexts/loggedUserContext";
+
 const Settings = () => {
-  return <div></div>;
+  const { loggedUserData } = useLoggedUserContext();
+  return (
+    <div>
+      <UserCard user={loggedUserData}>
+        <div></div>
+      </UserCard>
+    </div>
+  );
 };
 
 export default Settings;

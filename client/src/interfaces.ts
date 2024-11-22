@@ -70,3 +70,8 @@ export interface IFormData {
   password: string;
   passwordRepeat: string;
 }
+
+export interface IStatus {
+  text: string;
+  status: string;
+}

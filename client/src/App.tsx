@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { lazy } from "react";
 import { useLoggedUserContext } from "./contexts/loggedUserContext";
 import TimeAgo from "javascript-time-ago";
-import pl from "javascript-time-ago/locale/en";
+import pl from "javascript-time-ago/locale/pl";
 
 const Error = lazy(() => import("./views/Error/Error"));
 const Home = lazy(() => import("./views/Home/Home"));

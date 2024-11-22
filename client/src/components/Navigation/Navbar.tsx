@@ -24,7 +24,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentLocation, setCurrentLocation] = useState<string>();
-  const [showLocations, setShowLocations] = useState<boolean>(true);
+  const [showLocations, setShowLocations] = useState<boolean>(false);
   const { loggedUserData, logoutUser } = useLoggedUserContext();
 
   const navItems: INavItems[] = [
