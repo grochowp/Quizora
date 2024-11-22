@@ -25,6 +25,7 @@ interface IQuizSectionProps {
   reset?: boolean;
   maxQuizzes?: number;
   userId?: string;
+  status?: string;
 }
 
 const QuizSection: React.FC<IQuizSectionProps> = ({
@@ -35,9 +36,15 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   reset = true,
   maxQuizzes = 3,
   userId,
+  status = "published",
 }) => {
   const [resetKey, setResetKey] = useState(0);
   if (userId) query = query.concat(`${query && "&"}userId=${userId}`);
+  query =
+    status === "liked"
+      ? query.concat("&liked=true")
+      : query.concat(`&status=${status}`);
+
   const { quizzes, error, isLoading } = useQuiz(query, resetKey);
   const handleResetClick = () => {
     setResetKey((prevKey) => prevKey + 1);

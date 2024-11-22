@@ -15,3 +15,14 @@ export const loginOrRegister = async (
     throw new Error(err);
   }
 };
+
+export const findUserById = async (userId: string) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3000/api/user/${userId}`,
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};

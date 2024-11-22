@@ -11,7 +11,13 @@ import {
 import { Button } from "./Button";
 import QuizSection from "./QuizSection";
 
-export const QuizSelection = ({ userId }: { userId?: string }) => {
+export const QuizSelection = ({
+  userId,
+  status,
+}: {
+  userId?: string;
+  status?: string;
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
@@ -113,6 +119,7 @@ export const QuizSelection = ({ userId }: { userId?: string }) => {
           reset={false}
           query={query}
           userId={userId}
+          status={status}
           maxQuizzes={20}
         />
       </section>
