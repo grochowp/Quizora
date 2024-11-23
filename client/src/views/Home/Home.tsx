@@ -8,8 +8,8 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center gap-8 2xl:flex-row">
-      <div className="flex max-w-[300px] flex-col sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[1000px]">
+    <div className="flex flex-col gap-12 2xl:flex-row 2xl:gap-4">
+      <div className="flex max-w-[300px] flex-col gap-8 sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[1000px]">
         <QuizSection title="Popularne" query="shuffle=true" maxQuizzes={6} />
         <QuizSection
           title="Ostatnio Dodane"

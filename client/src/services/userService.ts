@@ -7,7 +7,7 @@ export const loginOrRegister = async (
 ): Promise<IUser> => {
   try {
     const response = await axios.post(
-      `http://localhost:3000/api/user/${action}`,
+      `${import.meta.env.VITE_DB_URL}api/user/${action}`,
       body,
     );
     return response.data;
@@ -19,7 +19,7 @@ export const loginOrRegister = async (
 export const findUserById = async (userId: string) => {
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/user/${userId}`,
+      `${import.meta.env.VITE_DB_URL}api/user/${userId}`,
     );
     return response.data;
   } catch (err) {

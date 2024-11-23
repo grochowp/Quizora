@@ -24,7 +24,7 @@ export const QuizSelection = ({
     title: searchParams.get("title") || "",
     category: searchParams.get("category") || "",
     difficulty: searchParams.get("difficulty") || "",
-    questionsNumber: searchParams.get("questionsCount") || "",
+    questionsCount: searchParams.get("questionsCount") || "",
     sortBy: searchParams.get("sortBy") || "",
     order: searchParams.get("order") || "",
   });
@@ -55,7 +55,7 @@ export const QuizSelection = ({
       title: "",
       category: "",
       difficulty: "",
-      questionsNumber: "",
+      questionsCount: "",
       sortBy: "",
       order: "",
     };
@@ -64,9 +64,9 @@ export const QuizSelection = ({
   };
 
   return (
-    <div className="flex max-w-[1600px] flex-col gap-16 font-poppins text-baseText">
-      <section className="flex w-[300px] flex-col items-center justify-between gap-12 sm:w-[320px] lg:w-[660px] xl:w-[984px] xl:flex-row 2xl:w-[1316px]">
-        <article className="inputBox flex flex-wrap justify-center gap-6 lg:justify-normal">
+    <article className="flex max-w-[1600px] flex-col gap-16 font-poppins text-baseText">
+      <div className="flex w-[300px] flex-col items-center justify-between gap-12 sm:w-[320px] lg:w-[660px] xl:w-[984px] xl:flex-row 2xl:w-[1316px]">
+        <div className="inputBox flex flex-wrap justify-center gap-6 lg:justify-normal">
           <CustomInput
             styles="h-12 w-[276px] lg:w-[300px]"
             label="Nazwa"
@@ -89,9 +89,9 @@ export const QuizSelection = ({
           />
           <CustomSelect
             label="Ilość pytań"
-            value={filters.questionsNumber}
+            value={filters.questionsCount}
             options={questionCountOptions}
-            onChange={(value) => updateFilter("questionNumber", value)}
+            onChange={(value) => updateFilter("questionsCount", value)}
           />
           <CustomSelect
             label="Sortuj według"
@@ -103,16 +103,16 @@ export const QuizSelection = ({
               updateFilter("order", order);
             }}
           />
-        </article>
-        <article className="flex max-h-10 gap-4">
+        </div>
+        <div className="flex max-h-10 gap-4">
           <Button onClick={handleReset} styles="px-6 " variant="outline">
             Reset
           </Button>
           <Button onClick={handleUpdate} styles="px-8" variant="fill">
             Szukaj
           </Button>
-        </article>
-      </section>
+        </div>
+      </div>
 
       <section className="flex max-w-[300px] flex-col sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[984px] 2xl:max-w-[1316px]">
         <QuizSection
@@ -123,6 +123,6 @@ export const QuizSelection = ({
           maxQuizzes={20}
         />
       </section>
-    </div>
+    </article>
   );
 };

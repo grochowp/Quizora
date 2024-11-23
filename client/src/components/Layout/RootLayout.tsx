@@ -15,11 +15,13 @@ const RootLayout = () => {
         <Navbar />
         <div className="ml-0 flex flex-grow flex-col items-center justify-center">
           <SearchBar />
-          <section className="z-10 flex max-w-[1600px] flex-1">
+          <div className="z-10 flex max-w-[1600px] flex-1">
             <Suspense fallback={<Spinner />}>
-              <Outlet />
+              <div className="flex w-[300px] justify-center sm:w-[550px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
+                <Outlet />
+              </div>
             </Suspense>
-          </section>
+          </div>
         </div>
       </main>
       <img

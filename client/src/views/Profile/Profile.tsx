@@ -23,7 +23,7 @@ function Profile() {
   if (error) navigate("/error");
 
   return (
-    <section className="flex w-[300px] flex-col gap-16 sm:w-[320px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
+    <div className="flex w-[300px] flex-col gap-16 sm:w-[320px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
       <div className="flex flex-col items-center justify-between gap-4 border-b-[1px] border-secondary font-poppins lg:items-start xl:flex-row xl:items-end">
         <UserCard user={user} editButton>
           <h1 className="col-span-4 col-start-3 row-start-1 flex items-center gap-2 text-2xl">
@@ -62,7 +62,7 @@ function Profile() {
       <div className="flex justify-center">
         <QuizSelection userId={userId} status={status} />
       </div>
-    </section>
+    </div>
   );
 }
 

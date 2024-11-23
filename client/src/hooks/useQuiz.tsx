@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IQuiz } from "../interfaces";
-import { fetchQuizzesByQuery } from "../services/homeService";
+import { fetchQuizzesByQuery } from "../services/quizService";
 
 export function useQuiz(query: string, resetKey: number) {
   const [quizzes, setQuizzes] = useState<IQuiz[]>([]);

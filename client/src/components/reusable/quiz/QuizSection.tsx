@@ -57,7 +57,9 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   }
 
   return (
-    <article className={`${quizzes.length === 0 && "flex justify-center"}`}>
+    <article
+      className={`${quizzes.length === 0 && !isLoading && "flex justify-center"}`}
+    >
       <div className="flex items-center justify-between">
         {title && (
           <h1 className="pl-2 font-poppins tracking-widest text-baseText md:text-xl">
