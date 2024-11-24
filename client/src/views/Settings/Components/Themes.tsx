@@ -1,18 +1,16 @@
 import { CiLock } from "react-icons/ci";
-import { themes } from "../../../utils/themes";
-import { IThemes, IUser } from "../../../interfaces";
+import { themes } from "../../../utils/preferences";
+import { IThemes } from "../../../interfaces";
 
 export const Themes = ({
-  user,
+  userTitles,
   selectedTheme,
   handleTheme,
 }: {
-  user: IUser | undefined;
+  userTitles: string[] | undefined;
   selectedTheme: string | undefined;
   handleTheme: (theme: string) => void;
 }) => {
-  const userTitles = user?.userProfile?.titles;
-
   return (
     <div className="mx-6 flex flex-row flex-wrap gap-4 last:mb-8">
       {themes.map((theme: IThemes) => {

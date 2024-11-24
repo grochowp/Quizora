@@ -1,7 +1,7 @@
 import { UserCard } from "../../components/reusable/UserCard";
 import { useLoggedUserContext } from "../../contexts/loggedUserContext";
 import { Titles } from "./Components/Titles";
-import { Preferences } from "./Components/Preferences";
+import { PreferencesContainer } from "./Components/PreferencesContainer";
 
 const Settings = () => {
   const { loggedUserData } = useLoggedUserContext();
@@ -15,7 +15,7 @@ const Settings = () => {
         <Titles />
       </div>
 
-      <Preferences />
+      <PreferencesContainer />
     </div>
   );
 };

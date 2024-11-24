@@ -81,3 +81,10 @@ export interface IThemes {
   label: string;
   unlockAt?: string;
 }
+
+export interface IPreferences {
+  title: string;
+  description: string;
+  name: keyof IUserProfile;
+  unlockAt?: string;
+}
