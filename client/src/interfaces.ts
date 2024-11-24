@@ -75,3 +75,9 @@ export interface IStatus {
   text: string;
   status: string;
 }
+
+export interface IThemes {
+  name: string;
+  label: string;
+  unlockAt?: string;
+}

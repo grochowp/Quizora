@@ -1,3 +1,4 @@
+import React from "react";
 import { TileTitle } from "../../../components/reusable/TileTitle";
 import { EditButton } from "../../../components/reusable/elements/Button";
 import { useLoggedUserContext } from "../../../contexts/loggedUserContext";
@@ -14,26 +15,14 @@ export const Titles = () => {
       <div className="my-4 ml-6 flex h-full items-center gap-2">
         {loggedUserData?.activeTitles.length !== 0 &&
           loggedUserData?.activeTitles.map((title) => (
-            <>
+            <React.Fragment key={title}>
               <span
                 key={title}
                 className="rounded-md bg-extras px-3 py-[2px] font-roboto text-[14px] text-primary md:text-[17px]"
               >
                 {title}
               </span>
-              <span
-                key={title}
-                className="rounded-md bg-extras px-3 py-[2px] font-roboto text-[14px] text-primary md:text-[17px]"
-              >
-                {title}
-              </span>
-              <span
-                key={title}
-                className="rounded-md bg-extras px-3 py-[2px] font-roboto text-[14px] text-primary md:text-[17px]"
-              >
-                {title}
-              </span>
-            </>
+            </React.Fragment>
           ))}
       </div>
     </div>

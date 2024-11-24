@@ -11,7 +11,7 @@ export const Button = ({
   children,
   type = "button",
   variant = "fill",
-  styles = "py-2",
+  styles = "py-2 px-5 min-h-10",
 }: ButtonProps) => {
   const buttonStyles =
     variant === "fill"
@@ -20,7 +20,7 @@ export const Button = ({
 
   return (
     <button
-      className={`min-h-10 rounded-md border-2 px-5 transition-all duration-300 hover:border-extras hover:bg-primary hover:text-extras ${buttonStyles} ${styles}`}
+      className={`rounded-md border-2 transition-all duration-300 hover:border-extras hover:bg-primary hover:text-extras ${buttonStyles} ${styles}`}
       onClick={onClick}
       type={type}
     >
@@ -34,7 +34,9 @@ export const EditButton = ({ onClick }: { onClick: () => void }) => {
     <Button
       type="button"
       variant="outline"
-      styles={"border-primary absolute right-0 bg-primary py-0 h-max mr-2 mt-2"}
+      styles={
+        "border-primary text-sm absolute right-0 bg-primary py-0 min-h-8 lg:min-h-10 md:px-5 px-3 mr-2 mt-1"
+      }
       onClick={onClick}
     >
       Edytuj

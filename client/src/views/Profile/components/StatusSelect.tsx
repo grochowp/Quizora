@@ -49,6 +49,7 @@ export const StatusSelect = ({
     <div className="flex flex-wrap justify-center gap-6 md:text-xl">
       {statusArray.map((item: IStatus) => (
         <span
+          key={item.text}
           className={`cursor-pointer ${status === item.status ? "!important border-b-[1px] border-baseText opacity-100" : "opacity-35"}`}
           onClick={() => onClick(item.status)}
         >

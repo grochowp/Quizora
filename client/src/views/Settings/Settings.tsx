@@ -1,11 +1,11 @@
-import { Button, EditButton } from "../../components/reusable/elements/Button";
-import { TileTitle } from "../../components/reusable/TileTitle";
 import { UserCard } from "../../components/reusable/UserCard";
 import { useLoggedUserContext } from "../../contexts/loggedUserContext";
 import { Titles } from "./Components/Titles";
+import { Preferences } from "./Components/Preferences";
 
 const Settings = () => {
   const { loggedUserData } = useLoggedUserContext();
+
   return (
     <div className="justify-centet flex w-[300px] flex-col items-center gap-16 font-roboto sm:w-[320px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
       <div className="flex w-full flex-col justify-between gap-4 lg:gap-12 xl:flex-row">
@@ -14,37 +14,8 @@ const Settings = () => {
         </UserCard>
         <Titles />
       </div>
-      <div className="flex w-full min-w-[300px] flex-col gap-4 rounded-lg border-l-4 border-extras bg-secondary">
-        <div className="relative flex">
-          <TileTitle>Motyw</TileTitle>
-          <EditButton onClick={() => 1} />
-        </div>
-        <div className="mx-6 flex flex-row flex-wrap gap-4">
-          <p className="flex flex-col">
-            <img
-              src="/assets/theme-light.png"
-              className="w-28 rounded-lg border-4 border-extras lg:w-48"
-            />
-            <h2 className="text-extras">Jasny</h2>
-          </p>
-          <p className="flex flex-col">
-            <img src="/assets/theme-light.png" className="w-28 lg:w-48" />
-            <h2>Jasny</h2>
-          </p>
-          <p className="flex flex-col">
-            <img src="/assets/theme-light.png" className="w-28 lg:w-48" />
-            <h2>Jasny</h2>
-          </p>
-          <p className="flex flex-col">
-            <img src="/assets/theme-light.png" className="w-28 lg:w-48" />
-            <h2>Jasny</h2>
-          </p>
-          <p className="mb-10 flex flex-col">
-            <img src="/assets/theme-light.png" className="w-28 lg:w-48" />
-            <h2>Jasny</h2>
-          </p>
-        </div>
-      </div>
+
+      <Preferences />
     </div>
   );
 };
