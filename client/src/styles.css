@@ -49,6 +49,7 @@ body,
   overflow-x: hidden;
   position: relative;
   width: 100%;
+  box-sizing: border-box;
 }
 
 @layer utilities {

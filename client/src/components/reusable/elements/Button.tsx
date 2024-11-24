@@ -28,3 +28,16 @@ export const Button = ({
     </button>
   );
 };
+
+export const EditButton = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      styles={"border-primary absolute right-0 bg-primary py-0 h-max mr-2 mt-2"}
+      onClick={onClick}
+    >
+      Edytuj
+    </Button>
+  );
+};
