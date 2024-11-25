@@ -4,6 +4,7 @@ import Spinner from "../Spinner";
 import { useQuiz } from "../../../hooks/useQuiz";
 import Quiz from "./Quiz";
 import { motion } from "framer-motion";
+import { useLoggedUserContext } from "../../../contexts/loggedUserContext";
 
 const containerVariants = {
   hidden: { opacity: 1, scale: 0 },
@@ -38,6 +39,9 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   userId,
   status = "published",
 }) => {
+  const { loggedUserData } = useLoggedUserContext();
+  const lessAnimations = loggedUserData?.userProfile?.lessAnimations;
+
   const [resetKey, setResetKey] = useState(0);
   if (userId) query = query.concat(`${query && "&"}userId=${userId}`);
   query =
@@ -107,7 +111,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
         </div>
       ) : (
         <motion.div
-          variants={containerVariants}
+          variants={lessAnimations ? undefined : containerVariants}
           initial="hidden"
           animate="visible"
           className="flex flex-wrap gap-3"
@@ -116,7 +120,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
             <h1 className="text-xl">Brak Quizów o podanych kryteriach</h1>
           )}
           {quizzes.slice(0, maxQuizzes).map((quiz) => (
-            <Quiz key={quiz._id} quiz={quiz} />
+            <Quiz key={quiz._id} quiz={quiz} lessAnimations={lessAnimations} />
           ))}
         </motion.div>
       )}

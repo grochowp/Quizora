@@ -8,6 +8,6 @@ export const fetchQuizzesByQuery = async (query: string): Promise<IQuiz[]> => {
     );
     return response.data.quizzes;
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err.response.data.message);
   }
 };

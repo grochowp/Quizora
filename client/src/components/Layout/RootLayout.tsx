@@ -1,12 +1,13 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "../Navigation/Navbar";
 import { SearchBar } from "../Navigation/SearchBar";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import Spinner from "../reusable/Spinner";
+import { useLoggedUserContext } from "../../contexts/loggedUserContext";
 
 const RootLayout = () => {
-  const [theme] = useState("default");
-
+  const { loggedUserData } = useLoggedUserContext();
+  const theme = loggedUserData?.userProfile?.theme;
   return (
     <>
       <main

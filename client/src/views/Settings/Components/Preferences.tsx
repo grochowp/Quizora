@@ -1,4 +1,3 @@
-import React from "react";
 import { CiLock } from "react-icons/ci";
 import { preferences } from "../../../utils/preferences";
 

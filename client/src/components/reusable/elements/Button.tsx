@@ -1,6 +1,7 @@
 type ButtonProps = {
   onClick: () => void;
   children: string;
+  disabled?: boolean;
   type?: "button" | "submit" | "reset";
   variant?: "fill" | "outline";
   styles?: string;
@@ -9,6 +10,7 @@ type ButtonProps = {
 export const Button = ({
   onClick,
   children,
+  disabled = false,
   type = "button",
   variant = "fill",
   styles = "py-2 px-5 min-h-10",
@@ -20,9 +22,10 @@ export const Button = ({
 
   return (
     <button
-      className={`rounded-md border-2 transition-all duration-300 hover:border-extras hover:bg-primary hover:text-extras ${buttonStyles} ${styles}`}
+      className={`flex items-center justify-center rounded-md border-2 transition-all duration-300 hover:border-extras hover:bg-primary hover:text-extras ${buttonStyles} ${styles}`}
       onClick={onClick}
       type={type}
+      disabled={disabled}
     >
       {children}
     </button>

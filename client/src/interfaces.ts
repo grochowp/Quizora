@@ -10,6 +10,7 @@ export interface IUser {
   likedQuizzes: number;
   privateAccount: boolean;
   userProfile?: IUserProfile;
+  token: string;
 }
 
 export interface IUserProfile {

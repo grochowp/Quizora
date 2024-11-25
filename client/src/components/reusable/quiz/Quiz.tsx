@@ -7,11 +7,17 @@ const itemVariants = {
   visible: { y: 0, opacity: 1 },
 };
 
-const Quiz = ({ quiz }: { quiz: IQuiz }) => {
+const Quiz = ({
+  quiz,
+  lessAnimations,
+}: {
+  quiz: IQuiz;
+  lessAnimations: boolean | undefined;
+}) => {
   return (
     <motion.div
-      variants={itemVariants}
-      whileHover={{ scale: 1.05, rotate: -2 }}
+      variants={lessAnimations ? undefined : itemVariants}
+      whileHover={lessAnimations ? undefined : { scale: 1.05, rotate: -2 }}
       className={`duration-250 h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} bg-secondary text-baseText`}
     >
       <div className="m-2 mx-3 mb-2 flex justify-between sm:m-3">

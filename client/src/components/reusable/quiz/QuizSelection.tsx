@@ -105,10 +105,14 @@ export const QuizSelection = ({
           />
         </div>
         <div className="flex max-h-10 gap-4">
-          <Button onClick={handleReset} styles="px-6 " variant="outline">
+          <Button onClick={handleReset} variant="outline">
             Reset
           </Button>
-          <Button onClick={handleUpdate} styles="px-8" variant="fill">
+          <Button
+            onClick={handleUpdate}
+            styles="py-2 px-7 min-h-10"
+            variant="fill"
+          >
             Szukaj
           </Button>
         </div>

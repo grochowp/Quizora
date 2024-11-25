@@ -386,7 +386,11 @@ class UserService {
           user.userProfile,
           updateFields
         );
-        return "Preferencje zaktualizowane.";
+
+        const editedUser = await UserRepository.findUserWithUserProfileById(
+          userId
+        );
+        return { user: editedUser, message: "Preferencje zaktualizowane." };
       } else throw new Error("Brak wybranych zmian.");
     });
   }

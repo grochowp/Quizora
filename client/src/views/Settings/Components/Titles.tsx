@@ -7,7 +7,7 @@ export const Titles = () => {
   const { loggedUserData } = useLoggedUserContext();
 
   return (
-    <div className="flex h-28 w-full min-w-[300px] max-w-full flex-1 flex-col rounded-lg border-l-4 border-extras bg-secondary md:max-w-[1000px]">
+    <div className="flex h-28 w-full min-w-[300px] max-w-full flex-1 flex-col rounded-lg border-l-4 border-extras bg-secondary text-baseText md:max-w-[1000px]">
       <div className="relative flex h-max w-full items-center">
         <TileTitle>Wybrane Tytuły</TileTitle>
         <EditButton onClick={() => 1} />

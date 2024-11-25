@@ -9,6 +9,7 @@ interface LoggedUserContextType {
   loggedUserData: IUser | undefined;
   setLoggedUserData: React.Dispatch<React.SetStateAction<IUser | undefined>>;
   logoutUser: () => void;
+  editUser: (data: IUser) => void;
   loginUser: (data: IFormData, action: string) => void;
 }
 
@@ -21,11 +22,23 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
   const navigate = useNavigate();
 
   const setUserCookie = (user: IUser) => {
-    Cookies.set("loggedUser", JSON.stringify(user), { expires: 1 });
+    Cookies.set("loggedUser", JSON.stringify(user), { expires: 1 / 24 });
+    Cookies.set("userToken", JSON.stringify(user.token), {
+      expires: 1 / 24,
+      secure: true,
+    });
   };
 
   const removeUserCookie = () => {
     Cookies.remove("loggedUser");
+    Cookies.remove("userToken");
+  };
+
+  const editUserCookie = (newUserData: IUser) => {
+    Cookies.set("loggedUser", JSON.stringify(newUserData), { expires: 1 / 24 });
+    // Cookies.set("userToken", JSON.stringify(newUserData.token), {
+    //   expires: 1 / 24,
+    // });
   };
 
   useEffect(() => {
@@ -49,6 +62,11 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
     }
   };
 
+  const editUser = (newUserData: IUser) => {
+    setLoggedUserData(newUserData);
+    editUserCookie(newUserData);
+  };
+
   const logoutUser = () => {
     setLoggedUserData(undefined);
     removeUserCookie();
@@ -57,7 +75,13 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
 
   return (
     <LoggedUserContext.Provider
-      value={{ loggedUserData, setLoggedUserData, loginUser, logoutUser }}
+      value={{
+        loggedUserData,
+        setLoggedUserData,
+        loginUser,
+        editUser,
+        logoutUser,
+      }}
     >
       {children}
     </LoggedUserContext.Provider>

@@ -64,24 +64,21 @@ const editPreferences = async (
   req: Request & UserTokenRequest,
   res: Response
 ) => {
-  const filters: PreferencesFilters = {};
+  const filters: PreferencesFilters = { ...req.body };
 
   const { _id: userId } = req.user;
-  if (req.query.theme) filters.theme = req.query.theme as string;
-  if (req.query.checkpoints)
-    filters.checkpoints = req.query.checkpoints === "true";
-  if (req.query.lessAnimations)
-    filters.lessAnimations = req.query.lessAnimations === "true";
-  if (req.query.privateAccount)
-    filters.privateAccount = req.query.privateAccount === "true";
 
   try {
-    const message = await UserService.editPreferences(userId, filters);
-    res.status(200).json({ message });
+    const { user, message } = await UserService.editPreferences(
+      userId,
+      filters
+    );
+    res.status(200).json({ user, message });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
 const getUser = async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {

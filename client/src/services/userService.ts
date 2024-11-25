@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IFormData, IUser } from "../interfaces";
+import Cookies from "js-cookie";
 
 export const loginOrRegister = async (
   body: IFormData,
@@ -12,7 +13,7 @@ export const loginOrRegister = async (
     );
     return response.data;
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err.response.data.message);
   }
 };
 
@@ -23,6 +24,28 @@ export const findUserById = async (userId: string) => {
     );
     return response.data;
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err.response.data.message);
+  }
+};
+
+export const UpdatePreferences = async (preferences: {
+  [key: string]: boolean | string;
+}) => {
+  try {
+    const token = Cookies.get("userToken");
+    const cleanToken = token?.replace(/^"|"$/g, "");
+    const response = await axios.patch(
+      `${import.meta.env.VITE_DB_URL}api/user/preferences`,
+      preferences,
+      {
+        headers: {
+          Authorization: `Bearer ${cleanToken}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
   }
 };
