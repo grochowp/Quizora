@@ -3,7 +3,7 @@ import { Navbar } from "../Navigation/Navbar";
 import { SearchBar } from "../Navigation/SearchBar";
 import { Suspense } from "react";
 import Spinner from "../reusable/Spinner";
-import { useLoggedUserContext } from "../../contexts/loggedUserContext";
+import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
 
 const RootLayout = () => {
   const { loggedUserData } = useLoggedUserContext();

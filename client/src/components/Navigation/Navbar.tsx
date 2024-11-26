@@ -5,7 +5,7 @@ import { FaRegNewspaper } from "react-icons/fa6";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LuUser2 } from "react-icons/lu";
-import { useLoggedUserContext } from "../../contexts/loggedUserContext";
+import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
 import { MdOutlineQueryStats } from "react-icons/md";
 import { MdOutlineAddchart } from "react-icons/md";
 import { IoTrophyOutline } from "react-icons/io5";

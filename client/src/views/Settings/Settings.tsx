@@ -1,7 +1,8 @@
 import { UserCard } from "../../components/reusable/UserCard";
-import { useLoggedUserContext } from "../../contexts/loggedUserContext";
+import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
 import { Titles } from "./Components/Titles";
 import { PreferencesContainer } from "./Components/PreferencesContainer";
+import { useModalContext } from "../../contexts/ModalContext";
 
 const Settings = () => {
   const { loggedUserData } = useLoggedUserContext();

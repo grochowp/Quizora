@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { TileTitle } from "../../../components/reusable/TileTitle";
-import { useLoggedUserContext } from "../../../contexts/loggedUserContext";
+import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 import { Themes } from "./Themes";
 import { preferences } from "../../../utils/preferences";
 import { Button } from "../../../components/reusable/elements/Button";
 import { Preferences } from "./Preferences";
 import { UpdatePreferences } from "../../../services/userService";
 import FullPageSpinner from "../../../components/reusable/FullPageSpinner";
+import { useModalContext } from "../../../contexts/ModalContext";
 
 export const PreferencesContainer = () => {
   const { loggedUserData, editUser } = useLoggedUserContext();
+  const { openModal } = useModalContext();
   const [activeButtons, setActiveButtons] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string>(
@@ -74,6 +76,7 @@ export const PreferencesContainer = () => {
       });
 
       editUser(response.user);
+      openModal(<div className="h-16 w-16 bg-white">a</div>, 5, "top");
     } catch (err) {
       console.log(err.message);
       resetPreferences();

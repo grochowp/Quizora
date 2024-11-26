@@ -1,4 +1,4 @@
-import { useLoggedUserContext } from "../../../contexts/loggedUserContext";
+import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 import { IStatus } from "../../../interfaces";
 
 const statusPublic: IStatus[] = [

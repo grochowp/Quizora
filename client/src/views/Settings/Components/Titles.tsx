@@ -1,7 +1,7 @@
 import React from "react";
 import { TileTitle } from "../../../components/reusable/TileTitle";
 import { EditButton } from "../../../components/reusable/elements/Button";
-import { useLoggedUserContext } from "../../../contexts/loggedUserContext";
+import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 
 export const Titles = () => {
   const { loggedUserData } = useLoggedUserContext();

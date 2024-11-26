@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy } from "react";
-import { useLoggedUserContext } from "./contexts/loggedUserContext";
+import { useLoggedUserContext } from "./contexts/LoggedUserContext";
 import TimeAgo from "javascript-time-ago";
 import pl from "javascript-time-ago/locale/pl";
 

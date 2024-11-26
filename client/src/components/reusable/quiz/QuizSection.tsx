@@ -4,7 +4,7 @@ import Spinner from "../Spinner";
 import { useQuiz } from "../../../hooks/useQuiz";
 import Quiz from "./Quiz";
 import { motion } from "framer-motion";
-import { useLoggedUserContext } from "../../../contexts/loggedUserContext";
+import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 
 const containerVariants = {
   hidden: { opacity: 1, scale: 0 },

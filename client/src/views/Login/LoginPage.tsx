@@ -5,7 +5,7 @@ import { LuUser2 } from "react-icons/lu";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
 import { useForm } from "react-hook-form";
-import { useLoggedUserContext } from "../../contexts/loggedUserContext";
+import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
 import { IFormData } from "../../interfaces";
 
 const LoginPage = () => {
