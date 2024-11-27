@@ -7,6 +7,7 @@ interface CustomInputProps {
   type: string;
   icon?: React.ReactNode;
   register?: UseFormRegisterReturn;
+  color?: string;
   required?: boolean;
   styles?: string;
   value?: string;
@@ -18,6 +19,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   type,
   icon,
   register,
+  color = "secondary",
   styles = "h-12 w-[250px] md:w-[300px]",
   required = true,
   value,
@@ -32,7 +34,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   return (
     <div className="relative">
       <input
-        className={`shadow-custom-inner rounded-md bg-secondary pl-2 outline-none ${styles}`}
+        className={`shadow-custom-inner rounded-md bg-${color} pl-2 outline-none ${styles}`}
         required={required}
         type={type === "password" && !isPasswordVisible ? "password" : "text"}
         value={value}

@@ -67,6 +67,15 @@ body,
     opacity: 1;
   }
 
+  .inputAddQuizBox input:focus ~ span,
+  .inputAddQuizBox input:valid ~ span {
+    @apply rounded-[20px] bg-primary px-2 text-sm tracking-[0.1rem];
+    color: var(--color-text-base);
+    transform: translate(5px, -25px);
+    font-size: 0.7rem;
+    opacity: 1;
+  }
+
   .shadow-custom-inner {
     box-shadow: inset 2px 2px 7px 2px var(--color-shadow);
   }

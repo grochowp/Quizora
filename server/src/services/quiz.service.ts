@@ -3,13 +3,8 @@ import { IQuiz } from "../models/quiz.model";
 import { IQuestion, IQuizDetails } from "../models/quizDetails.model";
 import QuizRepository from "../repository/quiz.repository";
 import QuizDetailsRepository from "../repository/quizDetails.repository";
-import {
-  EditQuizFilters,
-  IQuizWithQuestions,
-  QuizFilters,
-} from "../types/interfaces";
+import { EditQuizFilters, QuizFilters } from "../types/interfaces";
 import quizRepository from "../repository/quiz.repository";
-import quizDetailsRepository from "../repository/quizDetails.repository";
 import CommentRepository from "../repository/comment.repository";
 import RatingRepository from "../repository/rating.repository";
 import { withTransaction } from "../utils/transaction";

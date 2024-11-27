@@ -60,7 +60,6 @@ export interface IQuestion {
 }
 
 export interface IQuizDetails {
-  _id: string;
   questions: Array<IQuestion>;
 }
 
@@ -88,4 +87,13 @@ export interface IPreferences {
   description: string;
   name: keyof IUserProfile;
   unlockAt?: string;
+}
+
+export interface IManageQuiz {
+  title: string;
+  description: string;
+  time: number;
+  category: string;
+  difficulty: string;
+  questions: IQuestion[];
 }

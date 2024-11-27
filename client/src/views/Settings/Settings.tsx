@@ -2,15 +2,15 @@ import { UserCard } from "../../components/reusable/UserCard";
 import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
 import { Titles } from "./Components/Titles";
 import { PreferencesContainer } from "./Components/PreferencesContainer";
-import { useModalContext } from "../../contexts/ModalContext";
 
 const Settings = () => {
   const { loggedUserData } = useLoggedUserContext();
 
   return (
-    <div className="justify-centet flex w-[300px] flex-col items-center gap-16 font-roboto sm:w-[320px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
+    <div className="flex w-[300px] flex-col items-center gap-16 font-roboto sm:w-[320px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
       <div className="flex w-full flex-col justify-between gap-4 lg:gap-12 xl:flex-row">
         <UserCard editButton user={loggedUserData} styles="">
+          {/** TO-DO --- Add user card + edit modal */}
           <h1 className=""></h1>
         </UserCard>
         <Titles />

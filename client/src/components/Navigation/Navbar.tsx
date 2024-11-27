@@ -47,7 +47,7 @@ export const Navbar = () => {
     {
       name: "Dodaj Quiz",
       icon: <MdOutlineAddchart />,
-      path: "addQuiz",
+      path: "manageQuiz",
       onlyLogged: true,
     },
     {

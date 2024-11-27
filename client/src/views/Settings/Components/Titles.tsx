@@ -10,7 +10,7 @@ export const Titles = () => {
     <div className="flex h-28 w-full min-w-[300px] max-w-full flex-1 flex-col rounded-lg border-l-4 border-extras bg-secondary text-baseText md:max-w-[1000px]">
       <div className="relative flex h-max w-full items-center">
         <TileTitle>Wybrane Tytuły</TileTitle>
-        <EditButton onClick={() => 1} />
+        <EditButton onClick={() => 1} /> {/** TO-DO --- Add edit modal */}
       </div>
       <div className="my-4 ml-6 flex h-full items-center gap-2">
         {loggedUserData?.activeTitles.length !== 0 &&

@@ -12,7 +12,7 @@ const Quizzes = lazy(() => import("./views/Quizzes/Quizzes"));
 const Ranking = lazy(() => import("./views/Ranking/Ranking"));
 const LoginPage = lazy(() => import("./views/Login/LoginPage"));
 const Stats = lazy(() => import("./views/Stats/Stats"));
-const AddQuiz = lazy(() => import("./views/AddQuiz/AddQuiz"));
+const ManageQuiz = lazy(() => import("./views/ManageQuiz/ManageQuiz"));
 const Achievements = lazy(() => import("./views/Achievements/Achievements"));
 const Settings = lazy(() => import("./views/Settings/Settings"));
 
@@ -30,7 +30,7 @@ const App = () => {
           <>
             <Route path="profile/:userId" element={<Profile />} />
             <Route path="stats" element={<Stats />} />
-            <Route path="addQuiz" element={<AddQuiz />} />
+            <Route path="ManageQuiz" element={<ManageQuiz />} />
             <Route path="achievements" element={<Achievements />} />
             <Route path="settings" element={<Settings />} />
           </>

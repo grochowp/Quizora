@@ -6,6 +6,7 @@ interface CustomSelectProps {
   options: { value: string; label: string }[];
   onChange: (value: string) => void;
   styles?: string;
+  color?: string;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -13,7 +14,8 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   value,
   options,
   onChange,
-  styles = "",
+  styles = "w-max",
+  color = "secondary",
 }) => {
   return (
     <div className="relative flex flex-col">
@@ -21,7 +23,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
         {label}
       </span>
       <select
-        className={`shadow-custom-inner h-12 w-max rounded-md bg-secondary px-2 text-sm ${styles}`}
+        className={`shadow-custom-inner h-12 rounded-md bg-${color} px-2 text-sm ${styles}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
