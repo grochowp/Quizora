@@ -97,3 +97,11 @@ export interface IManageQuiz {
   difficulty: string;
   questions: IQuestion[];
 }
+
+export interface IQuizFilters {
+  title: string;
+  description: string;
+  category: string;
+  difficulty: string;
+  time: string;
+}
