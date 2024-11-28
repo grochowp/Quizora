@@ -62,9 +62,9 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
 
   return (
     <article
-      className={`${quizzes.length === 0 && !isLoading && "flex justify-center"}`}
+      className={`${quizzes.length === 0 && !isLoading && "flex flex-col items-center justify-center"}`}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex w-full items-center justify-between">
         {title && (
           <h1 className="pl-2 font-poppins tracking-widest text-baseText md:text-xl">
             {title}
@@ -117,7 +117,9 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
           className="flex flex-wrap gap-3"
         >
           {quizzes.length === 0 && (
-            <h1 className="text-xl">Brak Quizów o podanych kryteriach</h1>
+            <h1 className="flex h-[132px] items-center justify-center text-xl">
+              Brak Quizów o podanych kryteriach
+            </h1>
           )}
           {quizzes.slice(0, maxQuizzes).map((quiz) => (
             <Quiz key={quiz._id} quiz={quiz} lessAnimations={lessAnimations} />

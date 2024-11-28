@@ -18,11 +18,14 @@ const Quiz = ({
     <motion.div
       variants={lessAnimations ? undefined : itemVariants}
       whileHover={lessAnimations ? undefined : { scale: 1.05, rotate: -2 }}
-      className={`duration-250 h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} bg-secondary text-baseText`}
+      className={`duration-250 h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} relative bg-secondary text-baseText`}
     >
-      <div className="m-2 mx-3 mb-2 flex justify-between sm:m-3">
+      <div className="flex justify-between sm:m-3 sm:mb-2">
         <div className="relative flex gap-1">
-          <h1 className="flex items-end text-xl">{quiz.title}</h1>
+          <h1 className="line-clamp-1 max-w-[160px] overflow-hidden text-ellipsis text-xl">
+            {quiz.title}
+          </h1>
+
           <h2 className="relative bottom-[3px] flex items-end text-[10px] opacity-50">
             {quiz.points}pkt
           </h2>
@@ -32,11 +35,11 @@ const Quiz = ({
         </div>
       </div>
       <div>
-        <p className="line-clamp-3 h-14 overflow-hidden text-ellipsis px-3 text-xs opacity-50 sm:h-[63px] sm:text-sm">
+        <p className="line-clamp-3 overflow-hidden text-ellipsis px-3 text-xs opacity-50 sm:h-[63px] sm:text-sm">
           {quiz.description}
         </p>
       </div>
-      <div className="flex justify-between px-3">
+      <div className="absolute bottom-2 flex w-full justify-between px-3">
         <div className="flex items-center gap-1">
           <img
             src={quiz.user.profilePicture}

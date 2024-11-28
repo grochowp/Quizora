@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "../../../components/reusable/elements/Button";
 import CustomInput from "../../../components/reusable/elements/CustomInput";
 import { TileTitle } from "../../../components/reusable/TileTitle";

@@ -42,13 +42,17 @@ class QuizService {
   ): Promise<IQuiz> {
     return withTransaction(async (session) => {
       if (title.length < 5 || title.length > 50) {
-        throw new Error("Quiz title must be between 5 and 50 characters long.");
+        throw new Error("Tytuł Quizu musi wynosić od 5 do 50 znaków.");
       }
       if (time < 3 || time > 10) {
-        throw new Error("Quiz time must be between 3 and 10 minutes.");
+        throw new Error(
+          "Czas przeznaczony na Quiz musi wynosić od 3 do 10 minut."
+        );
       }
       if (questions.length < 3 || questions.length > 15) {
-        throw new Error("Quiz must have between 3 and 15 questions.");
+        throw new Error(
+          "Quiz musi składać się z minimum 3 pytań, a maksymalnie z 15."
+        );
       }
 
       const quizDetails = await QuizDetailsRepository.create(questions, {

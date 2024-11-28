@@ -17,8 +17,19 @@ export interface IQuiz extends Document {
 }
 
 const quizSchema = new mongoose.Schema<IQuiz>({
-  title: { type: String, minlength: 5, maxlength: 30, required: true },
-  description: { type: String, minlength: 5, maxlength: 120, required: true },
+  title: {
+    type: String,
+    minlength: [5, "Tytuł musi zawierać co najmniej 5 znaków"],
+    maxlength: [30, "Tytuł może zawierać maksymalnie 30 znaków"],
+    required: [true, "Tytuł jest wymagany"],
+  },
+  description: {
+    type: String,
+    required: [true, "Opis jest wymagany"],
+    minlength: [5, "Opis musi zawierać co najmniej 5 znaków"],
+    maxlength: [120, "Opis może zawierać maksymalnie 120 znaków"],
+  },
+
   time: { type: Number, min: 1, max: 10, required: true },
   category: {
     type: String,

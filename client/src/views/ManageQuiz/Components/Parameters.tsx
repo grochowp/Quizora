@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "../../../components/reusable/elements/Button";
 import {
   categoryOptions,
@@ -8,16 +7,6 @@ import {
 import CustomSelect from "../../../components/reusable/elements/CustomSelect";
 import { TileTitle } from "../../../components/reusable/TileTitle";
 import { IQuizFilters } from "../../../interfaces";
-
-const calculatePoints = (time: number, difficulty: string, length: number) => {
-  const difficultyModifier =
-    difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
-
-  let points = Math.round((difficultyModifier * (4 + 10 / time) * length) / 3);
-  points = Math.max(5, Math.min(points, 90));
-
-  return points;
-};
 
 export const Parameters = ({
   filters,
@@ -30,6 +19,21 @@ export const Parameters = ({
   handleAddQuiz: () => void;
   questionsLength: number;
 }) => {
+  const calculatePoints = (
+    time: number,
+    difficulty: string,
+    length: number,
+  ) => {
+    const difficultyModifier =
+      difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
+
+    let points = Math.round(
+      (difficultyModifier * (4 + 10 / time) * length) / 3,
+    );
+    points = Math.max(5, Math.min(points, 90));
+
+    return points;
+  };
   return (
     <div className="relative h-full">
       <div className="top-[144px] flex h-96 min-w-[300px] flex-col gap-7 rounded-lg border-l-4 border-extras bg-secondary lg:sticky">

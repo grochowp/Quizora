@@ -15,7 +15,9 @@ export const UpdateModal = ({
       <div className="m-3 flex aspect-square items-center justify-center rounded-full border-[1px] border-baseText p-2 text-2xl md:text-4xl">
         {icon}
       </div>
-      <div className="mr-8 flex items-center text-sm md:text-base">{label}</div>
+      <div className="mr-8 flex items-center whitespace-pre-wrap text-sm md:text-base">
+        {label}
+      </div>
 
       <IoIosCloseCircleOutline
         className="absolute right-2 top-2 cursor-pointer text-xl"

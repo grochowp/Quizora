@@ -8,6 +8,7 @@ const createQuiz = async (req: Request & UserTokenRequest, res: Response) => {
   const { _id: userId } = req.user;
   const { title, description, time, questions, difficulty, category } =
     req.body;
+
   try {
     const { quiz, createdQuizzesMessage } = await QuizService.createQuiz(
       userId,
