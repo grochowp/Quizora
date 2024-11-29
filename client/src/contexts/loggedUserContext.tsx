@@ -36,9 +36,6 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
 
   const editUserCookie = (newUserData: IUser) => {
     Cookies.set("loggedUser", JSON.stringify(newUserData), { expires: 1 / 24 });
-    // Cookies.set("userToken", JSON.stringify(newUserData.token), {
-    //   expires: 1 / 24,
-    // });
   };
 
   useEffect(() => {

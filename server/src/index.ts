@@ -11,7 +11,14 @@ const connectDatabase = require("./config/database");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://quizora-grochowp.netlify.app"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 const port = process.env.PORT;
