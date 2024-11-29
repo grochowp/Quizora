@@ -1,4 +1,6 @@
-export const categoryOptions = [
+import { IOptions } from "../interfaces";
+
+export const categoryOptions: IOptions[] = [
   { value: "", label: "Dowolna" },
   { value: "programming", label: "Programowanie" },
   { value: "history", label: "Historia" },
@@ -7,14 +9,14 @@ export const categoryOptions = [
   { value: "sport", label: "Sport" },
 ];
 
-export const difficultyOptions = [
+export const difficultyOptions: IOptions[] = [
   { value: "", label: "Dowolny" },
   { value: "easy", label: "Łatwy" },
   { value: "medium", label: "Średni" },
   { value: "hard", label: "Trudny" },
 ];
 
-export const timeOptions = [
+export const timeOptions: IOptions[] = [
   { value: "3", label: "3" },
   { value: "4", label: "4" },
   { value: "5", label: "5" },
@@ -25,7 +27,7 @@ export const timeOptions = [
   { value: "10", label: "10" },
 ];
 
-export const questionCountOptions = [
+export const questionCountOptions: IOptions[] = [
   { value: "", label: "Dowolna" },
   ...Array.from({ length: 13 }, (_, index) => ({
     value: (index + 3).toString(),
@@ -33,7 +35,7 @@ export const questionCountOptions = [
   })),
 ];
 
-export const orderOptions = [
+export const orderOptions: IOptions[] = [
   { value: "points -1", label: "Punkty - malejąco" },
   { value: "points 1", label: "Punkty - rosnąco" },
   { value: "updatedAt -1", label: "Najnowsze" },

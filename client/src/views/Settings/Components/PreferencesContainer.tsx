@@ -9,7 +9,7 @@ import { UpdatePreferences } from "../../../services/userService";
 import FullPageSpinner from "../../../components/reusable/FullPageSpinner";
 import { useModalContext } from "../../../contexts/ModalContext";
 import { CiEdit } from "react-icons/ci";
-import { UpdateModal } from "../../../components/reusable/modals/UpdateModal";
+import { TopModal } from "../../../components/reusable/modals/TopModal";
 
 export const PreferencesContainer = () => {
   const { loggedUserData, editUser } = useLoggedUserContext();
@@ -79,7 +79,7 @@ export const PreferencesContainer = () => {
 
       editUser(response.user);
       openModal(
-        <UpdateModal
+        <TopModal
           label="Pomyślnie zaktualizowano preferencje!"
           icon={<CiEdit />}
         />,

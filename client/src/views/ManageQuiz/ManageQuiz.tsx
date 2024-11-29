@@ -1,7 +1,12 @@
 import { useState } from "react";
-import { IManageQuiz, IQuestion, IQuiz, IQuizFilters } from "../../interfaces";
+import {
+  IManageQuiz,
+  IQuestion,
+  IQuiz,
+  IQuizFilters,
+  ITopModalBody,
+} from "../../interfaces";
 import { useModalContext } from "../../contexts/ModalContext";
-import { UpdateModal } from "../../components/reusable/modals/UpdateModal";
 import { MdOutlineAddchart } from "react-icons/md";
 import { GeneralInformations } from "./Components/GeneralInformations";
 import { Questions } from "./Components/Questions";
@@ -9,6 +14,8 @@ import { Parameters } from "./Components/Parameters";
 import FullPageSpinner from "../../components/reusable/FullPageSpinner";
 import { createQuiz } from "../../services/quizService";
 import { useNavigate } from "react-router-dom";
+import { TopModal } from "../../components/reusable/modals/TopModal";
+import { BiError } from "react-icons/bi";
 
 const initialQuestionsState = [
   {
@@ -31,7 +38,7 @@ const initialQuestionsState = [
 ];
 
 const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
-  const { openModal, setIsModalOpen } = useModalContext();
+  const { openModal, closeAllModals } = useModalContext();
   const [questions, setQuestions] = useState<IQuestion[]>(
     quiz?.quizDetails.questions || initialQuestionsState,
   );
@@ -44,6 +51,8 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
     time: "3",
   });
 
+  const modals: ITopModalBody[] = [];
+
   const navigate = useNavigate();
 
   const updateFilter = (key: string, value: string) => {
@@ -51,7 +60,7 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
   };
 
   const validateQuiz = (quiz: IManageQuiz) => {
-    setIsModalOpen(false);
+    closeAllModals();
 
     if (!quiz.title || !quiz.description) {
       throw new Error("Wprowadź podstawowe informacje o Quizie.");
@@ -83,8 +92,11 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
     });
   };
 
+  const addModal = (label: string, icon: React.ReactNode, time: number) => {
+    modals.push({ label, icon, time });
+  };
+
   const handleAddQuiz = async () => {
-    let message;
     try {
       setIsLoading(true);
       const quiz: IManageQuiz = {
@@ -95,18 +107,27 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
       validateQuiz(quiz);
 
       const { quiz: newQuiz, createdQuizzesMessage } = await createQuiz(quiz);
-      message = `Quiz "${newQuiz.title}" został utworzony \n${createdQuizzesMessage}`;
+      addModal(
+        `Quiz "${newQuiz.title}" został dodany`,
+        <MdOutlineAddchart />,
+        7,
+      );
+      addModal(createdQuizzesMessage, <MdOutlineAddchart />, 5);
+
       navigate("/");
       resetFilters();
     } catch (err) {
-      message = err.message;
+      addModal(err.message, <BiError />, 5);
     } finally {
       setIsLoading(false);
-      openModal(
-        <UpdateModal icon={<MdOutlineAddchart />} label={message} />,
-        "top",
-        5,
-      );
+
+      modals.forEach((modal) => {
+        openModal(
+          <TopModal icon={modal.icon} label={modal.label} />,
+          "top",
+          modal.time,
+        );
+      });
     }
   };
 

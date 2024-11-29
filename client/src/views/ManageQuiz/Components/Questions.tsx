@@ -3,9 +3,9 @@ import { IQuestion } from "../../../interfaces";
 import CustomInput from "../../../components/reusable/elements/CustomInput";
 import { CiTrash } from "react-icons/ci";
 import { useModalContext } from "../../../contexts/ModalContext";
-import { UpdateModal } from "../../../components/reusable/modals/UpdateModal";
 import { MdOutlineAddchart } from "react-icons/md";
 import { Button } from "../../../components/reusable/elements/Button";
+import { TopModal } from "../../../components/reusable/modals/TopModal";
 
 const indexAnswerMap: Record<number, string> = {
   0: "A",
@@ -67,7 +67,7 @@ export const Questions = ({
       setQuestions(updatedQuestions);
     } else {
       openModal(
-        <UpdateModal
+        <TopModal
           label="Quiz musi się składać z minimum 3 pytań."
           icon={<MdOutlineAddchart />}
         />,

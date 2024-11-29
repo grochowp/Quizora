@@ -105,3 +105,21 @@ export interface IQuizFilters {
   difficulty: string;
   time: string;
 }
+
+export interface ITopModalBody {
+  icon: React.ReactNode;
+  label: string;
+  time: number;
+}
+
+export interface IModalBody {
+  id: string;
+  position: "center" | "top";
+  body: React.ReactNode;
+  time?: number;
+}
+
+export interface IOptions {
+  value: string;
+  label: string;
+}
