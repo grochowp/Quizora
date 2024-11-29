@@ -1,12 +1,13 @@
 import { Button } from "../../../components/reusable/elements/Button";
+
+import CustomSelect from "../../../components/reusable/elements/CustomSelect";
+import { TileTitle } from "../../../components/reusable/TileTitle";
+import { IQuizFilters } from "../../../interfaces";
 import {
   categoryOptions,
   difficultyOptions,
   timeOptions,
 } from "../../../utils/selectOptions";
-import CustomSelect from "../../../components/reusable/elements/CustomSelect";
-import { TileTitle } from "../../../components/reusable/TileTitle";
-import { IQuizFilters } from "../../../interfaces";
 
 export const Parameters = ({
   filters,

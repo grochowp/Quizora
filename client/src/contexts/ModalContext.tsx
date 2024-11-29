@@ -11,7 +11,11 @@ const centerVariants = {
 
 const topVariants = {
   hidden: { opacity: 0, top: -30 },
-  visible: (index: number) => ({ opacity: 1, top: 60 + index * 120 }),
+  visible: (index: number) => {
+    const screenWidth = window.innerWidth;
+    const offset = screenWidth >= 768 ? 105 : 90;
+    return { opacity: 1, top: 60 + index * offset };
+  },
   exit: { opacity: 0, top: -30 },
 };
 

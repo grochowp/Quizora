@@ -131,7 +131,9 @@ export const Questions = ({
       })}
       {questions.length < 15 && (
         <div className="flex flex-col gap-4 rounded-lg border-l-4 border-extras bg-secondary px-4">
-          <div className="mt-4 flex">{questions.length + 1}.</div>
+          <div className="relative mb-2 mt-4 pb-2 after:absolute after:left-0 after:top-[115%] after:h-[1px] after:w-full after:bg-baseText after:opacity-50">
+            {questions.length + 1}.
+          </div>
           <div className="mb-4 flex w-full items-center justify-center">
             <Button
               variant="outline"
