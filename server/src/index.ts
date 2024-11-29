@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 
 const userRoutes = require("./routes/user.routes");
 const quizRoutes = require("./routes/quiz.routes");
@@ -11,14 +10,14 @@ const connectDatabase = require("./config/database");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["https://quizora-grochowp.netlify.app"],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: true,
-  })
-);
+const cors = require("cors");
 
+const corsOptions = {
+  origin: "https://quizora-grochowp.netlify.app", // Zaufana domena frontendowa
+  credentials: true, // Zezwala na wysyłanie ciasteczek
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const port = process.env.PORT;

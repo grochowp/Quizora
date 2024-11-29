@@ -19,8 +19,10 @@ export const createQuiz = async (quizData: IManageQuiz) => {
     const cleanToken = token?.replace(/^"|"$/g, "");
     const response = await axios.post(
       `${import.meta.env.VITE_DB_URL}api/quiz/`,
+
       quizData,
       {
+        withCredentials: true,
         headers: {
           Authorization: `Bearer ${cleanToken}`,
           "Content-Type": "application/json",
