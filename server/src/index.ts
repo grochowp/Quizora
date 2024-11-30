@@ -11,6 +11,7 @@ const connectDatabase = require("./config/database");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+require("dotenv").config();
 
 app.use(cookieParser());
 
@@ -19,20 +20,9 @@ const allowedOrigins = process.env.ORIGINS
   : [];
 
 const corsOptions = {
-  origin: (origin: string, callback: any) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: "https://quizora-grochowp.netlify.app",
   credentials: true,
 };
-
-app.use((req, res, next) => {
-  console.log(req.cookies);
-  next();
-});
 
 app.use(cors(corsOptions));
 app.use(express.json());

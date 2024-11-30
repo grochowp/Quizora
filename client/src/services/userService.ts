@@ -39,6 +39,7 @@ export const UpdatePreferences = async (preferences: {
       `${import.meta.env.VITE_DB_URL}api/user/preferences`,
       preferences,
       {
+        withCredentials: true,
         headers: {
           Authorization: `Bearer ${cleanToken}`,
           "Content-Type": "application/json",
