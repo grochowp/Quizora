@@ -25,6 +25,7 @@ export const Parameters = ({
     difficulty: string,
     length: number,
   ) => {
+    if (length < 3) return 0;
     const difficultyModifier =
       difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
 
@@ -35,6 +36,7 @@ export const Parameters = ({
 
     return points;
   };
+
   return (
     <div className="relative h-full">
       <div className="top-[144px] flex h-96 min-w-[300px] flex-col gap-7 rounded-lg border-l-4 border-extras bg-secondary lg:sticky">

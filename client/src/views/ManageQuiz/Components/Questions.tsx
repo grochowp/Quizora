@@ -1,4 +1,4 @@
-import React from "react";
+import { useRef } from "react";
 import { IQuestion } from "../../../interfaces";
 import CustomInput from "../../../components/reusable/elements/CustomInput";
 import { CiTrash } from "react-icons/ci";
@@ -17,15 +17,29 @@ const popVariants = {
       type: "spring",
       stiffness: 300,
       damping: 20,
-      delay: index < 3 ? index * 0.1 : 0,
+      delay: index < 3 ? index * 0.1 : 0.1,
     },
   }),
   exit: {
     opacity: 0,
     scale: 0.8,
-    transition: { type: "spring", stiffness: 300, damping: 20 },
+    height: 0,
   },
 };
+
+const addVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: (index: number) => ({
+    opacity: index >= 15 ? 0.5 : 1,
+    scale: 1,
+  }),
+  exit: {
+    opacity: 0,
+    scale: 0.8,
+    height: 0,
+  },
+};
+
 const indexAnswerMap: Record<number, string> = {
   0: "A",
   1: "B",
@@ -41,6 +55,7 @@ export const Questions = ({
   handleSetQuestions: (questions: IQuestion[]) => void;
 }) => {
   const { openModal } = useModalContext();
+  const lastQuestionRef = useRef<HTMLDivElement | null>(null);
 
   const handleQuestionChange = (questionIndex: number, value: string) => {
     const updatedQuestions = [...questions];
@@ -76,6 +91,11 @@ export const Questions = ({
     ];
 
     handleSetQuestions(newQuestions);
+    setTimeout(() => {
+      if (lastQuestionRef.current) {
+        lastQuestionRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 50);
   };
 
   const handleDeleteQuestion = (questionIndex: number) => {
@@ -101,12 +121,13 @@ export const Questions = ({
       {questions.map((question: IQuestion, index) => {
         return (
           <motion.div
+            ref={index === questions.length - 1 ? lastQuestionRef : null}
             variants={popVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
             custom={index}
-            key={question._id}
+            key={question._id || index}
             className="flex flex-col gap-4 rounded-lg border-l-4 border-extras bg-secondary px-4"
           >
             <div className="relative my-4 flex pb-2 after:absolute after:left-0 after:top-[115%] after:h-[1px] after:w-full after:bg-baseText after:opacity-50">
@@ -153,22 +174,31 @@ export const Questions = ({
           </motion.div>
         );
       })}
-      {questions.length < 15 && (
-        <div className="flex flex-col gap-4 rounded-lg border-l-4 border-extras bg-secondary px-4">
-          <div className="relative mb-2 mt-4 pb-2 after:absolute after:left-0 after:top-[115%] after:h-[1px] after:w-full after:bg-baseText after:opacity-50">
-            {questions.length + 1}.
-          </div>
-          <div className="mb-4 flex w-full items-center justify-center">
-            <Button
-              variant="outline"
-              styles=" h-10 px-5"
-              onClick={handleAddQuestion}
-            >
-              Dodaj pytanie
-            </Button>
-          </div>
+
+      <motion.div
+        variants={addVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        custom={questions.length}
+        className={`${questions.length >= 15 && "pointer-events-none opacity-50"} flex flex-col gap-4 rounded-lg border-l-4 border-extras bg-secondary px-4`}
+      >
+        <div className="relative mb-2 mt-4 pb-2 after:absolute after:left-0 after:top-[115%] after:h-[1px] after:w-full after:bg-baseText after:opacity-50">
+          {questions.length >= 15
+            ? "Maksymalna liczba pytań"
+            : questions.length + 1}
+          .
         </div>
-      )}
+        <div className="mb-4 flex w-full items-center justify-center">
+          <Button
+            variant="outline"
+            styles=" h-10 px-5"
+            onClick={handleAddQuestion}
+          >
+            Dodaj pytanie
+          </Button>
+        </div>
+      </motion.div>
     </AnimatePresence>
   );
 };

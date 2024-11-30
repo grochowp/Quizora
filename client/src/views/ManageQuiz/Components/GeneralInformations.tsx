@@ -7,10 +7,12 @@ export const GeneralInformations = ({
   filters,
   updateFilter,
   handleAddQuiz,
+  resetFilters,
 }: {
   filters: IQuizFilters;
   updateFilter: (key: string, value: string) => void;
   handleAddQuiz: () => void;
+  resetFilters: () => void;
 }) => {
   return (
     <div className="flex flex-col gap-4 rounded-lg border-l-4 border-extras bg-secondary">
@@ -25,13 +27,23 @@ export const GeneralInformations = ({
             value={filters.title}
             onChange={(value) => updateFilter("title", value)}
           />
-          <Button
-            styles="hidden xl:flex h-10 px-4"
-            onClick={handleAddQuiz}
-            type="submit"
-          >
-            Dodaj Quiz
-          </Button>
+          <div className="flex gap-4">
+            <Button
+              styles="hidden xl:flex h-10 px-4"
+              onClick={resetFilters}
+              type="button"
+              variant="outline"
+            >
+              Reset
+            </Button>
+            <Button
+              styles="hidden xl:flex h-10 px-4"
+              onClick={handleAddQuiz}
+              type="submit"
+            >
+              Dodaj Quiz
+            </Button>
+          </div>
         </div>
 
         <CustomInput

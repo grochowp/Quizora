@@ -17,38 +17,18 @@ import { useNavigate } from "react-router-dom";
 import { TopModal } from "../../components/reusable/modals/TopModal";
 import { BiError } from "react-icons/bi";
 
-const initialQuestionsState = [
-  {
-    question: "",
-    answers: ["", "", "", ""],
-    correctAnswerIndex: 0,
-  },
-
-  {
-    question: "",
-    answers: ["", "", "", ""],
-    correctAnswerIndex: 0,
-  },
-
-  {
-    question: "",
-    answers: ["", "", "", ""],
-    correctAnswerIndex: 0,
-  },
-];
-
 const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
   const { openModal, closeAllModals } = useModalContext();
-  const [questions, setQuestions] = useState<IQuestion[]>(
-    quiz?.quizDetails.questions || initialQuestionsState,
-  );
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [questions, setQuestions] = useState<IQuestion[]>(
+    quiz?.quizDetails.questions || [],
+  );
   const [filters, setFilters] = useState<IQuizFilters>({
     title: quiz?.title || "",
     description: quiz?.description || "",
     category: quiz?.category || "programming",
     difficulty: quiz?.difficulty || "easy",
-    time: String(quiz?.time) || "3",
+    time: quiz?.time.toString() || "3",
   });
 
   const modals: ITopModalBody[] = [];
@@ -86,7 +66,7 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
   };
 
   const resetFilters = () => {
-    setQuestions(initialQuestionsState);
+    setQuestions([]);
     setFilters({
       title: "",
       description: "",
@@ -94,6 +74,9 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
       difficulty: "easy",
       time: "3",
     });
+    setTimeout(() => {
+      console.log(questions);
+    }, 0);
   };
 
   const addModal = (label: string, icon: React.ReactNode, time: number) => {
@@ -145,6 +128,7 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
         <GeneralInformations
           filters={filters}
           handleAddQuiz={handleAddQuiz}
+          resetFilters={resetFilters}
           updateFilter={updateFilter}
         />
 
