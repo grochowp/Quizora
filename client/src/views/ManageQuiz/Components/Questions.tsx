@@ -6,7 +6,26 @@ import { useModalContext } from "../../../contexts/ModalContext";
 import { MdOutlineAddchart } from "react-icons/md";
 import { Button } from "../../../components/reusable/elements/Button";
 import { TopModal } from "../../../components/reusable/modals/TopModal";
+import { AnimatePresence, motion } from "framer-motion";
 
+const popVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: (index: number) => ({
+    opacity: 1,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 20,
+      delay: index < 3 ? index * 0.1 : 0,
+    },
+  }),
+  exit: {
+    opacity: 0,
+    scale: 0.8,
+    transition: { type: "spring", stiffness: 300, damping: 20 },
+  },
+};
 const indexAnswerMap: Record<number, string> = {
   0: "A",
   1: "B",
@@ -16,17 +35,17 @@ const indexAnswerMap: Record<number, string> = {
 
 export const Questions = ({
   questions,
-  setQuestions,
+  handleSetQuestions,
 }: {
   questions: IQuestion[];
-  setQuestions: React.Dispatch<React.SetStateAction<IQuestion[]>>;
+  handleSetQuestions: (questions: IQuestion[]) => void;
 }) => {
   const { openModal } = useModalContext();
 
   const handleQuestionChange = (questionIndex: number, value: string) => {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex].question = value;
-    setQuestions(updatedQuestions);
+    handleSetQuestions(updatedQuestions);
   };
 
   const handleAnswerChange = (
@@ -36,18 +55,18 @@ export const Questions = ({
   ) => {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex].answers[answerIndex] = value;
-    setQuestions(updatedQuestions);
+    handleSetQuestions(updatedQuestions);
   };
 
   const handleCorrectAnswerChange = (
     questionIndex: number,
     answerIndex: number,
   ) => {
-    setQuestions((prevQuestions) =>
-      prevQuestions.map((q, i) =>
-        i === questionIndex ? { ...q, correctAnswerIndex: answerIndex } : q,
-      ),
+    const newQuestions = questions.map((q, i) =>
+      i === questionIndex ? { ...q, correctAnswerIndex: answerIndex } : q,
     );
+
+    handleSetQuestions(newQuestions);
   };
 
   const handleAddQuestion = () => {
@@ -56,7 +75,7 @@ export const Questions = ({
       { question: "", answers: ["", "", "", ""], correctAnswerIndex: 0 },
     ];
 
-    setQuestions(newQuestions);
+    handleSetQuestions(newQuestions);
   };
 
   const handleDeleteQuestion = (questionIndex: number) => {
@@ -64,7 +83,7 @@ export const Questions = ({
       const updatedQuestions = questions.filter(
         (_, index) => questionIndex !== index,
       );
-      setQuestions(updatedQuestions);
+      handleSetQuestions(updatedQuestions);
     } else {
       openModal(
         <TopModal
@@ -78,11 +97,16 @@ export const Questions = ({
   };
 
   return (
-    <>
+    <AnimatePresence>
       {questions.map((question: IQuestion, index) => {
         return (
-          <div
-            key={index}
+          <motion.div
+            variants={popVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            custom={index}
+            key={question._id}
             className="flex flex-col gap-4 rounded-lg border-l-4 border-extras bg-secondary px-4"
           >
             <div className="relative my-4 flex pb-2 after:absolute after:left-0 after:top-[115%] after:h-[1px] after:w-full after:bg-baseText after:opacity-50">
@@ -126,7 +150,7 @@ export const Questions = ({
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         );
       })}
       {questions.length < 15 && (
@@ -145,6 +169,6 @@ export const Questions = ({
           </div>
         </div>
       )}
-    </>
+    </AnimatePresence>
   );
 };

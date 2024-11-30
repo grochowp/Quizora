@@ -3,10 +3,15 @@ import { GoSearch } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 
 export const SearchBar = () => {
-  const [searchInput, setSearchInput] = useState<string>();
+  const [searchInput, setSearchInput] = useState<string>("");
   const navigate = useNavigate();
 
-  const handleSearchQuiz = () => {
+  const handleSearchQuiz = (
+    e: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+    if (searchInput.length === 0) return;
+
     navigate(`/quizzes?title=${searchInput}`);
     setSearchInput("");
   };
@@ -14,7 +19,7 @@ export const SearchBar = () => {
   return (
     <header className="z-30 m-0 mb-16 flex h-20 items-center justify-center">
       <div className="fixed left-[50vw] -translate-x-1/2 transform">
-        <div className="relative flex">
+        <form className="relative flex" onSubmit={(e) => handleSearchQuiz(e)}>
           <GoSearch className="absolute left-5 top-3 h-6 w-6 text-baseText" />
           <input
             type="text"
@@ -24,14 +29,14 @@ export const SearchBar = () => {
             onChange={(e) => setSearchInput(e.target.value)}
           />
           {searchInput && (
-            <span
-              className="absolute right-5 top-[11px] cursor-pointer text-extras"
-              onClick={handleSearchQuiz}
+            <button
+              className="absolute right-5 top-[11px] cursor-pointer text-baseText"
+              onClick={(e) => handleSearchQuiz(e)}
             >
               Szukaj
-            </span>
+            </button>
           )}
-        </div>
+        </form>
       </div>
     </header>
   );

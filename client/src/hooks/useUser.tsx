@@ -1,28 +1,20 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { IUser } from "../interfaces";
 import { findUserById } from "../services/userService";
 
 export function useUser(userId: string | undefined) {
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  if (!userId) throw new Error("Błędny ID użytkownika.");
 
-  useEffect(() => {
-    (async function () {
-      if (!userId) throw new Error("Błędny ID użytkownika.");
-      try {
-        setIsLoading(true);
-        const response = await findUserById(userId);
-        setUser(response);
-      } catch (err) {
-        if (err instanceof Error && err.name !== "AbortError") {
-          setError(err.message);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [userId]);
+  const {
+    data: user,
+    error,
+    isLoading,
+  } = useQuery<IUser>({
+    queryKey: ["user", userId],
+    queryFn: () => findUserById(userId),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
 
   return { user, error, isLoading };
 }

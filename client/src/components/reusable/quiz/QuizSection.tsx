@@ -1,5 +1,5 @@
 import { GrPowerReset } from "react-icons/gr";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Spinner from "../Spinner";
 import { useQuiz } from "../../../hooks/useQuiz";
 import Quiz from "./Quiz";
@@ -42,22 +42,19 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   const { loggedUserData } = useLoggedUserContext();
   const lessAnimations = loggedUserData?.userProfile?.lessAnimations;
 
-  const [resetKey, setResetKey] = useState(0);
   if (userId) query = query.concat(`${query && "&"}userId=${userId}`);
+
   query =
     status === "liked"
       ? query.concat("&liked=true")
       : query.concat(`&status=${status}`);
 
-  const { quizzes, error, isLoading } = useQuiz(query, resetKey);
-  const handleResetClick = () => {
-    setResetKey((prevKey) => prevKey + 1);
-  };
+  const { quizzes, error, isLoading, refetch } = useQuiz(query);
 
   const difficultyOptions = useMemo(() => ["easy", "medium", "hard"], []);
 
   if (error) {
-    return <div>{error}</div>;
+    return <div>{error.message}</div>;
   }
 
   return (
@@ -93,7 +90,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
         {reset && (
           <GrPowerReset
             className="m-4 mr-4 h-5 cursor-pointer md:h-6 md:w-6 xl:mr-4"
-            onClick={handleResetClick}
+            onClick={() => refetch()}
           />
         )}
       </div>

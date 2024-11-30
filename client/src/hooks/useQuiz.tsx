@@ -1,28 +1,19 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { IQuiz } from "../interfaces";
 import { fetchQuizzesByQuery } from "../services/quizService";
 
-export function useQuiz(query: string, resetKey: number) {
-  const [quizzes, setQuizzes] = useState<IQuiz[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+export function useQuiz(query: string) {
+  const {
+    data: quizzes = [],
+    error,
+    isLoading,
+    refetch,
+  } = useQuery<IQuiz[]>({
+    queryKey: ["quizzes", query],
+    queryFn: () => fetchQuizzesByQuery(query),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
 
-  useEffect(() => {
-    (async function () {
-      try {
-        setIsLoading(true);
-
-        const response = await fetchQuizzesByQuery(query);
-        setQuizzes(response);
-      } catch (err) {
-        if (err instanceof Error && err.name !== "AbortError") {
-          setError(err.message);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [query, resetKey]);
-
-  return { quizzes, error, isLoading };
+  return { quizzes, error, isLoading, refetch };
 }

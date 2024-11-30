@@ -44,16 +44,20 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [filters, setFilters] = useState<IQuizFilters>({
-    title: "",
-    description: "",
-    category: "programming",
-    difficulty: "easy",
-    time: "3",
+    title: quiz?.title || "",
+    description: quiz?.description || "",
+    category: quiz?.category || "programming",
+    difficulty: quiz?.difficulty || "easy",
+    time: String(quiz?.time) || "3",
   });
 
   const modals: ITopModalBody[] = [];
 
   const navigate = useNavigate();
+
+  const handleSetQuestions = (newQuestions: IQuestion[]) => {
+    setQuestions(newQuestions);
+  };
 
   const updateFilter = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -136,6 +140,7 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
       className={` ${isLoading && "pointer-events-none opacity-50"} relative mb-8 flex w-[300px] flex-col gap-16 font-roboto lg:w-[660px] lg:flex-row lg:gap-4 xl:w-[984px] 2xl:w-[1316px]`}
     >
       {isLoading && <FullPageSpinner />}
+
       <div className={`inputAddQuizBox relative flex w-full flex-col gap-4`}>
         <GeneralInformations
           filters={filters}
@@ -143,7 +148,10 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
           updateFilter={updateFilter}
         />
 
-        <Questions questions={questions} setQuestions={setQuestions} />
+        <Questions
+          questions={questions}
+          handleSetQuestions={handleSetQuestions}
+        />
       </div>
       <Parameters
         filters={filters}

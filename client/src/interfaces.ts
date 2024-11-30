@@ -54,6 +54,7 @@ export interface IQuiz {
 }
 
 export interface IQuestion {
+  _id?: string;
   question: string;
   answers: Array<string>;
   correctAnswerIndex: number;
