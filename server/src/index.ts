@@ -15,12 +15,9 @@ require("dotenv").config();
 
 app.use(cookieParser());
 
-const allowedOrigins = process.env.ORIGINS
-  ? process.env.ORIGINS.split(",")
-  : [];
-
 const corsOptions = {
-  origin: "https://quizora-grochowp.netlify.app",
+  // origin: "https://quizora-grochowp.netlify.app",
+  origin: "http://localhost:5173",
   credentials: true,
 };
 

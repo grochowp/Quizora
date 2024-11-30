@@ -1,7 +1,6 @@
 import axios from "axios";
 import { IFormData, IUser } from "../interfaces";
 import Cookies from "js-cookie";
-axios.defaults.withCredentials = true;
 
 export const loginOrRegister = async (
   body: IFormData,
@@ -25,6 +24,7 @@ export const findUserById = async (userId: string) => {
     );
     return response.data;
   } catch (err) {
+    console.log(err);
     throw new Error(err.response.data.message);
   }
 };
