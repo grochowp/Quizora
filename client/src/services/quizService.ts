@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IManageQuiz, IQuiz } from "../interfaces";
 import Cookies from "js-cookie";
+axios.defaults.withCredentials = true; // Włącza przesyłanie ciasteczek
 
 export const fetchQuizzesByQuery = async (query: string): Promise<IQuiz[]> => {
   try {
@@ -19,10 +20,8 @@ export const createQuiz = async (quizData: IManageQuiz) => {
     const cleanToken = token?.replace(/^"|"$/g, "");
     const response = await axios.post(
       `${import.meta.env.VITE_DB_URL}api/quiz/`,
-
       quizData,
       {
-        withCredentials: true,
         headers: {
           Authorization: `Bearer ${cleanToken}`,
           "Content-Type": "application/json",

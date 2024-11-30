@@ -23,17 +23,15 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
 
   const setUserCookie = (user: IUser) => {
     Cookies.set("loggedUser", JSON.stringify(user), {
-      expires: 1 / 24, // Ciasteczko wygasa po godzinie
-      secure: true, // Ciasteczko będzie ustawiane tylko przez HTTPS
-      sameSite: "None", // Ważne dla cross-site cookies
-      domain: ".quizora-grochowp.netlify.app", // Określa domenę, do której ma być wysyłane ciasteczko
+      expires: 1 / 24,
+      secure: true,
+      sameSite: "None",
     });
 
     Cookies.set("userToken", JSON.stringify(user.token), {
       expires: 1 / 24,
       secure: true,
-      sameSite: "None", // Ważne dla cross-site cookies
-      domain: ".quizora-grochowp.netlify.app", // Określa domenę, do której ma być wysyłane ciasteczko
+      sameSite: "None",
     });
   };
 
@@ -44,10 +42,9 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
 
   const editUserCookie = (newUserData: IUser) => {
     Cookies.set("loggedUser", JSON.stringify(newUserData), {
-      expires: 1 / 24, // Ciasteczko wygasa po godzinie
-      secure: true, // Ciasteczko będzie ustawiane tylko przez HTTPS
-      sameSite: "None", // Ważne dla cross-site cookies
-      domain: ".quizora-grochowp.netlify.app", // Określa domenę, do której ma być wysyłane ciasteczko
+      expires: 1 / 24,
+      secure: true,
+      sameSite: "None",
     });
   };
 

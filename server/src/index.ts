@@ -9,13 +9,30 @@ const ratingRoutes = require("./routes/rating.routes");
 const connectDatabase = require("./config/database");
 
 const app = express();
-
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
+app.use(cookieParser());
+
+const allowedOrigins = process.env.ORIGINS
+  ? process.env.ORIGINS.split(",")
+  : [];
+
 const corsOptions = {
-  origin: "https://quizora-grochowp.netlify.app", // Zaufana domena frontendowa
-  credentials: true, // Zezwala na wysyłanie ciasteczek
+  origin: (origin: string, callback: any) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 };
+
+app.use((req, res, next) => {
+  console.log(req.cookies);
+  next();
+});
 
 app.use(cors(corsOptions));
 app.use(express.json());

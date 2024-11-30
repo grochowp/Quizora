@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IFormData, IUser } from "../interfaces";
 import Cookies from "js-cookie";
+axios.defaults.withCredentials = true;
 
 export const loginOrRegister = async (
   body: IFormData,
@@ -38,8 +39,6 @@ export const UpdatePreferences = async (preferences: {
       `${import.meta.env.VITE_DB_URL}api/user/preferences`,
       preferences,
       {
-        withCredentials: true,
-
         headers: {
           Authorization: `Bearer ${cleanToken}`,
           "Content-Type": "application/json",
