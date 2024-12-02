@@ -64,7 +64,7 @@ function Profile() {
         />
       </div>
       <div className="flex justify-center">
-        <QuizSelection userId={userId} status={status} />
+        <QuizSelection userId={userId} status={status} maxQuizzes={16} />
       </div>
     </div>
   );

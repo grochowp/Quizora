@@ -49,7 +49,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
       ? query.concat("&liked=true")
       : query.concat(`&status=${status}`);
 
-  const { quizzes, error, isLoading, refetch } = useQuiz(query);
+  const { quizzesLength, quizzes, error, isLoading, refetch } = useQuiz(query);
 
   const difficultyOptions = useMemo(() => ["easy", "medium", "hard"], []);
 
@@ -62,11 +62,12 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
       className={`${quizzes.length === 0 && !isLoading && "flex flex-col items-center justify-center"}`}
     >
       <div className="flex w-full items-center justify-between">
-        {title && (
-          <h1 className="pl-2 font-poppins tracking-widest text-baseText md:text-xl">
-            {title}
+        {!difficultyFilter && (
+          <h1 className="mb-4 pl-2 font-poppins tracking-widest text-baseText md:text-xl">
+            {title ? title : `Znaleziono ${quizzesLength} Quizów.`}
           </h1>
         )}
+
         {difficultyFilter && handleDifficultyChange && (
           <div className="flex gap-2">
             {difficultyOptions.map((difficulty: string) => (
@@ -89,7 +90,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
         )}
         {reset && (
           <GrPowerReset
-            className="m-4 mr-4 h-5 cursor-pointer md:h-6 md:w-6 xl:mr-4"
+            className="mb-4 mr-4 h-5 cursor-pointer md:h-6 md:w-6 xl:mr-4"
             onClick={() => refetch()}
           />
         )}

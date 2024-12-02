@@ -14,9 +14,11 @@ import QuizSection from "./QuizSection";
 export const QuizSelection = ({
   userId,
   status,
+  maxQuizzes = 20,
 }: {
   userId?: string;
   status?: string;
+  maxQuizzes?: number;
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
@@ -124,7 +126,7 @@ export const QuizSelection = ({
           query={query}
           userId={userId}
           status={status}
-          maxQuizzes={20}
+          maxQuizzes={maxQuizzes}
         />
       </section>
     </article>

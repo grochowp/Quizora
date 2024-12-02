@@ -124,3 +124,8 @@ export interface IOptions {
   value: string;
   label: string;
 }
+
+export interface IQuizWithNumber {
+  quizzesLength: number;
+  quizzes: IQuiz[];
+}

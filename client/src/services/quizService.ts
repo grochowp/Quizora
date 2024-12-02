@@ -1,13 +1,15 @@
 import axios from "axios";
-import { IManageQuiz, IQuiz } from "../interfaces";
+import { IManageQuiz, IQuizWithNumber } from "../interfaces";
 import Cookies from "js-cookie";
 
-export const fetchQuizzesByQuery = async (query: string): Promise<IQuiz[]> => {
+export const fetchQuizzesByQuery = async (
+  query: string,
+): Promise<IQuizWithNumber> => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_DB_URL}api/quiz?${query}`,
     );
-    return response.data.quizzes;
+    return response.data;
   } catch (err) {
     throw new Error(err.response.data.message);
   }
