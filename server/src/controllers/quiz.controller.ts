@@ -74,14 +74,14 @@ const fetchQuizzes = async (req: Request, res: Response) => {
     filters.questionsCount = +req.query.questionsCount;
 
   try {
-    const { quizzes, createdQuizzesMessage } = await QuizService.getQuizzes(
+    const { quizzesLength, quizzes } = await QuizService.getQuizzes(
       filters,
       page,
       limit,
       sortBy,
       order
     );
-    res.status(200).json({ quizzes, createdQuizzesMessage });
+    res.status(200).json({ quizzesLength, quizzes });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

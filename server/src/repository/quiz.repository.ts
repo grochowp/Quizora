@@ -98,6 +98,11 @@ class QuizRepository {
   async getQuizWithDetails(quizId: ObjectId): Promise<IQuiz> {
     return Quiz.findById(quizId).populate("quizDetails");
   }
+
+  async findQuizzesLength(pipeline: any): Promise<number> {
+    const quizzes = await Quiz.aggregate(pipeline);
+    return quizzes.length;
+  }
 }
 
 export default new QuizRepository();

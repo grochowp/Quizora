@@ -296,6 +296,9 @@ class QuizService {
     if (Object.keys(matchStage).length > 0) {
       aggregationPipeline.push({ $match: matchStage });
     }
+    const quizzesLength = await quizRepository.findQuizzesLength(
+      aggregationPipeline
+    );
 
     const skip = (page - 1) * limit;
     aggregationPipeline.push({ $skip: skip });
@@ -309,7 +312,10 @@ class QuizService {
 
     if (filters.shuffle) shuffleQuizzes(quizzes);
 
-    return { quizzes, message: `${quizzes.length} has been found.` };
+    return {
+      quizzesLength,
+      quizzes,
+    };
   }
 
   async getQuizWithDetails(quizId: ObjectId): Promise<IQuiz> {
