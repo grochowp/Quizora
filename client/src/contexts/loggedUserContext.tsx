@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import { IFormData, IUser } from "../interfaces";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-import { loginOrRegister } from "../services/userService";
+import { getDataFromToken, loginOrRegister } from "../services/userService";
 import Cookies from "js-cookie";
 
 interface LoggedUserContextType {
@@ -22,12 +22,6 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
   const navigate = useNavigate();
 
   const setUserCookie = (user: IUser) => {
-    Cookies.set("loggedUser", JSON.stringify(user), {
-      expires: 1 / 24,
-      secure: true,
-      sameSite: "None",
-    });
-
     Cookies.set("userToken", JSON.stringify(user.token), {
       expires: 1 / 24,
       secure: true,
@@ -36,23 +30,25 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
   };
 
   const removeUserCookie = () => {
-    Cookies.remove("loggedUser");
     Cookies.remove("userToken");
   };
 
-  const editUserCookie = (newUserData: IUser) => {
-    Cookies.set("loggedUser", JSON.stringify(newUserData), {
-      expires: 1 / 24,
-      secure: true,
-      sameSite: "None",
-    });
-  };
-
   useEffect(() => {
-    const userFromCookie = Cookies.get("loggedUser");
-    if (userFromCookie) {
-      setLoggedUserData(JSON.parse(userFromCookie));
-    }
+    (async () => {
+      try {
+        const userToken = Cookies.get("userToken")?.replace(/^"|"$/g, "");
+        if (userToken) {
+          const { user } = await getDataFromToken({
+            token: userToken,
+          });
+
+          setLoggedUserData(user);
+        }
+      } catch (error) {
+        console.error("Token verification failed", error);
+        setLoggedUserData(undefined);
+      }
+    })();
   }, []);
 
   const loginUser = async (data: IFormData, action: string) => {
@@ -71,7 +67,6 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
 
   const editUser = (newUserData: IUser) => {
     setLoggedUserData(newUserData);
-    editUserCookie(newUserData);
   };
 
   const logoutUser = () => {

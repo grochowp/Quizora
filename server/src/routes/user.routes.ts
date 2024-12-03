@@ -12,9 +12,10 @@ const {
   addFinishedQuizData,
   changeDisplayedTitles,
 } = require("../controllers/user.controller");
-const { verifyToken } = require("../middlewares/authMiddleware");
+const { verifyToken, userTokenData } = require("../middlewares/authMiddleware");
 
 // User profile
+router.post("/userTokenData", userTokenData);
 router.post("/register", register);
 router.post("/login", login);
 router.delete("/", verifyToken, deleteUser);

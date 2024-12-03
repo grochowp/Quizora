@@ -74,9 +74,7 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
       difficulty: "easy",
       time: "3",
     });
-    setTimeout(() => {
-      console.log(questions);
-    }, 0);
+    setTimeout(() => {}, 0);
   };
 
   const addModal = (label: string, icon: React.ReactNode, time: number) => {

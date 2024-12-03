@@ -2,15 +2,23 @@ import axios from "axios";
 import { IFormData, IUser } from "../interfaces";
 import Cookies from "js-cookie";
 
+const url = import.meta.env.VITE_DB_URL;
+
+export const getDataFromToken = async (body: { token: string }) => {
+  try {
+    const response = await axios.post(`${url}api/user/userTokenData`, body);
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
+
 export const loginOrRegister = async (
   body: IFormData,
   action: string,
 ): Promise<IUser> => {
   try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_DB_URL}api/user/${action}`,
-      body,
-    );
+    const response = await axios.post(`${url}api/user/${action}`, body);
     return response.data;
   } catch (err) {
     throw new Error(err.response.data.message);
@@ -19,12 +27,9 @@ export const loginOrRegister = async (
 
 export const findUserById = async (userId: string) => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_DB_URL}api/user/${userId}`,
-    );
+    const response = await axios.get(`${url}api/user/${userId}`);
     return response.data;
   } catch (err) {
-    console.log(err);
     throw new Error(err.response.data.message);
   }
 };
@@ -36,7 +41,7 @@ export const UpdatePreferences = async (preferences: {
     const token = Cookies.get("userToken");
     const cleanToken = token?.replace(/^"|"$/g, "");
     const response = await axios.patch(
-      `${import.meta.env.VITE_DB_URL}api/user/preferences`,
+      `${url}api/user/preferences`,
       preferences,
       {
         withCredentials: true,

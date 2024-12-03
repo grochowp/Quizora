@@ -33,4 +33,24 @@ const verifyToken = async (
   }
 };
 
-module.exports = { verifyToken };
+const userTokenData = async (req: Request, res: Response) => {
+  const { token } = req.body;
+  if (!token) return res.status(401).json({ message: "Token not provided" });
+
+  try {
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token:", decoded);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    console.error("JWT verification error:", error); // Wyświetl dokładny błąd
+    res.status(401).json({ message: "Invalid or expired token" });
+  }
+};
+
+module.exports = { verifyToken, userTokenData };
