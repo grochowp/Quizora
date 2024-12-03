@@ -66,7 +66,7 @@ export const QuizSelection = ({
   };
 
   return (
-    <article className="flex max-w-[1600px] flex-col gap-16 font-poppins text-baseText">
+    <article className="flex max-w-[1600px] flex-col gap-12 font-poppins text-baseText">
       <div className="flex w-[300px] flex-col items-center justify-between gap-12 sm:w-[320px] lg:w-[660px] xl:w-[984px] xl:flex-row 2xl:w-[1316px]">
         <div className="inputBox flex flex-wrap justify-center gap-6 lg:justify-normal">
           <CustomInput

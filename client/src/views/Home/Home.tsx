@@ -21,7 +21,7 @@ const Home = () => {
           handleDifficultyChange={handleDifficultyChange}
         />
       </div>
-      <div className="relative flex h-[300px] w-full max-w-[300px] flex-col rounded-xl border-l-4 border-extras bg-secondary shadow-md sm:max-w-[320px] lg:max-w-[650px] xl:max-w-[1000px] 2xl:top-14 2xl:w-[300px]">
+      <div className="relative flex h-[300px] w-full max-w-[300px] flex-col rounded-xl border-l-4 border-extras bg-secondary shadow-md sm:max-w-[320px] lg:max-w-[650px] xl:max-w-[1000px] 2xl:top-[44px] 2xl:w-[300px]">
         <div className="p-4">
           <p className="text-center text-white">
             Tutaj może być dodatkowa treść lub widget.

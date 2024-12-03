@@ -17,7 +17,7 @@ export const SearchBar = () => {
   };
 
   return (
-    <header className="z-30 m-0 mb-16 flex h-20 items-center justify-center">
+    <header className="z-30 m-0 mb-8 flex h-20 items-center justify-center">
       <div className="fixed left-[50vw] -translate-x-1/2 transform">
         <form className="relative flex" onSubmit={(e) => handleSearchQuiz(e)}>
           <GoSearch className="absolute left-5 top-3 h-6 w-6 text-baseText" />
