@@ -4,10 +4,13 @@ import Cookies from "js-cookie";
 
 export const fetchQuizzesByQuery = async (
   query: string,
+  page: number,
+  limit: number,
 ): Promise<IQuizWithNumber> => {
   try {
+    console.log(`api/quiz?${query}&page=${page}`);
     const response = await axios.get(
-      `${import.meta.env.VITE_DB_URL}api/quiz?${query}`,
+      `${import.meta.env.VITE_DB_URL}api/quiz?page=${page}&limit=${limit}&${query}`,
     );
     return response.data;
   } catch (err) {

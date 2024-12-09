@@ -15,10 +15,12 @@ export const QuizSelection = ({
   userId,
   status,
   maxQuizzes = 20,
+  styles = "",
 }: {
   userId?: string;
   status?: string;
   maxQuizzes?: number;
+  styles?: string;
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
@@ -127,6 +129,7 @@ export const QuizSelection = ({
           userId={userId}
           status={status}
           maxQuizzes={maxQuizzes}
+          styles={styles}
         />
       </section>
     </article>
