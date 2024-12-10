@@ -16,11 +16,13 @@ export const QuizSelection = ({
   status,
   maxQuizzes = 20,
   styles = "",
+  pagination = false,
 }: {
   userId?: string;
   status?: string;
   maxQuizzes?: number;
   styles?: string;
+  pagination?: boolean;
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState("");
@@ -130,6 +132,7 @@ export const QuizSelection = ({
           status={status}
           maxQuizzes={maxQuizzes}
           styles={styles}
+          pagination={pagination}
         />
       </section>
     </article>

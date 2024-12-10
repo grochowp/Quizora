@@ -89,10 +89,6 @@ export const Navbar = () => {
         <ul className="flex flex-col gap-3">
           {navItems
             .filter((item) => {
-              // Show item if:
-              // 1. `onlyLogged` is `undefined` (always visible)
-              // 2. `onlyLogged` is `true` and `loggedUserData` is present
-              // 3. `onlyLogged` is `false` and `loggedUserData` is absent
               if (item.onlyLogged === undefined) return true;
               if (item.onlyLogged && loggedUserData) return true;
               if (!item.onlyLogged && !loggedUserData) return true;

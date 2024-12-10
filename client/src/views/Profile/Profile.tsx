@@ -69,6 +69,7 @@ function Profile() {
           status={status}
           maxQuizzes={12}
           styles="min-h-[469px]"
+          pagination
         />
       </div>
     </div>

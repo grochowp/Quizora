@@ -29,6 +29,7 @@ interface IQuizSectionProps {
   status?: string;
   limit?: number;
   styles?: string;
+  pagination?: boolean;
 }
 
 const QuizSection: React.FC<IQuizSectionProps> = ({
@@ -41,6 +42,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   userId,
   status = "published",
   styles = "",
+  pagination = false,
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { loggedUserData } = useLoggedUserContext();
@@ -57,7 +59,6 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
     currentPage,
     maxQuizzes,
   );
-  console.log(quizzes);
 
   const pages = Math.ceil(quizzesLength / maxQuizzes);
 
@@ -133,7 +134,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
           variants={lessAnimations ? undefined : containerVariants}
           initial="hidden"
           animate="visible"
-          className={`${styles} mb-6 flex flex-wrap gap-3`}
+          className={`${styles} ${pagination && "mb-6"} flex flex-wrap gap-3`}
         >
           {quizzes.length === 0 && (
             <h1 className="flex h-[132px] items-center justify-center text-xl">
@@ -145,35 +146,37 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
           ))}
         </motion.div>
       )}
-      <div className="mb-4 flex w-full items-center justify-center gap-2 text-sm lg:gap-4 lg:text-lg">
-        <span
-          className={`${currentPage === 1 ? "border-extras text-extras opacity-100" : "opacity-50"} mr-2 flex cursor-pointer items-center justify-center rounded-lg border-[1px] px-3 lg:mr-4`}
-          onClick={() => handleChangePage(1)}
-        >
-          Pierwsza
-        </span>
-        <span
-          className={`${currentPage <= 1 ? "pointer-events-none opacity-10" : "opacity-50"} flex w-[24px] cursor-pointer justify-center lg:w-[30px]`}
-          onClick={() => handleChangePage(currentPage - 1)}
-        >
-          {currentPage - 1}
-        </span>
-        <span className="flex w-[24px] items-center justify-center rounded-full border-[1px] border-extras text-extras lg:w-[30px]">
-          {currentPage}
-        </span>
-        <span
-          className={`${currentPage >= pages ? "pointer-events-none opacity-10" : "opacity-50"} flex w-[24px] cursor-pointer justify-center lg:w-[30px]`}
-          onClick={() => handleChangePage(currentPage + 1)}
-        >
-          {currentPage + 1}
-        </span>
-        <span
-          className={`${currentPage === pages ? "border-extras text-extras opacity-100" : "opacity-50"} ml-2 flex cursor-pointer items-center justify-center rounded-lg border-[1px] px-3 md:ml-4`}
-          onClick={() => handleChangePage(pages)}
-        >
-          Ostatnia
-        </span>
-      </div>
+      {pagination && (
+        <div className="mb-4 flex w-full items-center justify-center gap-2 text-sm lg:gap-4 lg:text-lg">
+          <span
+            className={`${currentPage === 1 ? "border-extras text-extras opacity-100" : "opacity-50"} mr-2 flex cursor-pointer items-center justify-center rounded-lg border-[1px] px-3 lg:mr-4`}
+            onClick={() => handleChangePage(1)}
+          >
+            Pierwsza
+          </span>
+          <span
+            className={`${currentPage <= 1 ? "pointer-events-none opacity-10" : "opacity-50"} flex w-[24px] cursor-pointer justify-center lg:w-[30px]`}
+            onClick={() => handleChangePage(currentPage - 1)}
+          >
+            {currentPage - 1}
+          </span>
+          <span className="flex w-[24px] items-center justify-center rounded-full border-[1px] border-extras text-extras lg:w-[30px]">
+            {currentPage}
+          </span>
+          <span
+            className={`${currentPage >= pages ? "pointer-events-none opacity-10" : "opacity-50"} flex w-[24px] cursor-pointer justify-center lg:w-[30px]`}
+            onClick={() => handleChangePage(currentPage + 1)}
+          >
+            {currentPage + 1}
+          </span>
+          <span
+            className={`${currentPage === pages ? "border-extras text-extras opacity-100" : "opacity-50"} ml-2 flex cursor-pointer items-center justify-center rounded-lg border-[1px] px-3 md:ml-4`}
+            onClick={() => handleChangePage(pages)}
+          >
+            Ostatnia
+          </span>
+        </div>
+      )}
     </article>
   );
 };

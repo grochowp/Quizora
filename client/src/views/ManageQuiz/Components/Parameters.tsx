@@ -39,7 +39,7 @@ export const Parameters = ({
 
   return (
     <div className="relative h-full">
-      <div className="top-[144px] flex h-96 min-w-[300px] flex-col gap-7 rounded-lg border-l-4 border-extras bg-secondary lg:sticky">
+      <div className="top-[110px] flex h-96 min-w-[300px] flex-col gap-7 rounded-lg border-l-4 border-extras bg-secondary lg:sticky">
         <TileTitle>Parametry</TileTitle>
         <div className="mx-4 flex w-full flex-col gap-8">
           <CustomSelect
