@@ -15,13 +15,9 @@ class CommentService {
   ): Promise<string> {
     return withTransaction(async (session) => {
       if (comment.length < 5)
-        throw new Error(
-          "Your comment is too short. It must be at least 5 characters"
-        );
+        throw new Error("Komentarz musi mieć minimum 5 znaków.");
       if (comment.length > 60)
-        throw new Error(
-          "Your comment is too long. It must be maximum of 60 characters"
-        );
+        throw new Error("Komentarz może mieć maksymalnie 60 znaków.");
 
       await ValidationService.validateUser(userId, { session });
       await ValidationService.validateQuiz(quizId, { session });
@@ -31,7 +27,7 @@ class CommentService {
           session,
         });
 
-      if (existingComment) throw new Error("You already commented this Quiz.");
+      if (existingComment) throw new Error("Skomentowano Quiz.");
 
       const rating =
         (await RatingRepository.findRatingByData(userId, quizId, { session }))
@@ -80,6 +76,28 @@ class CommentService {
     if (Object.keys(matchStage).length > 0) {
       aggregationPipeline.push({ $match: matchStage });
     }
+
+    aggregationPipeline.push(
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $addFields: {
+          user: {
+            nickname: { $arrayElemAt: ["$userDetails.nickname", 0] },
+            profilePicture: {
+              $arrayElemAt: ["$userDetails.profilePicture", 0],
+            },
+          },
+        },
+      },
+      { $unset: "userDetails" }
+    );
 
     const skip = (page - 1) * limit;
     aggregationPipeline.push({ $skip: skip });

@@ -4,7 +4,6 @@ import { IRating } from "../models/rating.model";
 import { EditQuizFilters } from "../types/interfaces";
 
 const Quiz = require("../models/quiz.model");
-const QuizDetails = require("../models/quizDetails.model");
 class QuizRepository {
   async create(
     quizData: any,

@@ -87,7 +87,6 @@ export const PreferencesContainer = () => {
         5,
       );
     } catch (err) {
-      console.log(err.message);
       resetPreferences();
     } finally {
       setIsLoading(false);

@@ -36,6 +36,19 @@ export interface IAchievement {
   ];
 }
 
+export interface IComment {
+  _id?: string;
+  userId: string;
+  quizId: string;
+  comment: string;
+  rating: number;
+  date: Date;
+  user: {
+    nickname: string;
+    profilePicture: string;
+  };
+}
+
 export interface IQuiz {
   _id: string;
   title: string;

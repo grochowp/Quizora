@@ -8,7 +8,7 @@ export const SideBar = memo(({ quizId }: { quizId: string }) => {
   );
 
   return (
-    <div className="min-h-[668px] max-w-[320px] flex-1 items-stretch font-poppins">
+    <div className="min-h-[668px] max-w-[300px] flex-1 items-stretch font-poppins md:max-w-[320px]">
       <div className="mb-8 flex w-full justify-between text-xl">
         <span
           className={`${selectedAction !== "comments" && "opacity-50"} cursor-pointer`}
@@ -25,7 +25,11 @@ export const SideBar = memo(({ quizId }: { quizId: string }) => {
       </div>
 
       <div className="flex min-h-[608px] flex-col justify-between">
-        {selectedAction === "comments" ? <Comments /> : <SimilarQuizzes />}
+        {selectedAction === "comments" ? (
+          <Comments quizId={quizId} />
+        ) : (
+          <SimilarQuizzes />
+        )}
       </div>
     </div>
   );
