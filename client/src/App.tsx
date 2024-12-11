@@ -13,6 +13,7 @@ const Ranking = lazy(() => import("./views/Ranking/Ranking"));
 const LoginPage = lazy(() => import("./views/Login/LoginPage"));
 const Stats = lazy(() => import("./views/Stats/Stats"));
 const ManageQuiz = lazy(() => import("./views/ManageQuiz/ManageQuiz"));
+const SolveQuiz = lazy(() => import("./views/SolveQuiz/SolveQuiz"));
 const Achievements = lazy(() => import("./views/Achievements/Achievements"));
 const Settings = lazy(() => import("./views/Settings/Settings"));
 
@@ -26,11 +27,14 @@ const App = () => {
         <Route index element={<Home />} />
         <Route path="quizzes" element={<Quizzes />} />
         <Route path="ranking" element={<Ranking />} />
+        <Route path="quiz/:quizId" element={<SolveQuiz />} />
+
         {loggedUserData ? (
           <>
             <Route path="profile/:userId" element={<Profile />} />
             <Route path="stats" element={<Stats />} />
-            <Route path="ManageQuiz" element={<ManageQuiz />} />
+            <Route path="quiz/" element={<ManageQuiz />} />
+            <Route path="quiz/manage" element={<ManageQuiz />} />
             <Route path="achievements" element={<Achievements />} />
             <Route path="settings" element={<Settings />} />
           </>

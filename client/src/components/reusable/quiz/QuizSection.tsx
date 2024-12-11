@@ -69,7 +69,6 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
   };
 
   useEffect(() => {
-    console.log(currentPage);
     refetch();
   }, [currentPage, refetch]);
 

@@ -8,7 +8,6 @@ export const fetchQuizzesByQuery = async (
   limit: number,
 ): Promise<IQuizWithNumber> => {
   try {
-    console.log(`api/quiz?${query}&page=${page}`);
     const response = await axios.get(
       `${import.meta.env.VITE_DB_URL}api/quiz?page=${page}&limit=${limit}&${query}`,
     );
