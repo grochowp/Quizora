@@ -14,6 +14,7 @@ interface IQuestionsRedux {
   results: IResult[];
   status: string;
   timer: number;
+  maxTimer: number;
 }
 
 const initialState: IQuestionsRedux = {
@@ -24,6 +25,7 @@ const initialState: IQuestionsRedux = {
   results: [],
   status: "idle",
   timer: 0,
+  maxTimer: 0,
 };
 
 const quizSlice = createSlice({
@@ -49,6 +51,7 @@ const quizSlice = createSlice({
       }));
       state.status = "active";
       state.timer = time * 60;
+      state.maxTimer = time * 60;
     },
 
     answerQuestion(

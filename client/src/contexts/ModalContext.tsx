@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IModalBody } from "../interfaces";
@@ -40,20 +40,23 @@ export const ModalContext = createContext<ModalProps>(defaultModal);
 export const ModalProvider = ({ children }: React.PropsWithChildren) => {
   const [modals, setModals] = useState<IModalBody[]>([]);
 
-  const openModal = (
-    modalBody: React.ReactNode,
-    position: "center" | "top" = "center",
-    time?: number,
-  ) => {
-    const id = crypto.randomUUID();
-    setModals((prev) => [...prev, { id, body: modalBody, position, time }]);
+  const openModal = useCallback(
+    (
+      modalBody: React.ReactNode,
+      position: "center" | "top" = "center",
+      time?: number,
+    ) => {
+      const id = crypto.randomUUID();
+      setModals((prev) => [...prev, { id, body: modalBody, position, time }]);
 
-    if (time) {
-      setTimeout(() => {
-        setModals((prev) => prev.filter((modal) => modal.id !== id));
-      }, time * 1000);
-    }
-  };
+      if (time) {
+        setTimeout(() => {
+          setModals((prev) => prev.filter((modal) => modal.id !== id));
+        }, time * 1000);
+      }
+    },
+    [],
+  );
 
   const closeModal = (id: string) => {
     setModals((prev) => prev.filter((modal) => modal.id !== id));

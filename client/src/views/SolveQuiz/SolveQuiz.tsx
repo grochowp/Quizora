@@ -1,38 +1,63 @@
-import { useParams } from "react-router-dom";
-import { ProgressBar } from "./components/ProgressBar";
+import { useNavigate, useParams } from "react-router-dom";
+import { TimeBar } from "./components/TimeBar";
 import { Button } from "../../components/reusable/elements/Button";
 import { Question } from "./components/Question";
 import { useEffect, useState } from "react";
-import { answerQuestion, finishQuiz } from "../../store/quiz/quizSlice";
+import {
+  answerQuestion,
+  finishQuiz,
+  resetQuiz,
+} from "../../store/quiz/quizSlice";
 import { SideBar } from "./components/SideBar";
-import Timer from "./components/Timer";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchQuestions } from "../../store/quiz/quizActions";
 import { AppDispatch, RootState } from "../../store/store";
+import { useModalContext } from "../../contexts/ModalContext";
+import { TopModal } from "../../components/reusable/modals/TopModal";
+import { BiError } from "react-icons/bi";
+import Spinner from "../../components/reusable/Spinner";
 
 // TO-DO Add modal to display quiz data before going to this components, pass quiz object as a props
 const SolveQuiz = () => {
   const { quizId } = useParams();
+  const { openModal } = useModalContext();
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number>(-1);
   const dispatch = useDispatch<AppDispatch>();
-  const { questions, points, totalPoints, status } = useSelector(
-    (state: RootState) => state.quiz,
-  );
+  const navigate = useNavigate();
+  const { questions, status } = useSelector((state: RootState) => state.quiz);
+
   useEffect(() => {
     const fetchDetails = async () => {
       try {
         if (!quizId) throw new Error("Błędne ID Quizu");
-        dispatch(fetchQuestions(quizId));
+        await dispatch(fetchQuestions(quizId));
       } catch (err) {
-        console.log(err.message);
+        navigate("/error");
+        openModal(
+          <TopModal icon={<BiError />} label={err.message} />,
+          "top",
+          5,
+        );
       }
     };
 
+    dispatch(resetQuiz());
     fetchDetails();
-  }, [quizId, dispatch]);
+  }, [quizId, dispatch, openModal, navigate]);
 
   const handleNextQuestion = () => {
+    if (selectedAnswer === -1) {
+      openModal(
+        <TopModal
+          icon={<BiError />}
+          label="Aby przejść dalej, musisz wybrać odpowiedź."
+        />,
+        "top",
+        3,
+      );
+      return;
+    }
     setSelectedAnswer(-1);
     dispatch(
       answerQuestion({ index: currentQuestion, answer: selectedAnswer }),
@@ -53,11 +78,16 @@ const SolveQuiz = () => {
   return (
     <div className="flex h-fit w-full flex-col items-center gap-12 text-baseText xl:flex-row xl:items-start">
       <div className="flex w-full max-w-[660px] flex-col gap-8 lg:max-w-[640px] 2xl:max-w-[900px]">
-        <ProgressBar max={totalPoints} progress={points} />
-        {status === "idle" && "aaa"}
+        <TimeBar />
+        {status === "idle" && (
+          <div className="flex h-full w-full justify-center">
+            <Spinner />
+          </div>
+        )}
         {status === "active" && (
           <div className="flex h-fit w-full flex-col items-center rounded-lg border-l-4 border-extras bg-secondary font-poppins">
             <Question
+              // title={title}
               question={question}
               handleSelectAnswer={handleSelectAnswer}
               selectedAnswer={selectedAnswer}
@@ -66,9 +96,10 @@ const SolveQuiz = () => {
               <div className="flex flex-col gap-1">
                 <h1 className="text-xs md:text-base">
                   Pytanie:{" "}
-                  <span className="text-extras">{currentQuestion + 1}/32</span>
+                  <span className="text-extras">
+                    {currentQuestion + 1}/{questions.length}
+                  </span>
                 </h1>
-                <Timer />
               </div>
               <Button
                 type="button"

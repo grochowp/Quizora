@@ -13,7 +13,7 @@ export const fetchQuestions =
           time: response.time,
         }),
       );
-    } catch (error) {
-      console.error("Błąd w pobieraniu pytań:", error);
+    } catch (err) {
+      throw new Error(`Błąd w pobieraniu pytań: ${err.message}`);
     }
   };
