@@ -13,7 +13,7 @@ export const ProgressBar: React.FC<IPoints> = memo(({ max, progress }) => {
       </div>
       <div className="h-6 w-full rounded-full bg-secondary md:h-8">
         <div
-          className="relative h-6 w-20 rounded-full bg-extras md:h-8"
+          className="relative h-6 w-20 rounded-full bg-extras transition-all duration-300 md:h-8"
           style={{ width: `${(progress / max) * 100}%` }}
         >
           <span className="absolute -top-[1px] right-2 font-roboto text-lg text-primary md:right-3 md:top-[2px] md:text-xl">

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IManageQuiz, IQuizWithNumber } from "../interfaces";
+import { IManageQuiz, IQuiz, IQuizWithNumber } from "../interfaces";
 import Cookies from "js-cookie";
 
 export const fetchQuizzesByQuery = async (
@@ -36,6 +36,17 @@ export const createQuiz = async (quizData: IManageQuiz) => {
     const { quiz, createdQuizzesMessage } = response.data;
 
     return { quiz, createdQuizzesMessage };
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
+
+export const getQuizWithDetails = async (quizId: string): Promise<IQuiz> => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_DB_URL}api/quiz/${quizId}`,
+    );
+    return response.data;
   } catch (err) {
     throw new Error(err.response.data.message);
   }
