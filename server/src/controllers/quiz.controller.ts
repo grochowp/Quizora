@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { QuizFilters, UserTokenRequest } from "../types/interfaces";
-import { IQuiz } from "../models/quiz.model";
 
 const QuizService = require("../services/quiz.service");
 

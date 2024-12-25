@@ -2,7 +2,6 @@ import { ClientSession, ObjectId } from "mongoose";
 import { IUser } from "../models/user.model";
 
 const User = require("../models/user.model");
-const UserProfile = require("../models/userProfile.model");
 
 class UserRepository {
   async create(

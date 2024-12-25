@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
-import {
-  EditProfileFilters,
-  PreferencesFilters,
-  UserTokenRequest,
-} from "../types/interfaces";
+import { PreferencesFilters, UserTokenRequest } from "../types/interfaces";
 
 const UserService = require("../services/user.service");
 
