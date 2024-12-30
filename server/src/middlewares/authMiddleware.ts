@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 import { Request, Response, NextFunction } from "express";
 import { IUser } from "../models/user.model";
+import userRepository from "../repository/user.repository";
 
 interface IUserRequest extends Request {
   user: IUser;
@@ -39,7 +40,7 @@ const userTokenData = async (req: Request, res: Response) => {
 
   try {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    const user = await userRepository.findUserWithUserProfileById(decoded.id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
