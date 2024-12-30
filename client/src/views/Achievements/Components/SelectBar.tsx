@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 import { IAchievement } from "../../../interfaces";
-import { statusMap } from "../Achievements";
+import { statusMap } from "../../../utils/maps";
 
 export const SelectBar = ({
   handleStatus,
@@ -40,7 +40,7 @@ export const SelectBar = ({
         <span>
           Zdobyte osiągnięcia:{" "}
           <strong className="text-extras">
-            {userAchievements}/{allAchievements}
+            {userAchievements}/{allAchievements || 0}
           </strong>
         </span>
         <span>

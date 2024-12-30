@@ -37,6 +37,7 @@ export interface IAchievement {
   description: string;
   levels: [
     {
+      _id: string;
       level: number;
       title?: string;
       requirement: number;
