@@ -142,4 +142,8 @@ body,
   @apply text-secondary;
 }
 
-/** **/
+/** ACHIEVEMENTS **/
+
+.trapez {
+  clip-path: polygon(48% 0, 100% 33%, 49% 100%, 0 33%);
+}

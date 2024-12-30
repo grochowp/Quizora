@@ -25,6 +25,7 @@ export interface IUserProfile {
 
 export interface IUserAchievemnt {
   _id: string;
+  achievementId: string;
   name: string;
   level: number;
   value: number;
