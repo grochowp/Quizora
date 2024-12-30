@@ -20,7 +20,14 @@ export interface IUserProfile {
   lessAnimations: boolean;
   privateAccount: boolean;
   titles: Array<string>;
-  achievements: [IAchievement];
+  achievements: [IUserAchievemnt];
+}
+
+export interface IUserAchievemnt {
+  _id: string;
+  name: string;
+  level: number;
+  value: number;
 }
 
 export interface IAchievement {

@@ -46,7 +46,7 @@ export const PreferencesContainer = () => {
   }, [loggedUserData, preferenceStates, selectedTheme]);
 
   const userTitles = loggedUserData?.userProfile?.titles;
-
+  console.log(loggedUserData?.userProfile);
   const togglePreference = (name: string) => {
     setPreferenceStates((prev) => ({
       ...prev,

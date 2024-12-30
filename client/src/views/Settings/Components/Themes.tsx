@@ -16,7 +16,6 @@ export const Themes = ({
       {themes.map((theme: IThemes) => {
         const titleNotUnlocked =
           theme.unlockAt && !userTitles?.includes(theme.unlockAt);
-
         return (
           <div
             key={theme.name}
