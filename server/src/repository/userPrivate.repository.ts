@@ -14,7 +14,10 @@ class UserPrivateRepository {
   ): Promise<IUserPrivate> {
     const newUserPrivate = await UserPrivate.create(
       [{ userId, login, password, email }],
-      options
+      {
+        session: options.session,
+        runValidators: true,
+      }
     );
     return newUserPrivate[0];
   }

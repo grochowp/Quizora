@@ -12,7 +12,12 @@ export interface IComment extends Document {
 const commentSchema = new mongoose.Schema<IComment>({
   userId: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   quizId: { type: mongoose.Types.ObjectId, ref: "Quiz", required: true },
-  comment: { type: String, required: true, minlength: 5, maxlength: 50 },
+  comment: {
+    type: String,
+    required: [true, "Komentarz jest wymagany."],
+    minlength: [5, "Komentarz musi mieć minimum 5 znaków."],
+    maxlength: [50, "Komentarz musi mieć maksumum 50 znaków."],
+  },
   rating: {
     type: Number,
     enum: {

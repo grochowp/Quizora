@@ -20,7 +20,10 @@ class CommentRepository {
           rating,
         },
       ],
-      options
+      {
+        session: options.session,
+        runValidators: true,
+      }
     );
   }
 
@@ -66,8 +69,12 @@ class CommentRepository {
   ) {
     await Comment.findOneAndUpdate(
       { _id: commentId },
-      { $set: { rating } }
-    ).session(options?.session);
+      { $set: { rating } },
+      {
+        session: options?.session,
+        runValidators: true,
+      }
+    );
   }
 
   async deleteQuizComments(

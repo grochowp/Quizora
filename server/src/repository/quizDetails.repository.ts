@@ -8,7 +8,10 @@ class QuizDetailsRepository {
     questions: IQuestion[],
     options: { session: ClientSession }
   ): Promise<IQuizDetails> {
-    const quizDetails = await QuizDetails.create([{ questions }], options);
+    const quizDetails = await QuizDetails.create([{ questions }], {
+      session: options.session,
+      runValidators: true,
+    });
     return quizDetails[0];
   }
 

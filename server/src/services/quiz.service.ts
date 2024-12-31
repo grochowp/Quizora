@@ -41,9 +41,6 @@ class QuizService {
     category: string
   ): Promise<IQuiz> {
     return withTransaction(async (session) => {
-      if (title.length < 5 || title.length > 50) {
-        throw new Error("Tytuł Quizu musi wynosić od 5 do 50 znaków.");
-      }
       if (time < 3 || time > 10) {
         throw new Error(
           "Czas przeznaczony na Quiz musi wynosić od 3 do 10 minut."

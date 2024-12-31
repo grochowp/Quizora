@@ -78,7 +78,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
 
   return (
     <article
-      className={`${quizzes.length === 0 && !isLoading && "flex flex-col items-center justify-center"}`}
+      className={` ${quizzes.length === 0 && !isLoading && "flex flex-col items-center justify-center"}`}
     >
       <div className="flex w-full items-center justify-between">
         {!difficultyFilter && (
@@ -117,34 +117,40 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
         )}
       </div>
 
-      {isLoading ? (
-        <div className="flex flex-wrap gap-3">
-          {Array.from({ length: maxQuizzes }, (_, index) => (
-            <div
-              key={index}
-              className="h-[132px] w-[300px] sm:h-[148px] sm:w-80"
-            >
-              <Spinner />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <motion.div
-          variants={lessAnimations ? undefined : containerVariants}
-          initial="hidden"
-          animate="visible"
-          className={`${styles} ${pagination && "mb-6"} flex flex-wrap gap-3`}
-        >
-          {quizzes.length === 0 && (
-            <h1 className="flex h-[132px] items-center justify-center text-xl">
-              Brak Quizów o podanych kryteriach
-            </h1>
-          )}
-          {quizzes.slice(0, maxQuizzes).map((quiz) => (
-            <Quiz key={quiz._id} quiz={quiz} lessAnimations={lessAnimations} />
-          ))}
-        </motion.div>
-      )}
+      <div className={styles}>
+        {isLoading ? (
+          <div className="flex flex-wrap gap-3">
+            {Array.from({ length: maxQuizzes }, (_, index) => (
+              <div
+                key={index}
+                className="h-[132px] w-[300px] sm:h-[148px] sm:w-80"
+              >
+                <Spinner />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            variants={lessAnimations ? undefined : containerVariants}
+            initial="hidden"
+            animate="visible"
+            className={` ${pagination && "mb-6"} flex flex-wrap gap-3`}
+          >
+            {quizzes.length === 0 && (
+              <h1 className="flex h-[132px] items-center justify-center text-xl">
+                Brak Quizów o podanych kryteriach
+              </h1>
+            )}
+            {quizzes.slice(0, maxQuizzes).map((quiz) => (
+              <Quiz
+                key={quiz._id}
+                quiz={quiz}
+                lessAnimations={lessAnimations}
+              />
+            ))}
+          </motion.div>
+        )}
+      </div>
       {pagination && (
         <div className="mb-4 flex w-full items-center justify-center gap-2 text-sm lg:gap-4 lg:text-lg">
           <span

@@ -5,7 +5,7 @@ const Achievement = require("../models/achievement.model");
 
 class AchievementRepository {
   async create(achievementData: IAchievement): Promise<IAchievement> {
-    return await Achievement.create(achievementData);
+    return await Achievement.create(achievementData, { runValidators: true });
   }
 
   async get(options?: { session: ClientSession }): Promise<IAchievement> {

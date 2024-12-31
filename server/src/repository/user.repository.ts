@@ -11,7 +11,10 @@ class UserRepository {
   ): Promise<IUser> {
     const newUser = await User.create(
       [{ nickname, userProfile: userProfileId }],
-      options
+      {
+        session: options.session,
+        runValidators: true,
+      }
     );
     return newUser[0];
   }
@@ -68,7 +71,10 @@ class UserRepository {
       {
         $inc: { createdQuizzes: value },
       },
-      options
+      {
+        session: options.session,
+        runValidators: true,
+      }
     );
   }
 
@@ -90,7 +96,7 @@ class UserRepository {
     return await User.findByIdAndUpdate(
       userId,
       { profilePicture: imgQuery },
-      { new: true }
+      { new: true, runValidators: true }
     );
   }
   async changeDisplayedTitles(
@@ -114,7 +120,7 @@ class UserRepository {
     return await User.findByIdAndUpdate(
       userId,
       { $set: { nickname } },
-      { new: true, session: options.session }
+      { new: true, session: options.session, runValidators: true }
     ).select("-_id nickname");
   }
 
@@ -138,7 +144,14 @@ class UserRepository {
     privateAccount: boolean,
     options: { session: ClientSession }
   ) {
-    await User.findByIdAndUpdate(userId, { $set: { privateAccount } }, options);
+    await User.findByIdAndUpdate(
+      userId,
+      { $set: { privateAccount } },
+      {
+        session: options.session,
+        runValidators: true,
+      }
+    );
   }
 }
 

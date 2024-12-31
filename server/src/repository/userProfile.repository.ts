@@ -10,10 +10,10 @@ class UserProfileRepository {
     achievements: IAchievement[],
     options: { session: ClientSession }
   ): Promise<IUserProfile> {
-    const newUserProfile = await UserProfile.create(
-      [{ achievements }],
-      options
-    );
+    const newUserProfile = await UserProfile.create([{ achievements }], {
+      session: options.session,
+      runValidators: true,
+    });
     return newUserProfile[0];
   }
 
@@ -46,7 +46,10 @@ class UserProfileRepository {
     await UserProfile.findOneAndUpdate(
       { _id: userProfileId },
       { $push: { titles: title } },
-      { session: options.session }
+      {
+        session: options.session,
+        runValidators: true,
+      }
     );
   }
 
@@ -66,7 +69,7 @@ class UserProfileRepository {
           "achievements.$.value": achievementIncreaseValue,
         },
       },
-      { new: true, session: options.session }
+      { new: true, session: options.session, runValidators: true }
     );
 
     const achievement = user.achievements.find(
@@ -90,7 +93,7 @@ class UserProfileRepository {
           "achievements.$.level": 1,
         },
       },
-      { new: true, session: options.session }
+      { new: true, session: options.session, runValidators: true }
     );
 
     const achievement = user.achievements.find(

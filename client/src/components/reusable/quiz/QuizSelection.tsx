@@ -51,7 +51,8 @@ export const QuizSelection = ({
     return new URLSearchParams(queryParams).toString();
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (e?: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     const newQuery = buildQuery(filters);
     setSearchParams(newQuery);
   };
@@ -71,7 +72,10 @@ export const QuizSelection = ({
 
   return (
     <article className="flex max-w-[1600px] flex-col gap-12 font-poppins text-baseText">
-      <div className="flex w-[300px] flex-col items-center justify-between gap-12 sm:w-[320px] lg:w-[660px] xl:w-[984px] xl:flex-row 2xl:w-[1316px]">
+      <form
+        onSubmit={(e) => handleUpdate(e)}
+        className="flex w-[300px] flex-col items-center justify-between gap-12 sm:w-[320px] lg:w-[660px] xl:w-[984px] xl:flex-row 2xl:w-[1316px]"
+      >
         <div className="inputBox flex flex-wrap justify-center gap-6 lg:justify-normal">
           <CustomInput
             styles="h-12 w-[276px] lg:w-[300px]"
@@ -115,14 +119,14 @@ export const QuizSelection = ({
             Reset
           </Button>
           <Button
-            onClick={handleUpdate}
+            onClick={() => handleUpdate()}
             styles="py-2 px-7 min-h-10"
             variant="fill"
           >
             Szukaj
           </Button>
         </div>
-      </div>
+      </form>
 
       <section className="flex max-w-[300px] flex-col sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[984px] 2xl:max-w-[1316px]">
         <QuizSection

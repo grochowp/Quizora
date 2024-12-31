@@ -9,7 +9,10 @@ class QuizRepository {
     quizData: any,
     options: { session: ClientSession }
   ): Promise<IQuiz> {
-    const createdQuiz = await Quiz.create([quizData], options);
+    const createdQuiz = await Quiz.create([quizData], {
+      session: options.session,
+      runValidators: true,
+    });
     return createdQuiz[0];
   }
 
@@ -52,7 +55,10 @@ class QuizRepository {
     await Quiz.findOneAndUpdate(
       { _id: quizId },
       { $inc: { rating: newRating * 2 } },
-      options
+      {
+        session: options.session,
+        runValidators: true,
+      }
     );
   }
 

@@ -10,7 +10,10 @@ class RatingRepository {
     rating: number,
     options: { session: ClientSession }
   ) {
-    await Rating.create([{ userId, quizId, rating }], options);
+    await Rating.create([{ userId, quizId, rating }], {
+      session: options.session,
+      runValidators: true,
+    });
   }
   async findRatingByData(
     userId: ObjectId,
@@ -28,7 +31,10 @@ class RatingRepository {
     await Rating.findOneAndUpdate(
       { _id: ratingId },
       { $set: { rating } },
-      { session: options.session }
+      {
+        session: options.session,
+        runValidators: true,
+      }
     );
   }
 
