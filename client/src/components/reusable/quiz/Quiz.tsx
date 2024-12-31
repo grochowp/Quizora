@@ -27,6 +27,7 @@ const Quiz = ({
       whileHover={lessAnimations ? undefined : { scale: 1.05, rotate: -2 }}
       className={`duration-250 h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} relative bg-secondary text-baseText`}
       onClick={openQuizModal}
+      // onClick={() => console.log(quiz._id)}
     >
       <div className="m-3 mb-2 flex justify-between">
         <div className="relative flex gap-1">

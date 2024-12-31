@@ -48,8 +48,7 @@ export const Achievement = ({ achievement }: { achievement: IAchievement }) => {
             <React.Fragment key={level._id}>
               <div className="flex flex-col items-center gap-1">
                 <span
-                  className={`${level.title || "opacity-0"} ${isAchieved || "opacity-25"}`}
-                  onMouseEnter={() => console.log(1)}
+                  className={`${isAchieved && level.title ? "opacity-100" : level.title ? "opacity-25" : "opacity-0"}`}
                 >
                   <CiTrophy />
                 </span>
@@ -73,8 +72,10 @@ export const Achievement = ({ achievement }: { achievement: IAchievement }) => {
                       className={`relative h-[1px] bg-extras`}
                       style={{
                         width: `${
-                          (userAchievement?.value /
-                            achievement.levels[userLevel]?.requirement) *
+                          ((userAchievement?.value -
+                            achievement.levels[userLevel - 1]?.requirement) /
+                            (achievement.levels[userLevel]?.requirement -
+                              achievement.levels[userLevel - 1]?.requirement)) *
                           100
                         }%`,
                       }}
