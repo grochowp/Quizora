@@ -84,7 +84,6 @@ const quizSlice = createSlice({
   },
 });
 
-// Eksportowanie akcji i reducerów
 export const { startQuiz, answerQuestion, tickTimer, finishQuiz, resetQuiz } =
   quizSlice.actions;
 
