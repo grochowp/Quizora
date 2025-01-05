@@ -152,33 +152,33 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
         )}
       </div>
       {pagination && (
-        <div className="mb-4 flex w-full items-center justify-center gap-2 text-sm lg:gap-4 lg:text-lg">
+        <div className="mb-4 flex w-full items-center justify-center gap-2 text-sm text-baseText lg:gap-4 lg:text-lg">
           <span
-            className={`${currentPage === 1 ? "border-extras text-extras opacity-100" : "opacity-50"} mr-2 flex cursor-pointer items-center justify-center rounded-lg border-[1px] px-3 lg:mr-4`}
+            className={`${currentPage === 1 ? "opacity-25" : "opacity-100"} mr-2 flex cursor-pointer items-center justify-center rounded-full border-[1px] border-baseText px-3 lg:mr-4`}
             onClick={() => handleChangePage(1)}
           >
-            Pierwsza
+            {"<<"}
           </span>
           <span
             className={`${currentPage <= 1 ? "pointer-events-none opacity-10" : "opacity-50"} flex w-[24px] cursor-pointer justify-center lg:w-[30px]`}
             onClick={() => handleChangePage(currentPage - 1)}
           >
-            {currentPage - 1}
+            {"<"}
           </span>
-          <span className="flex w-[24px] items-center justify-center rounded-full border-[1px] border-extras text-extras lg:w-[30px]">
+          <span className="flex w-[24px] items-center justify-center rounded-full border-[1px] border-baseText lg:w-[30px]">
             {currentPage}
           </span>
           <span
             className={`${currentPage >= pages ? "pointer-events-none opacity-10" : "opacity-50"} flex w-[24px] cursor-pointer justify-center lg:w-[30px]`}
             onClick={() => handleChangePage(currentPage + 1)}
           >
-            {currentPage + 1}
+            {">"}
           </span>
           <span
-            className={`${currentPage === pages ? "border-extras text-extras opacity-100" : "opacity-50"} ml-2 flex cursor-pointer items-center justify-center rounded-lg border-[1px] px-3 md:ml-4`}
+            className={`${currentPage === pages ? "opacity-25" : "opacity-100"} ml-2 flex cursor-pointer items-center justify-center rounded-full border-[1px] border-baseText px-3 md:ml-4`}
             onClick={() => handleChangePage(pages)}
           >
-            Ostatnia
+            {">>"}
           </span>
         </div>
       )}

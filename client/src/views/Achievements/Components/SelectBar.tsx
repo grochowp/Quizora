@@ -1,38 +1,22 @@
-import { useMemo } from "react";
 import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
-import { IAchievement } from "../../../interfaces";
 import { statusMap } from "../../../utils/maps";
+import { useUserAchievements } from "../../../hooks/useUserAchievements";
 
 export const SelectBar = ({
   handleStatus,
   status,
-  achievements,
 }: {
   handleStatus: (props: string) => void;
   status: string;
-  achievements: IAchievement[] | undefined;
 }) => {
   const { loggedUserData } = useLoggedUserContext();
-
-  const allAchievements = achievements?.reduce(
-    (acc, val) => acc + val.levels.length - 1,
-    0,
-  );
-
-  const allTitles = achievements?.reduce((acc, achievement) => {
-    const titleCount = achievement.levels.filter((level) => level.title).length;
-    return acc + titleCount;
-  }, 0);
-
-  const { userAchievements, userTitles } = useMemo(() => {
-    const userAchievements = loggedUserData?.userProfile?.achievements.reduce(
-      (total, achievement) => total + achievement.level - 1,
-      0,
-    );
-
-    const userTitles = loggedUserData?.userProfile?.titles || [];
-    return { userAchievements, userTitles };
-  }, [loggedUserData?.userProfile]);
+  const {
+    userAchievements,
+    userTitles,
+    allAchievements,
+    allTitles,
+    isLoading,
+  } = useUserAchievements(loggedUserData);
 
   return (
     <div className="flex min-h-[60px] w-full flex-col items-center justify-between gap-8 rounded-lg border-l-4 border-extras bg-secondary px-4 py-3 text-[18px] sm:gap-4 xl:flex-row">
@@ -40,13 +24,15 @@ export const SelectBar = ({
         <span>
           Zdobyte osiągnięcia:{" "}
           <strong className="text-extras">
-            {userAchievements}/{allAchievements || 0}
+            {isLoading
+              ? "Ładowanie..."
+              : `${userAchievements}/${allAchievements}`}{" "}
           </strong>
         </span>
         <span>
           Zdobyte tytuły:{" "}
           <strong className="text-extras">
-            {userTitles.length}/{allTitles}
+            {isLoading ? "Ładowanie..." : `${userTitles}/${allTitles}`}
           </strong>
         </span>
       </div>

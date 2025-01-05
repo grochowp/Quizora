@@ -1,22 +1,16 @@
 import { useState } from "react";
 import { SelectBar } from "./Components/SelectBar";
-import { useQuery } from "@tanstack/react-query";
 import { IAchievement, IUserAchievemnt } from "../../interfaces";
-import { fetchAchievements } from "../../services/achievementService";
 import Error from "../Error/Error";
 import Spinner from "../../components/reusable/Spinner";
 import { Achievement } from "./Components/Achievement";
 import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
+import { useAchievements } from "../../hooks/useAchievements";
 
 const Achievements = () => {
   const [status, setStatus] = useState<string>("all");
   const { loggedUserData } = useLoggedUserContext();
-  const { data, error, isLoading } = useQuery<IAchievement[]>({
-    queryKey: ["achievements"],
-    queryFn: () => fetchAchievements(),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
+  const { data, isLoading, error } = useAchievements();
 
   const filteredAchievements = data?.filter((achievement: IAchievement) => {
     const userAchievement = loggedUserData?.userProfile?.achievements.find(
@@ -46,11 +40,7 @@ const Achievements = () => {
 
   return (
     <div className="flex h-full w-full flex-col gap-16">
-      <SelectBar
-        handleStatus={handleStatus}
-        status={status}
-        achievements={data}
-      />
+      <SelectBar handleStatus={handleStatus} status={status} />
       {isLoading ? (
         <Spinner />
       ) : (

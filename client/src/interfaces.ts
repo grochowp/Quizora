@@ -151,3 +151,10 @@ export interface IQuizWithNumber {
   quizzesLength: number;
   quizzes: IQuiz[];
 }
+
+export interface IStatsTileData {
+  name: string;
+  value: number;
+  maxValue?: number;
+  hiperlink?: string;
+}
