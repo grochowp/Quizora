@@ -1,4 +1,3 @@
-import React from "react";
 import { StatsCard } from "../../../components/reusable/StatsCard";
 import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 import { IStatsTileData } from "../../../interfaces";

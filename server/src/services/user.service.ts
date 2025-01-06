@@ -24,6 +24,7 @@ const { generateToken } = require("../config/authentication");
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 const profilePictureRegex =
   /^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
 class UserService {
   async handleAchievementUpdate(
@@ -136,8 +137,12 @@ class UserService {
         throw new Error("Hasło musi zawierać minimum 8 znaków.");
 
       if (!passwordRegex.test(password))
-        throw new Error("Hasło musi zawierać minimum jedną cyfrę.");
+        throw new Error(
+          "Hasło musi zawierać minimum jedną cyfrę i nie zawierać znaków specjalnych."
+        );
 
+      if (!emailRegex.test(email))
+        throw new Error("Email musi być w odpowiednim formacie - example@x.y");
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const allAchievements = await AchievementService.getAchievements({

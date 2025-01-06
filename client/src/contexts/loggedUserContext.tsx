@@ -1,7 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { IFormData, IUser } from "../interfaces";
 import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
 import { getDataFromToken, loginOrRegister } from "../services/userService";
 import Cookies from "js-cookie";
 
@@ -57,11 +56,8 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
       setLoggedUserData(response);
       setUserCookie(response);
       navigate("/");
-    } catch (err: unknown) {
-      if (err instanceof AxiosError) {
-        throw new Error(err.response?.data?.message || "Something went wrong");
-      }
-      throw new Error("An unknown error occurred");
+    } catch (err) {
+      throw new Error(err.message);
     }
   };
 
