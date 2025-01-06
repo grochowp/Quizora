@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { TimeBar } from "./components/TimeBar";
 import { Button } from "../../components/reusable/elements/Button";
 import { Question } from "./components/Question";
@@ -18,6 +18,7 @@ import { BiError } from "react-icons/bi";
 import Spinner from "../../components/reusable/Spinner";
 
 // TO-DO Add modal to display quiz data before going to this components, pass quiz object as a props
+// TO-DO Add fetching title to display it in quiz
 const SolveQuiz = () => {
   const { quizId } = useParams();
   const { openModal } = useModalContext();
@@ -25,6 +26,7 @@ const SolveQuiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<number>(-1);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { questions, status } = useSelector((state: RootState) => state.quiz);
 
   useEffect(() => {
@@ -87,7 +89,7 @@ const SolveQuiz = () => {
         {status === "active" && (
           <div className="flex h-fit w-full flex-col items-center rounded-lg border-l-4 border-extras bg-secondary font-poppins">
             <Question
-              // title={title}
+              title={location.state.title}
               question={question}
               handleSelectAnswer={handleSelectAnswer}
               selectedAnswer={selectedAnswer}

@@ -4,6 +4,7 @@ import { SearchBar } from "../Navigation/SearchBar";
 import { Suspense } from "react";
 import Spinner from "../reusable/Spinner";
 import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
+import { ModalProvider } from "../../contexts/ModalContext";
 
 const RootLayout = () => {
   const { loggedUserData } = useLoggedUserContext();
@@ -11,19 +12,21 @@ const RootLayout = () => {
   return (
     <>
       <main
-        className={`flex min-h-screen flex-col bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-gradient-secondary)] md:flex-row theme-${theme}`}
+        className={`flex min-h-screen flex-col bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-gradient-secondary)] text-baseText md:flex-row theme-${theme}`}
       >
-        <Navbar />
-        <div className="ml-0 flex flex-grow flex-col items-center justify-center">
-          <SearchBar />
-          <div className="z-10 flex max-w-[1600px] flex-1">
-            <Suspense fallback={<Spinner />}>
-              <div className="flex w-[300px] justify-center sm:w-[550px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
-                <Outlet />
-              </div>
-            </Suspense>
+        <ModalProvider>
+          <Navbar />
+          <div className="ml-0 flex flex-grow flex-col items-center justify-center">
+            <SearchBar />
+            <div className="z-10 flex max-w-[1600px] flex-1">
+              <Suspense fallback={<Spinner />}>
+                <div className="flex w-[300px] justify-center sm:w-[550px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
+                  <Outlet />
+                </div>
+              </Suspense>
+            </div>
           </div>
-        </div>
+        </ModalProvider>
       </main>
       <img
         src="/assets/book-left.png"

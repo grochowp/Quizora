@@ -1,19 +1,19 @@
 import { IQuestion } from "../../../interfaces";
 
 export const Question = ({
+  title,
   question,
   handleSelectAnswer,
   selectedAnswer,
 }: {
+  title: string;
   question: IQuestion;
   handleSelectAnswer: (index: number) => void;
   selectedAnswer: number;
 }) => {
   return (
     <>
-      <h1 className="py-4 md:py-6 md:text-xl">
-        ddasdsdasadsadsadsdsads - sadsaddasdasas
-      </h1>
+      <h1 className="py-4 md:py-6 md:text-xl">{title}</h1>
       <div className="mb-8 flex h-fit min-h-24 w-[90%] items-center justify-center rounded-lg bg-primary px-4 py-6 text-center text-sm md:text-base">
         {question.question}
       </div>

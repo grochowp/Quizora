@@ -151,7 +151,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
           </motion.div>
         )}
       </div>
-      {pagination && (
+      {pagination && pages !== 1 && (
         <div className="mb-4 flex w-full items-center justify-center gap-2 text-sm text-baseText lg:gap-4 lg:text-lg">
           <span
             className={`${currentPage === 1 ? "opacity-25" : "opacity-100"} mr-2 flex cursor-pointer items-center justify-center rounded-full border-[1px] border-baseText px-3 lg:mr-4`}
