@@ -29,12 +29,12 @@
 }
 
 .theme-light {
-  --color-primary: #ede0d4;
-  --color-gradient-secondary: #8a8a8f;
-  --color-secondary: #e6ccb2bf;
-  --color-secondary-no-alpha: #e6ccb2;
-  --color-text-base: #212121;
-  --color-extras: #7f5539;
+  --color-primary: #f8fafc;
+  --color-gradient-secondary: #d9eafd;
+  --color-secondary: #9aa6b2bf;
+  --color-secondary-no-alpha: #9aa6b2;
+  --color-text-base: #0a0a0a;
+  --color-extras: #42423d;
   /* --color-extras-secondary: #292929;
   --color-shadow: #101010; */
 }
@@ -140,10 +140,4 @@ body,
 .list-item-selected svg,
 .list-item-selected span {
   @apply text-secondary;
-}
-
-/** ACHIEVEMENTS **/
-
-.trapez {
-  clip-path: polygon(48% 0, 100% 33%, 49% 100%, 0 33%);
 }

@@ -8,6 +8,7 @@ import { TopModal } from "../modals/TopModal";
 import { useModalContext } from "../../../contexts/ModalContext";
 import { getQuizWithDetails } from "../../../services/quizService";
 import { MdOutlineAddchart } from "react-icons/md";
+import { PiTrashLight } from "react-icons/pi";
 
 const itemVariants = {
   hidden: { y: 0, opacity: 0 },
@@ -23,11 +24,24 @@ const Quiz = ({
 }) => {
   const { loggedUserData } = useLoggedUserContext();
   const { openModal } = useModalContext();
-  const editButton = loggedUserData?._id === quiz.createdBy;
+  const loggedUserQuiz = loggedUserData?._id === quiz.createdBy;
   const navigate = useNavigate();
 
   const navigateToQuiz = () => {
     navigate(`/quiz/${quiz._id}`, { state: { title: quiz.title } });
+  };
+
+  const deleteQuiz = async (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    try {
+      console.log(quiz._id);
+    } catch (err) {
+      openModal(
+        <TopModal label={err.message} icon={<MdOutlineAddchart />} />,
+        "top",
+        5,
+      );
+    }
   };
 
   const navigateToQuizEdit = async (e: React.MouseEvent<HTMLDivElement>) => {
@@ -48,16 +62,24 @@ const Quiz = ({
     <motion.div
       variants={lessAnimations ? undefined : itemVariants}
       whileHover={lessAnimations ? undefined : { scale: 1.05, rotate: -2 }}
-      className={`duration-250 relative h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} relative bg-secondary text-baseText`}
+      className={`duration-250 group relative h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} relative bg-secondary text-baseText`}
       onClick={navigateToQuiz}
     >
-      {editButton && (
-        <div
-          className="absolute -top-2 right-4 -z-10 h-2 w-8 cursor-pointer rounded-t-md bg-extras text-xs transition-all duration-500 hover:h-8 hover:-translate-y-6"
-          onClick={(e) => navigateToQuizEdit(e)}
-        >
-          <CiEdit className="h-8 w-8 text-primary" />
-        </div>
+      {loggedUserQuiz && (
+        <>
+          <div
+            className="absolute -top-2 right-14 -z-10 h-2 w-8 cursor-pointer rounded-t-md bg-extras text-xs opacity-0 transition-all duration-100 group-hover:h-8 group-hover:-translate-y-6 group-hover:opacity-100"
+            onClick={(e) => navigateToQuizEdit(e)}
+          >
+            <CiEdit className="h-8 w-8 text-primary" />
+          </div>
+          <div
+            className="absolute -top-2 right-4 -z-10 h-2 w-8 cursor-pointer rounded-t-md bg-red-500 text-xs opacity-0 group-hover:h-8 group-hover:-translate-y-6 group-hover:opacity-100"
+            onClick={(e) => deleteQuiz(e)}
+          >
+            <PiTrashLight className="h-7 w-7 translate-x-[2.5px] translate-y-[3px] text-primary" />
+          </div>
+        </>
       )}
       <div className="m-3 mb-2 flex justify-between">
         <div className="relative flex gap-1">
