@@ -68,7 +68,7 @@ function Profile() {
           userId={userId}
           status={status}
           maxQuizzes={12}
-          styles="min-h-[469px]"
+          styles="min-h-[479px]"
           pagination
         />
       </div>

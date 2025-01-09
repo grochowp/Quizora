@@ -126,7 +126,7 @@ export interface IQuizFilters {
   description: string;
   category: string;
   difficulty: string;
-  time: string;
+  time: number;
 }
 
 export interface ITopModalBody {

@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   IManageQuiz,
   IQuestion,
-  IQuiz,
   IQuizFilters,
   ITopModalBody,
 } from "../../interfaces";
@@ -13,11 +12,13 @@ import { Questions } from "./Components/Questions";
 import { Parameters } from "./Components/Parameters";
 import FullPageSpinner from "../../components/reusable/FullPageSpinner";
 import { createQuiz } from "../../services/quizService";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TopModal } from "../../components/reusable/modals/TopModal";
 import { BiError } from "react-icons/bi";
 
-const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
+const ManageQuiz = () => {
+  const location = useLocation();
+  const quiz = location.state?.quiz;
   const { openModal, closeAllModals } = useModalContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [questions, setQuestions] = useState<IQuestion[]>(
@@ -28,7 +29,7 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
     description: quiz?.description || "",
     category: quiz?.category || "programming",
     difficulty: quiz?.difficulty || "easy",
-    time: quiz?.time.toString() || "3",
+    time: quiz?.time || 3,
   });
 
   const modals: ITopModalBody[] = [];
@@ -66,15 +67,14 @@ const ManageQuiz = ({ quiz }: { quiz?: IQuiz }) => {
   };
 
   const resetFilters = () => {
-    setQuestions([]);
+    setQuestions(quiz?.quizDetails.questions || []);
     setFilters({
-      title: "",
-      description: "",
-      category: "programming",
-      difficulty: "easy",
-      time: "3",
+      title: quiz?.title || "",
+      description: quiz?.description || "",
+      category: quiz?.category || "programming",
+      difficulty: quiz?.difficulty || "easy",
+      time: quiz?.time || 3,
     });
-    setTimeout(() => {}, 0);
   };
 
   const addModal = (label: string, icon: React.ReactNode, time: number) => {
