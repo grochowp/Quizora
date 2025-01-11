@@ -11,7 +11,7 @@ import { GeneralInformations } from "./Components/GeneralInformations";
 import { Questions } from "./Components/Questions";
 import { Parameters } from "./Components/Parameters";
 import FullPageSpinner from "../../components/reusable/FullPageSpinner";
-import { createQuiz } from "../../services/quizService";
+import { createQuiz, editQuiz } from "../../services/quizService";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TopModal } from "../../components/reusable/modals/TopModal";
 import { BiError } from "react-icons/bi";
@@ -19,6 +19,8 @@ import { BiError } from "react-icons/bi";
 const ManageQuiz = () => {
   const location = useLocation();
   const quiz = location.state?.quiz;
+  console.log(quiz);
+  const action = quiz ? "Edytuj Quiz" : "Dodaj Quiz";
   const { openModal, closeAllModals } = useModalContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [questions, setQuestions] = useState<IQuestion[]>(
@@ -44,14 +46,14 @@ const ManageQuiz = () => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const validateQuiz = (quiz: IManageQuiz) => {
+  const validateQuiz = (quiz: Partial<IManageQuiz>) => {
     closeAllModals();
 
     if (!quiz.title || !quiz.description) {
       throw new Error("Wprowadź podstawowe informacje o Quizie.");
     }
 
-    quiz.questions.map((question, index) => {
+    quiz.questions?.map((question, index) => {
       if (
         !question.question ||
         question.correctAnswerIndex < 0 ||
@@ -81,23 +83,28 @@ const ManageQuiz = () => {
     modals.push({ label, icon, time });
   };
 
-  const handleAddQuiz = async () => {
+  const handleManageQuiz = async () => {
     try {
       setIsLoading(true);
-      const quiz: IManageQuiz = {
+      const quizData: Partial<IManageQuiz> = {
         ...filters,
         time: Number(filters.time),
         questions,
       };
-      validateQuiz(quiz);
+      validateQuiz(quizData);
 
-      const { quiz: newQuiz, createdQuizzesMessage } = await createQuiz(quiz);
-      addModal(
-        `Quiz "${newQuiz.title}" został dodany`,
-        <MdOutlineAddchart />,
-        7,
-      );
-      addModal(createdQuizzesMessage, <MdOutlineAddchart />, 5);
+      if (quizData) {
+        const { message } = await editQuiz(filters, questions, quiz._id!);
+        addModal(message, <MdOutlineAddchart />, 7);
+      } else {
+        const { quiz: newQuiz, createdQuizzesMessage } = await createQuiz(quiz);
+        addModal(
+          `Quiz "${newQuiz.title}" został dodany`,
+          <MdOutlineAddchart />,
+          7,
+        );
+        addModal(createdQuizzesMessage, <MdOutlineAddchart />, 5);
+      }
 
       navigate("/");
       resetFilters();
@@ -125,9 +132,10 @@ const ManageQuiz = () => {
       <div className={`inputAddQuizBox relative flex w-full flex-col gap-4`}>
         <GeneralInformations
           filters={filters}
-          handleAddQuiz={handleAddQuiz}
+          handleManageQuiz={handleManageQuiz}
           resetFilters={resetFilters}
           updateFilter={updateFilter}
+          action={action}
         />
 
         <Questions
@@ -137,9 +145,10 @@ const ManageQuiz = () => {
       </div>
       <Parameters
         filters={filters}
-        handleAddQuiz={handleAddQuiz}
+        handleManageQuiz={handleManageQuiz}
         updateFilter={updateFilter}
         questionsLength={questions.length}
+        action={action}
       />
     </div>
   );

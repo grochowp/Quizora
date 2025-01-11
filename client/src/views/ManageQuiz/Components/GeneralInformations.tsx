@@ -6,13 +6,15 @@ import { IQuizFilters } from "../../../interfaces";
 export const GeneralInformations = ({
   filters,
   updateFilter,
-  handleAddQuiz,
+  handleManageQuiz,
   resetFilters,
+  action,
 }: {
   filters: IQuizFilters;
   updateFilter: (key: string, value: string) => void;
-  handleAddQuiz: () => void;
+  handleManageQuiz: () => void;
   resetFilters: () => void;
+  action: "Dodaj Quiz" | "Edytuj Quiz";
 }) => {
   return (
     <div className="flex flex-col gap-4 rounded-lg border-l-4 border-extras bg-secondary">
@@ -38,10 +40,10 @@ export const GeneralInformations = ({
             </Button>
             <Button
               styles="hidden xl:flex h-10 px-4"
-              onClick={handleAddQuiz}
+              onClick={handleManageQuiz}
               type="submit"
             >
-              Dodaj Quiz
+              {action}
             </Button>
           </div>
         </div>

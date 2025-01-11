@@ -2,7 +2,7 @@ import React from "react";
 
 interface CustomSelectProps {
   label: string;
-  value: string;
+  value: string | number;
   options: { value: string; label: string }[];
   onChange: (value: string) => void;
   styles?: string;

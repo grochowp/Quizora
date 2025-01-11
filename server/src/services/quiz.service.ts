@@ -89,6 +89,7 @@ class QuizService {
     quizData: IQuiz,
     questions: IQuizDetails["questions"]
   ): Promise<void> {
+    console.log(quizData);
     return withTransaction(async (session) => {
       const editFilter: EditQuizFilters = {};
 
@@ -143,7 +144,7 @@ class QuizService {
           { session }
         );
 
-      return { newQuiz, quizDetails, message: "Quiz edited succesfully." };
+      return { newQuiz, quizDetails, message: "Quiz został edytowany!" };
     });
   }
 
@@ -158,17 +159,21 @@ class QuizService {
       await ValidationService.isAuthorized(
         userId,
         quiz.createdBy,
-        "You can delete only your own Quiz."
+        "Możesz usunąc tylko swój Quiz."
       );
 
       const quizDeleted = await QuizRepository.deleteQuiz(quizId, { session });
-      if (!quizDeleted) throw new Error("Failed to delete the quiz.");
+      if (!quizDeleted)
+        throw new Error("Próba pobrania Quizu zakończona niepowodzeniem.");
 
       const detailsDeleted = await QuizDetailsRepository.deleteQuizDetails(
         quiz.quizDetails,
         { session }
       );
-      if (!detailsDeleted) throw new Error("Failed to delete quiz details.");
+      if (!detailsDeleted)
+        throw new Error(
+          "Próba pobrania detali Quizu zakończona niepowodzeniem."
+        );
 
       await CommentRepository.deleteQuizComments(quizId, { session });
 
@@ -177,7 +182,7 @@ class QuizService {
         session,
       });
 
-      return "Your Quiz has been successfully deleted.";
+      return `Quiz ${quiz.title} został usunięty!`;
     });
   }
 
@@ -203,6 +208,7 @@ class QuizService {
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       matchStage.updatedAt = { $gte: oneWeekAgo };
     }
+
     if (filters.status) matchStage.status = filters.status;
 
     aggregationPipeline.push(

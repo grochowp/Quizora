@@ -6,7 +6,10 @@ import { CiEdit } from "react-icons/ci";
 import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 import { TopModal } from "../modals/TopModal";
 import { useModalContext } from "../../../contexts/ModalContext";
-import { getQuizWithDetails } from "../../../services/quizService";
+import {
+  deleteQuizWithData,
+  getQuizWithDetails,
+} from "../../../services/quizService";
 import { MdOutlineAddchart } from "react-icons/md";
 import { PiTrashLight } from "react-icons/pi";
 
@@ -31,10 +34,12 @@ const Quiz = ({
     navigate(`/quiz/${quiz._id}`, { state: { title: quiz.title } });
   };
 
+  // TO-DO Add modal before deleting Quiz - confirm or cancel
   const deleteQuiz = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     try {
-      console.log(quiz._id);
+      const message = await deleteQuizWithData(quiz._id);
+      openModal(<TopModal label={message} icon={<PiTrashLight />} />, "top", 5);
     } catch (err) {
       openModal(
         <TopModal label={err.message} icon={<MdOutlineAddchart />} />,

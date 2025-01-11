@@ -12,13 +12,15 @@ import {
 export const Parameters = ({
   filters,
   updateFilter,
-  handleAddQuiz,
+  handleManageQuiz,
   questionsLength,
+  action,
 }: {
   filters: IQuizFilters;
   updateFilter: (key: string, value: string) => void;
-  handleAddQuiz: () => void;
+  handleManageQuiz: () => void;
   questionsLength: number;
+  action: "Dodaj Quiz" | "Edytuj Quiz";
 }) => {
   const calculatePoints = (
     time: number,
@@ -87,8 +89,8 @@ export const Parameters = ({
             </span>
           </div>
 
-          <Button styles=" h-10 px-4" onClick={handleAddQuiz} type="submit">
-            Dodaj Quiz
+          <Button styles=" h-10 px-4" onClick={handleManageQuiz} type="submit">
+            {action}
           </Button>
         </div>
       </div>
