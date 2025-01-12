@@ -3,6 +3,7 @@ import { IFormData, IUser } from "../interfaces";
 import { useNavigate } from "react-router-dom";
 import { getDataFromToken, loginOrRegister } from "../services/userService";
 import Cookies from "js-cookie";
+import { useQuery } from "@tanstack/react-query";
 
 interface LoggedUserContextType {
   loggedUserData: IUser | undefined;
@@ -10,6 +11,7 @@ interface LoggedUserContextType {
   logoutUser: () => void;
   editUser: (data: IUser) => void;
   loginUser: (data: IFormData, action: string) => void;
+  resetUserData: () => void;
 }
 
 export const LoggedUserContext = createContext<
@@ -19,6 +21,17 @@ export const LoggedUserContext = createContext<
 export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
   const [loggedUserData, setLoggedUserData] = useState<IUser | undefined>();
   const navigate = useNavigate();
+  const { refetch } = useQuery({
+    queryKey: ["User"],
+    queryFn: () => getDataFromToken(),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  const resetUserData = async () => {
+    const newData = await refetch();
+    setLoggedUserData(newData.data.user);
+  };
 
   const setUserCookie = (user: IUser) => {
     Cookies.set("userToken", JSON.stringify(user.token), {
@@ -35,14 +48,8 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
   useEffect(() => {
     (async () => {
       try {
-        const userToken = Cookies.get("userToken")?.replace(/^"|"$/g, "");
-        if (userToken) {
-          const { user } = await getDataFromToken({
-            token: userToken,
-          });
-
-          setLoggedUserData(user);
-        }
+        const { user } = await getDataFromToken();
+        setLoggedUserData(user);
       } catch (error) {
         console.error("Token verification failed", error);
         setLoggedUserData(undefined);
@@ -76,6 +83,7 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
       value={{
         loggedUserData,
         setLoggedUserData,
+        resetUserData,
         loginUser,
         editUser,
         logoutUser,

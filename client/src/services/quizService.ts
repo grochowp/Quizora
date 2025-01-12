@@ -24,7 +24,6 @@ export const editQuiz = async (
 ) => {
   try {
     const token = Cookies.get("userToken")?.replace(/^"|"$/g, "");
-    console.log(quizId);
     const response = await axios.put(
       `${import.meta.env.VITE_DB_URL}api/quiz/${quizId}`,
       { quiz: quizData, questions },
@@ -45,7 +44,7 @@ export const editQuiz = async (
   }
 };
 
-export const createQuiz = async (quizData: IManageQuiz) => {
+export const createQuiz = async (quizData: Partial<IManageQuiz>) => {
   try {
     const token = Cookies.get("userToken")?.replace(/^"|"$/g, "");
     const response = await axios.post(

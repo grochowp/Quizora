@@ -15,13 +15,14 @@ import { createQuiz, editQuiz } from "../../services/quizService";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TopModal } from "../../components/reusable/modals/TopModal";
 import { BiError } from "react-icons/bi";
+import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
 
 const ManageQuiz = () => {
   const location = useLocation();
   const quiz = location.state?.quiz;
-  console.log(quiz);
   const action = quiz ? "Edytuj Quiz" : "Dodaj Quiz";
   const { openModal, closeAllModals } = useModalContext();
+  const { resetUserData } = useLoggedUserContext();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [questions, setQuestions] = useState<IQuestion[]>(
     quiz?.quizDetails.questions || [],
@@ -93,11 +94,13 @@ const ManageQuiz = () => {
       };
       validateQuiz(quizData);
 
-      if (quizData) {
+      if (quiz) {
         const { message } = await editQuiz(filters, questions, quiz._id!);
         addModal(message, <MdOutlineAddchart />, 7);
       } else {
-        const { quiz: newQuiz, createdQuizzesMessage } = await createQuiz(quiz);
+        const { quiz: newQuiz, createdQuizzesMessage } =
+          await createQuiz(quizData);
+        resetUserData();
         addModal(
           `Quiz "${newQuiz.title}" został dodany`,
           <MdOutlineAddchart />,

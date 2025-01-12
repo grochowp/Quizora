@@ -68,6 +68,10 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
     setCurrentPage(page);
   };
 
+  const handleResetQuizzes = () => {
+    refetch();
+  };
+
   useEffect(() => {
     refetch();
   }, [currentPage, refetch]);
@@ -141,11 +145,12 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
                 Brak Quizów o podanych kryteriach
               </h1>
             )}
-            {quizzes.slice(0, maxQuizzes).map((quiz) => (
+            {quizzes.map((quiz) => (
               <Quiz
                 key={quiz._id}
                 quiz={quiz}
                 lessAnimations={lessAnimations}
+                handleResetQuizzes={handleResetQuizzes}
               />
             ))}
           </motion.div>

@@ -89,7 +89,6 @@ class QuizService {
     quizData: IQuiz,
     questions: IQuizDetails["questions"]
   ): Promise<void> {
-    console.log(quizData);
     return withTransaction(async (session) => {
       const editFilter: EditQuizFilters = {};
 
@@ -144,7 +143,11 @@ class QuizService {
           { session }
         );
 
-      return { newQuiz, quizDetails, message: "Quiz został edytowany!" };
+      return {
+        newQuiz,
+        quizDetails,
+        message: "Quiz został edytowany!",
+      };
     });
   }
 

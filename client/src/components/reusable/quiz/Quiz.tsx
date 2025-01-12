@@ -12,19 +12,26 @@ import {
 } from "../../../services/quizService";
 import { MdOutlineAddchart } from "react-icons/md";
 import { PiTrashLight } from "react-icons/pi";
+import { useState } from "react";
+import Spinner from "../Spinner";
 
 const itemVariants = {
   hidden: { y: 0, opacity: 0 },
-  visible: { y: 0, opacity: 1 },
+  visible: (isDeleteAttempt: boolean) => {
+    return { y: 0, opacity: isDeleteAttempt ? 0.25 : 1 };
+  },
 };
 
 const Quiz = ({
   quiz,
+  handleResetQuizzes,
   lessAnimations,
 }: {
   quiz: IQuiz;
+  handleResetQuizzes: () => void;
   lessAnimations?: boolean;
 }) => {
+  const [isDeleteAttempt, setIsDeleteAttempt] = useState<boolean>(false);
   const { loggedUserData } = useLoggedUserContext();
   const { openModal } = useModalContext();
   const loggedUserQuiz = loggedUserData?._id === quiz.createdBy;
@@ -38,14 +45,18 @@ const Quiz = ({
   const deleteQuiz = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     try {
+      setIsDeleteAttempt(true);
       const message = await deleteQuizWithData(quiz._id);
       openModal(<TopModal label={message} icon={<PiTrashLight />} />, "top", 5);
+      handleResetQuizzes();
     } catch (err) {
       openModal(
         <TopModal label={err.message} icon={<MdOutlineAddchart />} />,
         "top",
         5,
       );
+    } finally {
+      setIsDeleteAttempt(false);
     }
   };
 
@@ -65,11 +76,20 @@ const Quiz = ({
 
   return (
     <motion.div
-      variants={lessAnimations ? undefined : itemVariants}
-      whileHover={lessAnimations ? undefined : { scale: 1.05, rotate: -2 }}
-      className={`duration-250 group relative h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} relative bg-secondary text-baseText`}
+      variants={itemVariants}
+      custom={isDeleteAttempt}
+      whileHover={{
+        scale: lessAnimations ? 1.01 : 1.05,
+        rotate: lessAnimations ? 0 : -2,
+      }}
+      className={`${isDeleteAttempt && "pointer-events-none cursor-default opacity-25"} duration-250 group relative h-[132px] w-[300px] cursor-pointer rounded-xl border-l-4 font-roboto sm:h-[148px] sm:w-80 ${quiz.difficulty === "hard" ? "border-[#DE0315]" : quiz.difficulty === "medium" ? "border-[#E2E208]" : "border-[#80E900]"} relative bg-secondary text-baseText`}
       onClick={navigateToQuiz}
     >
+      {isDeleteAttempt && (
+        <div className="absolute translate-x-[140%] translate-y-[40%]">
+          <Spinner />
+        </div>
+      )}
       {loggedUserQuiz && (
         <>
           <div

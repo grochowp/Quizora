@@ -251,6 +251,11 @@ class UserService {
     return UserRepository.findUserById(userId);
   }
 
+  async findUserWithUserProfileById(userId: ObjectId) {
+    await ValidationService.validateUser(userId);
+    return UserRepository.findUserWithUserProfileById(userId);
+  }
+
   async getMultipleUsers(
     query: string,
     page: number,

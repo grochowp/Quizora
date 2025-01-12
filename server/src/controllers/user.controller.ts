@@ -85,6 +85,19 @@ const getUser = async (req: Request, res: Response) => {
   }
 };
 
+const getUserWithUserProfile = async (
+  req: Request & UserTokenRequest,
+  res: Response
+) => {
+  const { _id: userId } = req.user;
+  try {
+    const user = await UserService.findUserWithUserProfileById(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const getMultipleUsers = async (req: Request, res: Response) => {
   const query = req.query.query || "";
   const page = parseInt(req.query.page as string) || 1;
@@ -169,6 +182,7 @@ module.exports = {
   editPreferences,
   editProfile,
   getUser,
+  getUserWithUserProfile,
   getMultipleUsers,
   addFinishedQuizData,
   changeDisplayedTitles,

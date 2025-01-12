@@ -6,7 +6,7 @@ export const useAchievements = () => {
   return useQuery<IAchievement[]>({
     queryKey: ["achievements"],
     queryFn: fetchAchievements,
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 };
