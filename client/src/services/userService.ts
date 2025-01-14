@@ -4,10 +4,8 @@ import Cookies from "js-cookie";
 
 const url = import.meta.env.VITE_DB_URL;
 
-export const getDataFromToken = async () => {
+export const getDataFromToken = async (token?: string) => {
   try {
-    const token = Cookies.get("userToken")?.replace(/^"|"$/g, "");
-
     const response = await axios.post(`${url}api/user/userTokenData`, {
       token,
     });

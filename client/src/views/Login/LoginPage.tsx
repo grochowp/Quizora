@@ -10,27 +10,34 @@ import { IFormData } from "../../interfaces";
 
 const LoginPage = () => {
   const [selectedAction, setSelectedAction] = useState<string>("login");
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const { loginUser, handleRememberMe, getRememberMeData, resetRememberMe } =
+    useLoggedUserContext();
+  const [rememberMe, setRememberMe] = useState<boolean>(getRememberMeData());
   const [resErrors, setResErrors] = useState<string>("");
   const { register, handleSubmit, reset } = useForm<IFormData>();
-  const { loginUser } = useLoggedUserContext();
 
   const onSubmit = async (data: IFormData) => {
     try {
       setResErrors("");
       await loginUser(data, selectedAction);
+      if (rememberMe) {
+        handleRememberMe(data.login, data.password);
+      } else {
+        resetRememberMe();
+      }
     } catch (err) {
       setResErrors(err.message);
     }
   };
-  const handleRememberMe = () => {
+
+  const onRememberMeChange = () => {
     setRememberMe(!rememberMe);
   };
 
   const handleChangeAction = () => {
     reset();
     setResErrors("");
-    setRememberMe(false);
+    setRememberMe(getRememberMeData());
     setSelectedAction(selectedAction === "login" ? "register" : "login");
   };
 
@@ -60,6 +67,7 @@ const LoginPage = () => {
             type="text"
             register={register("login", {
               required: "Login jest wymagany",
+              value: localStorage.getItem("login") || "",
             })}
           />
 
@@ -90,6 +98,7 @@ const LoginPage = () => {
             type="password"
             register={register("password", {
               required: "Hasło jest wymagane",
+              value: localStorage.getItem("password") || "",
             })}
           />
           {selectedAction === "register" && (
@@ -107,9 +116,9 @@ const LoginPage = () => {
             <input
               type="checkbox"
               checked={rememberMe}
-              onChange={handleRememberMe}
+              onChange={onRememberMeChange}
             />
-            <p className="cursor-pointer" onClick={handleRememberMe}>
+            <p className="cursor-pointer" onClick={onRememberMeChange}>
               Pamiętaj mnie
             </p>
           </div>

@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchRankingUsers } from "../../../services/userService";
 import Spinner from "../../../components/reusable/Spinner";
 import { useNavigate } from "react-router-dom";
+import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 
 const tableColumns = [
   "Miejsce",
@@ -31,6 +32,7 @@ export const RankingTable = ({
   query: string;
   sortBy: string;
 }) => {
+  const { loggedUserData } = useLoggedUserContext();
   const [page, setPage] = useState<number>(0);
   const navigate = useNavigate();
   const {
@@ -101,7 +103,10 @@ export const RankingTable = ({
               >
                 <TableCell
                   sx={{
-                    color: "var(--color-text-base)",
+                    color:
+                      user._id === loggedUserData?._id
+                        ? "var(--color-extras)"
+                        : "var(--color-text-base)",
                     border: "none",
                   }}
                 >
@@ -109,7 +114,10 @@ export const RankingTable = ({
                 </TableCell>
                 <TableCell
                   sx={{
-                    color: "var(--color-text-base)",
+                    color:
+                      user._id === loggedUserData?._id
+                        ? "var(--color-extras)"
+                        : "var(--color-text-base)",
                     border: "none",
                     display: "flex",
                     gap: "4px",
@@ -132,22 +140,46 @@ export const RankingTable = ({
                   </span>
                 </TableCell>
                 <TableCell
-                  sx={{ color: "var(--color-text-base)", border: "none" }}
+                  sx={{
+                    color:
+                      user._id === loggedUserData?._id
+                        ? "var(--color-extras)"
+                        : "var(--color-text-base)",
+                    border: "none",
+                  }}
                 >
                   {user?.createdQuizzes}
                 </TableCell>
                 <TableCell
-                  sx={{ color: "var(--color-text-base)", border: "none" }}
+                  sx={{
+                    color:
+                      user._id === loggedUserData?._id
+                        ? "var(--color-extras)"
+                        : "var(--color-text-base)",
+                    border: "none",
+                  }}
                 >
                   {user?.finishedQuizzes}
                 </TableCell>
                 <TableCell
-                  sx={{ color: "var(--color-text-base)", border: "none" }}
+                  sx={{
+                    color:
+                      user._id === loggedUserData?._id
+                        ? "var(--color-extras)"
+                        : "var(--color-text-base)",
+                    border: "none",
+                  }}
                 >
                   {user?.likedQuizzes}
                 </TableCell>
                 <TableCell
-                  sx={{ color: "var(--color-text-base)", border: "none" }}
+                  sx={{
+                    color:
+                      user._id === loggedUserData?._id
+                        ? "var(--color-extras)"
+                        : "var(--color-text-base)",
+                    border: "none",
+                  }}
                 >
                   {user?.points}
                 </TableCell>

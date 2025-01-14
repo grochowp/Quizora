@@ -12,6 +12,9 @@ interface LoggedUserContextType {
   editUser: (data: IUser) => void;
   loginUser: (data: IFormData, action: string) => void;
   resetUserData: () => void;
+  handleRememberMe: (login: string, password: string) => void;
+  resetRememberMe: () => void;
+  getRememberMeData: () => boolean;
 }
 
 export const LoggedUserContext = createContext<
@@ -21,9 +24,11 @@ export const LoggedUserContext = createContext<
 export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
   const [loggedUserData, setLoggedUserData] = useState<IUser | undefined>();
   const navigate = useNavigate();
-  const { refetch } = useQuery({
+  const token = Cookies.get("userToken")?.replace(/^"|"$/g, "");
+  const { data, refetch } = useQuery({
     queryKey: ["User"],
-    queryFn: () => getDataFromToken(),
+    queryFn: () => getDataFromToken(token),
+    enabled: !!token,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -31,6 +36,23 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
   const resetUserData = async () => {
     const newData = await refetch();
     setLoggedUserData(newData.data.user);
+  };
+
+  const handleRememberMe = (login: string, password: string) => {
+    localStorage.setItem("login", login);
+    localStorage.setItem("password", password);
+  };
+
+  const resetRememberMe = () => {
+    localStorage.removeItem("login");
+    localStorage.removeItem("password");
+  };
+
+  const getRememberMeData = () => {
+    const login = localStorage.getItem("login");
+    const password = localStorage.getItem("password");
+
+    return !!login && !!password;
   };
 
   const setUserCookie = (user: IUser) => {
@@ -46,16 +68,10 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { user } = await getDataFromToken();
-        setLoggedUserData(user);
-      } catch (error) {
-        console.error("Token verification failed", error);
-        setLoggedUserData(undefined);
-      }
-    })();
-  }, []);
+    if (data) {
+      setLoggedUserData(data.user);
+    }
+  }, [data]);
 
   const loginUser = async (data: IFormData, action: string) => {
     try {
@@ -87,6 +103,9 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
         loginUser,
         editUser,
         logoutUser,
+        handleRememberMe,
+        resetRememberMe,
+        getRememberMeData,
       }}
     >
       {children}

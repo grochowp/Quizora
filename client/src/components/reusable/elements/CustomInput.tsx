@@ -1,4 +1,4 @@
-import { forwardRef, LegacyRef, useState } from "react";
+import { forwardRef, useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
@@ -12,7 +12,6 @@ interface CustomInputProps {
   styles?: string;
   value?: string;
   onChange?: (value: string) => void;
-  ref?: LegacyRef<HTMLInputElement>;
 }
 
 const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
@@ -45,7 +44,13 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           {...register}
-          ref={ref}
+          ref={(el) => {
+            if (typeof ref === "function") ref(el);
+            else if (ref)
+              (ref as React.MutableRefObject<HTMLInputElement | null>).current =
+                el;
+            if (register?.ref) register.ref(el);
+          }}
         />
         <span className="pointer-events-none absolute left-3 top-[13px] flex items-center gap-2 opacity-50 duration-500">
           {icon}
@@ -64,4 +69,5 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
     );
   },
 );
+
 export default CustomInput;
