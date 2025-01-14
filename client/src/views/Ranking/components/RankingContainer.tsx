@@ -25,7 +25,7 @@ export const RankingContainer = () => {
   }, "Escape");
 
   return (
-    <div className="mb-8 min-h-max min-w-[320px] rounded-lg border-l-4 border-extras bg-secondary lg:flex-1 2xl:mb-0">
+    <div className="min-h-max min-w-[308px] rounded-lg border-l-4 border-extras bg-secondary lg:flex-1 2xl:mb-0">
       <div className="inputBox m-4 mt-6 flex flex-col items-center justify-between gap-8 lg:flex-row lg:gap-0">
         <div className="flex flex-col items-center gap-8 lg:flex-row lg:gap-4">
           <CustomInput

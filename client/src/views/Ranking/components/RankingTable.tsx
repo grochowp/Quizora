@@ -113,7 +113,7 @@ export const RankingTable = ({
                     border: "none",
                     display: "flex",
                     gap: "4px",
-                    minWidth: "270px",
+                    minWidth: "250px",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",

@@ -19,9 +19,9 @@ export const StatsCard = ({
   };
 
   return (
-    <div className="relative flex h-32 w-80 flex-col justify-between rounded-lg border-l-4 border-extras bg-secondary">
+    <div className="relative flex h-32 w-[308px] flex-col justify-between rounded-lg border-l-4 border-extras bg-secondary">
       <TileTitle>{name}</TileTitle>
-      <div className="relative bottom-5 left-6 text-xl text-extras">
+      <div className="relative bottom-5 left-6 w-[80%] text-xl text-extras">
         {value}
         <span className="text-baseText">{maxValue && `/${maxValue}`}</span>
       </div>

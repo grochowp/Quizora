@@ -87,7 +87,9 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
       <div className="flex w-full items-center justify-between">
         {!difficultyFilter && (
           <h1 className="mb-4 pl-2 font-poppins tracking-widest text-baseText md:text-xl">
-            {title ? title : `Znaleziono ${quizzesLength} Quizów.`}
+            {title
+              ? title
+              : `Znaleziono ${quizzesLength} Quiz${quizzesLength === 1 ? "" : quizzesLength === 2 || quizzesLength === 3 ? "y" : "ów"}`}
           </h1>
         )}
 
@@ -156,7 +158,7 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
           </motion.div>
         )}
       </div>
-      {pagination && pages !== 1 && (
+      {pagination && pages > 1 && (
         <div className="mb-4 flex w-full items-center justify-center gap-2 text-sm text-baseText lg:gap-4 lg:text-lg">
           <span
             className={`${currentPage === 1 ? "opacity-25" : "opacity-100"} mr-2 flex cursor-pointer items-center justify-center rounded-full border-[1px] border-baseText px-3 lg:mr-4`}
