@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IUser } from "../interfaces";
 import { findUserById } from "../services/userService";
 
-export function useUser(userId: string | undefined) {
+export const useUser = (userId: string | undefined) => {
   if (!userId) throw new Error("Błędny ID użytkownika.");
 
   const {

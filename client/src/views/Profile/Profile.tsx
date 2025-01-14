@@ -6,9 +6,11 @@ import Spinner from "../../components/reusable/Spinner";
 import { UserCard } from "../../components/reusable/UserCard";
 import { StatusSelect } from "./components/StatusSelect";
 import ReactTimeAgo from "react-time-ago";
+import { useLoggedUserContext } from "../../contexts/LoggedUserContext";
 
 function Profile() {
   const { userId } = useParams();
+  const { loggedUserData } = useLoggedUserContext();
   const [status, setStatus] = useState<string>("published");
   const navigate = useNavigate();
   const { user, error, isLoading } = useUser(userId);
@@ -27,7 +29,7 @@ function Profile() {
       <div className="flex flex-col items-center justify-between gap-4 border-b-[1px] border-secondary font-poppins lg:items-start xl:flex-row xl:items-end">
         <UserCard
           user={user}
-          editButton
+          editButton={userId === loggedUserData?._id}
           styles="max-w-[300px] lg:max-w-96 flex-0"
         >
           <h1 className="col-span-4 col-start-3 row-start-1 flex items-center gap-2 text-2xl">

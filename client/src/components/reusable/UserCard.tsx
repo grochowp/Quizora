@@ -11,10 +11,12 @@ export const UserCard = ({
 }: {
   user: IUser | undefined;
   children: React.ReactNode;
+
   editButton?: boolean;
   styles?: string;
 }) => {
   const navigate = useNavigate();
+
   const navigateToSettings = () => {
     navigate("/settings");
   };
