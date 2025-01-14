@@ -24,12 +24,12 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       </span>
       <div className={`shadow-custom-inner bg-${color} w-max rounded-md pr-2`}>
         <select
-          className={`h-12 rounded-md bg-transparent px-2 text-sm text-baseText outline-none ${styles}`}
+          className={`h-12 cursor-pointer rounded-md bg-transparent px-2 text-sm text-baseText outline-none ${styles}`}
           value={value}
           onChange={(e) => onChange(e.target.value)}
         >
           {options.map((option, index) => (
-            <option key={index} className={`bg-${color}`} value={option.value}>
+            <option key={index} className={`bg-${color} `} value={option.value}>
               {option.label}
             </option>
           ))}

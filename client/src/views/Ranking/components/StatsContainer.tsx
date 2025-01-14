@@ -42,7 +42,7 @@ export const StatsContainer = () => {
   ];
 
   return (
-    <section className="flex flex-col gap-4 md:flex-row md:flex-wrap md:justify-center 2xl:flex-col">
+    <section className="flex flex-col gap-5 md:flex-row md:flex-wrap md:justify-center 2xl:flex-col">
       {loggedUserData &&
         statsData.map((stats) => {
           return isLoading ? (

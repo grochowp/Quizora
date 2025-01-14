@@ -23,7 +23,7 @@ const commentSchema = new mongoose.Schema<IComment>({
     enum: {
       values: [1, 0, -1],
       message:
-        "Rating must be positine (like), neutral (no rate) or negative (dislike).",
+        "Rating must be positive (like), neutral (no rate) or negative (dislike).",
     },
     required: true,
   },

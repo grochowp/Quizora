@@ -60,3 +60,18 @@ export const UpdatePreferences = async (preferences: {
     throw new Error(err.response.data.message);
   }
 };
+
+export const fetchRankingUsers = async (
+  query: string,
+  page: number,
+  sortBy: string,
+) => {
+  try {
+    const response = await axios.get(
+      `${url}api/user/ranking?query=${query}&page=${page}&sortBy=${sortBy}`,
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};

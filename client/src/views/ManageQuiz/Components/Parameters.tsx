@@ -89,7 +89,7 @@ export const Parameters = ({
             </span>
           </div>
 
-          <Button styles=" h-10 px-4" onClick={handleManageQuiz} type="submit">
+          <Button styles="h-10 px-4" onClick={handleManageQuiz} type="submit">
             {action}
           </Button>
         </div>

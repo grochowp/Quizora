@@ -273,7 +273,10 @@ class UserService {
       limit,
       sortOptions
     );
-    return users;
+
+    const allUsersCount = await UserRepository.countAllUsers(query);
+
+    return { users, allUsersCount };
   }
 
   async editProfile(

@@ -33,6 +33,13 @@ class UserRepository {
     return await User.findOne({ nickname }).session(options?.session);
   }
 
+  async countAllUsers(query: string) {
+    const users = await User.find({
+      nickname: { $regex: query, $options: "i" },
+    });
+    return users.length;
+  }
+
   async getMultipleUsers(
     query: string,
     skip: number,

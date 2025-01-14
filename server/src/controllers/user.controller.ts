@@ -105,13 +105,13 @@ const getMultipleUsers = async (req: Request, res: Response) => {
   const sortBy = req.query.sortBy || "points";
 
   try {
-    const users = await UserService.getMultipleUsers(
+    const { users, allUsersCount } = await UserService.getMultipleUsers(
       query,
       page,
       limit,
       sortBy
     );
-    res.status(200).json(users);
+    res.status(200).json({ users, allUsersCount });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
