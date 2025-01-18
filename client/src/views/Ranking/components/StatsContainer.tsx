@@ -20,6 +20,7 @@ export const StatsContainer = () => {
       name: "Stworzone Quizy",
       value: loggedUserData?.createdQuizzes || 0,
       hiperlink: "/quiz/manage",
+      hint: "Wartość może się różnić od wartości w osiągnięciach. Dotyczy tylko Quizów, które aktualnie są dostępne.",
     },
     {
       name: "Rozwiązane Quizy",
@@ -56,6 +57,7 @@ export const StatsContainer = () => {
               value={stats.value}
               maxValue={stats.maxValue}
               hiperlink={stats.hiperlink}
+              hint={stats.hint}
             />
           );
         })}

@@ -14,6 +14,7 @@ import { MdOutlineAddchart } from "react-icons/md";
 import { PiTrashLight } from "react-icons/pi";
 import { useState } from "react";
 import Spinner from "../Spinner";
+import { Tooltip, Zoom } from "@mui/material";
 
 const itemVariants = {
   hidden: { y: 0, opacity: 0 },
@@ -92,18 +93,36 @@ const Quiz = ({
       )}
       {loggedUserQuiz && (
         <>
-          <div
-            className="absolute -top-2 right-14 -z-10 h-2 w-8 cursor-pointer rounded-t-md bg-extras text-xs opacity-0 transition-all duration-100 group-hover:h-8 group-hover:-translate-y-6 group-hover:opacity-100"
-            onClick={(e) => navigateToQuizEdit(e)}
+          <Tooltip
+            title="Edytuj"
+            placement="top"
+            disableInteractive
+            slots={{
+              transition: Zoom,
+            }}
           >
-            <CiEdit className="h-8 w-8 text-primary" />
-          </div>
-          <div
-            className="absolute -top-2 right-4 -z-10 h-2 w-8 cursor-pointer rounded-t-md bg-red-500 text-xs opacity-0 group-hover:h-8 group-hover:-translate-y-6 group-hover:opacity-100"
-            onClick={(e) => deleteQuiz(e)}
+            <div
+              className="absolute -top-2 right-14 -z-10 h-2 w-8 cursor-pointer rounded-t-md bg-extras text-xs opacity-0 transition-all duration-100 group-hover:h-8 group-hover:-translate-y-6 group-hover:opacity-100"
+              onClick={(e) => navigateToQuizEdit(e)}
+            >
+              <CiEdit className="h-8 w-8 text-primary" />
+            </div>
+          </Tooltip>
+          <Tooltip
+            title="Usuń"
+            placement="top"
+            disableInteractive
+            slots={{
+              transition: Zoom,
+            }}
           >
-            <PiTrashLight className="h-7 w-7 translate-x-[2.5px] translate-y-[3px] text-primary" />
-          </div>
+            <div
+              className="absolute -top-2 right-4 -z-10 h-2 w-8 cursor-pointer rounded-t-md bg-red-500 text-xs opacity-0 group-hover:h-8 group-hover:-translate-y-6 group-hover:opacity-100"
+              onClick={(e) => deleteQuiz(e)}
+            >
+              <PiTrashLight className="h-7 w-7 translate-x-[2.5px] translate-y-[3px] text-primary" />
+            </div>
+          </Tooltip>
         </>
       )}
       <div className="m-3 mb-2 flex justify-between">

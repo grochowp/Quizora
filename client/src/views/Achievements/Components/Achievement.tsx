@@ -3,6 +3,7 @@ import { TileTitle } from "../../../components/reusable/TileTitle";
 import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
 import { CiTrophy } from "react-icons/ci";
 import React from "react";
+import { Tooltip, Zoom } from "@mui/material";
 
 export const Achievement = ({ achievement }: { achievement: IAchievement }) => {
   const { loggedUserData } = useLoggedUserContext();
@@ -47,21 +48,36 @@ export const Achievement = ({ achievement }: { achievement: IAchievement }) => {
           return (
             <React.Fragment key={level._id}>
               <div className="flex flex-col items-center gap-1">
-                <span
-                  className={`${isAchieved && level.title ? "opacity-100" : level.title ? "opacity-25" : "opacity-0"}`}
+                <Tooltip
+                  title={level.title}
+                  placement="top"
+                  slots={{
+                    transition: Zoom,
+                  }}
                 >
-                  <CiTrophy />
-                </span>
+                  <span
+                    className={`${isAchieved && level.title ? "opacity-100" : level.title ? "opacity-25" : "opacity-0"}`}
+                  >
+                    <CiTrophy />
+                  </span>
+                </Tooltip>
                 <div
                   className={`h-5 w-5 rounded-full bg-baseText sm:h-6 sm:w-6 ${isAchieved ? "opacity-100" : "opacity-25"} ${isCurrentLevel && userLevel !== 5 && "bg-extras"}`}
                 ></div>
-                <span
-                  className={`flex flex-nowrap text-[9px] sm:text-[10px] ${isAchieved || "opacity-25"}`}
+                <Tooltip
+                  title={`Wymagany postęp: ${level.requirement}`}
+                  slots={{
+                    transition: Zoom,
+                  }}
                 >
-                  {loggedUserData?.userProfile?.checkpoints
-                    ? `${level?.requirement}`
-                    : `Poziom ${level.level}`}
-                </span>
+                  <span
+                    className={`flex flex-nowrap text-[9px] sm:text-[10px] ${isAchieved || "opacity-25"}`}
+                  >
+                    {loggedUserData?.userProfile?.checkpoints
+                      ? `${level?.requirement}`
+                      : `Poziom ${level.level}`}
+                  </span>
+                </Tooltip>
               </div>
               {level.level !== maxAchievementLevel && (
                 <div

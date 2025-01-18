@@ -158,4 +158,5 @@ export interface IStatsTileData {
   value: number;
   maxValue?: number;
   hiperlink?: string;
+  hint?: string;
 }
