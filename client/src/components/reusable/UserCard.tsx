@@ -9,12 +9,14 @@ export const UserCard = ({
   children,
   editButton = false,
   styles,
+  onClick,
 }: {
   user: IUser | undefined;
   children: React.ReactNode;
 
   editButton?: boolean;
   styles?: string;
+  onClick?: () => void;
 }) => {
   const navigate = useNavigate();
 
@@ -33,7 +35,7 @@ export const UserCard = ({
       {children}
       {editButton && (
         <Tooltip
-          title="Ustawienia"
+          title={onClick ? "Edytuj" : "Ustawienia"}
           placement="right"
           slots={{
             transition: Zoom,
@@ -41,7 +43,7 @@ export const UserCard = ({
         >
           <div
             className="absolute -top-2 right-4 -z-10 h-2 w-8 cursor-pointer rounded-t-md bg-extras text-xs transition-all duration-100 group-hover:h-8 group-hover:-translate-y-6"
-            onClick={navigateToSettings}
+            onClick={onClick || navigateToSettings}
           >
             <CiEdit className="h-8 w-8 text-primary" />
           </div>

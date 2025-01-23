@@ -59,6 +59,28 @@ export const UpdatePreferences = async (preferences: {
   }
 };
 
+export const editTitles = async (titles: string[]) => {
+  try {
+    const token = Cookies.get("userToken")?.replace(/^"|"$/g, "");
+
+    const response = await axios.patch(
+      `${url}api/user/titles`,
+      { titles },
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};
+
 export const fetchRankingUsers = async (
   query: string,
   page: number,

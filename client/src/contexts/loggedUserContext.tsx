@@ -35,6 +35,7 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
 
   const resetUserData = async () => {
     const newData = await refetch();
+    console.log(newData.data.user);
     setLoggedUserData(newData.data.user);
   };
 

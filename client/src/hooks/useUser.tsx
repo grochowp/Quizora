@@ -9,6 +9,7 @@ export const useUser = (userId: string | undefined) => {
     data: user,
     error,
     isLoading,
+    refetch,
   } = useQuery<IUser>({
     queryKey: ["user", userId],
     queryFn: () => findUserById(userId),
@@ -16,5 +17,5 @@ export const useUser = (userId: string | undefined) => {
     refetchOnWindowFocus: false,
   });
 
-  return { user, error, isLoading };
-}
+  return { user, error, isLoading, refetch };
+};

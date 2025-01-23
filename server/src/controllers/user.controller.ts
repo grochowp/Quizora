@@ -139,7 +139,7 @@ const changeDisplayedTitles = async (
 ) => {
   const { _id: userId } = req.user;
   const { titles } = req.body;
-
+  console.log(req.body);
   try {
     const { user, message } = await UserService.changeDisplayedTitles(
       userId,

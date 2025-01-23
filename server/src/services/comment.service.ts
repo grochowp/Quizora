@@ -45,7 +45,7 @@ class CommentService {
     ValidationService.isAuthorized(
       userId,
       comment.userId,
-      "You can delete only your own comments."
+      "Możesz usuwać tylko swoje komentarze."
     );
     await CommentRepository.deleteComment(commentId);
   }

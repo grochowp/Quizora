@@ -5,6 +5,7 @@ import { useQuiz } from "../../../hooks/useQuiz";
 import Quiz from "./Quiz";
 import { motion } from "framer-motion";
 import { useLoggedUserContext } from "../../../contexts/LoggedUserContext";
+import { Tooltip, Zoom } from "@mui/material";
 
 const containerVariants = {
   hidden: { opacity: 1, scale: 0 },
@@ -113,13 +114,26 @@ const QuizSection: React.FC<IQuizSectionProps> = ({
             ))}
           </div>
         )}
-        {reset ? (
-          <GrPowerReset
-            className="mb-4 mr-4 h-5 cursor-pointer md:h-6 md:w-6 xl:mr-4"
-            onClick={() => refetch()}
-          />
-        ) : (
-          <div />
+        {reset && (
+          <Tooltip
+            className="mr-4"
+            title={"Odśwież"}
+            placement="top"
+            slots={{
+              transition: Zoom,
+            }}
+          >
+            <div className="mb-4 mr-4">
+              <GrPowerReset
+                className="h-5 cursor-pointer hover:animate-spin md:h-6 md:w-6"
+                style={{
+                  animationTimingFunction: "ease-in-out",
+                  animationIterationCount: "1",
+                }}
+                onClick={() => refetch()}
+              />
+            </div>
+          </Tooltip>
         )}
       </div>
 

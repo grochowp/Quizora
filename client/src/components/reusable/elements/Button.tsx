@@ -32,7 +32,13 @@ export const Button = ({
   );
 };
 
-export const EditButton = ({ onClick }: { onClick: () => void }) => {
+export const EditButton = ({
+  onClick,
+  label,
+}: {
+  onClick: () => void;
+  label?: string;
+}) => {
   return (
     <Button
       type="button"
@@ -42,7 +48,7 @@ export const EditButton = ({ onClick }: { onClick: () => void }) => {
       }
       onClick={onClick}
     >
-      Edytuj
+      {label || "Edytuj"}
     </Button>
   );
 };
