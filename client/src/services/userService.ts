@@ -95,3 +95,26 @@ export const fetchRankingUsers = async (
     throw new Error(err.response.data.message);
   }
 };
+
+export const finishQuizAndAssignPoints = async (
+  quizId: string,
+  points: number,
+) => {
+  const token = Cookies.get("userToken")?.replace(/^"|"$/g, "");
+  try {
+    const response = await axios.patch(
+      `${import.meta.env.VITE_DB_URL}api/user/finishQuiz/${quizId}?points=${points}`,
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response.data.message);
+  }
+};

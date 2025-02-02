@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
 import { IFormData, IUser } from "../interfaces";
 import { useNavigate } from "react-router-dom";
 import { getDataFromToken, loginOrRegister } from "../services/userService";
@@ -33,11 +39,10 @@ export const LoggedUserProvider = ({ children }: React.PropsWithChildren) => {
     refetchOnWindowFocus: false,
   });
 
-  const resetUserData = async () => {
+  const resetUserData = useCallback(async () => {
     const newData = await refetch();
-    console.log(newData.data.user);
     setLoggedUserData(newData.data.user);
-  };
+  }, [refetch]);
 
   const handleRememberMe = (login: string, password: string) => {
     localStorage.setItem("login", login);

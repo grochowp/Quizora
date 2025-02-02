@@ -16,6 +16,7 @@ import { useModalContext } from "../../contexts/ModalContext";
 import { TopModal } from "../../components/reusable/modals/TopModal";
 import { BiError } from "react-icons/bi";
 import Spinner from "../../components/reusable/Spinner";
+import { FinishQuiz } from "./components/FinishQuiz";
 
 // TO-DO Add modal to display quiz data before going to this components, pass quiz object as a props
 // TO-DO Add fetching title to display it in quiz
@@ -28,7 +29,6 @@ const SolveQuiz = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { questions, status } = useSelector((state: RootState) => state.quiz);
-
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -86,35 +86,37 @@ const SolveQuiz = () => {
             <Spinner />
           </div>
         )}
-        {status === "active" && (
-          <div className="flex h-fit w-full flex-col items-center rounded-lg border-l-4 border-extras bg-secondary font-poppins">
-            <Question
-              title={location.state.title}
-              question={question}
-              handleSelectAnswer={handleSelectAnswer}
-              selectedAnswer={selectedAnswer}
-            />
-            <div className="flex w-[90%] items-center justify-between py-6 pb-6">
-              <div className="flex flex-col gap-1">
-                <h1 className="text-xs md:text-base">
-                  Pytanie:{" "}
-                  <span className="text-extras">
-                    {currentQuestion + 1}/{questions.length}
-                  </span>
-                </h1>
+        <div className="flex h-fit w-full flex-col items-center rounded-lg border-l-4 border-extras bg-secondary font-poppins">
+          {status === "active" && (
+            <>
+              <Question
+                title={location.state.title}
+                question={question}
+                handleSelectAnswer={handleSelectAnswer}
+                selectedAnswer={selectedAnswer}
+              />
+              <div className="flex w-[90%] items-center justify-between py-6 pb-6">
+                <div className="flex flex-col gap-1">
+                  <h1 className="text-xs md:text-base">
+                    Pytanie:{" "}
+                    <span className="text-extras">
+                      {currentQuestion + 1}/{questions.length}
+                    </span>
+                  </h1>
+                </div>
+                <Button
+                  type="button"
+                  variant="fill"
+                  styles="py-1 px-8"
+                  onClick={handleNextQuestion}
+                >
+                  Dalej
+                </Button>
               </div>
-              <Button
-                type="button"
-                variant="fill"
-                styles="py-1 px-8"
-                onClick={handleNextQuestion}
-              >
-                Dalej
-              </Button>
-            </div>
-          </div>
-        )}
-        {status === "finished" && ""}
+            </>
+          )}
+          {status === "finished" && <FinishQuiz title={location.state.title} />}
+        </div>
       </div>
       {quizId && <SideBar quizId={quizId} />}
     </div>

@@ -68,9 +68,11 @@ const quizSlice = createSlice({
     },
 
     tickTimer(state) {
-      state.timer -= 1;
-      if (state.timer <= 0) {
-        state.status = "finished";
+      if (state.status === "active") {
+        state.timer -= 1;
+        if (state.timer <= 0) {
+          state.status = "finished";
+        }
       }
     },
 

@@ -15,7 +15,12 @@ const quizDetailsSchema = new mongoose.Schema<IQuizDetails>({
   questions: {
     type: [
       {
-        question: { type: String, minlength: 1, maxlength: 50, required: true },
+        question: {
+          type: String,
+          minlength: 1,
+          maxlength: 150,
+          required: true,
+        },
         answers: {
           type: [String],
           required: true,

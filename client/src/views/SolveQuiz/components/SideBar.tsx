@@ -24,7 +24,7 @@ export const SideBar = memo(({ quizId }: { quizId: string }) => {
         </span>
       </div>
 
-      <div className="flex min-h-[608px] flex-col justify-between">
+      <div className="flex min-h-[590px] flex-col justify-between">
         {selectedAction === "comments" ? (
           <Comments quizId={quizId} />
         ) : (

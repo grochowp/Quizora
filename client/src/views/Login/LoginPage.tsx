@@ -44,7 +44,7 @@ const LoginPage = () => {
   return (
     <div className="shadow-custom absolute left-1/2 top-1/2 flex h-[620px] w-[320px] -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-center rounded-xl bg-primary font-poppins text-baseText md:w-[374px]">
       <h1 className="mt-5 flex h-10 items-center gap-1 text-xl">
-        <img src="/assets/logo.png" alt="Logo" /> Quizora
+        <img src="/assets/logo2.png" alt="Logo" className="h-10 w-10" /> Quizora
       </h1>
 
       <h2 className="flex h-16 items-center text-3xl">

@@ -123,7 +123,6 @@ const addFinishedQuizData = async (
   const { _id: userId } = req.user;
   const { quizId } = req.params;
   const { points } = req.query;
-
   try {
     const { finishQuizMessage, addPointsMessage } =
       await UserService.addFinishedQuizData(userId, quizId, points);
@@ -139,7 +138,6 @@ const changeDisplayedTitles = async (
 ) => {
   const { _id: userId } = req.user;
   const { titles } = req.body;
-  console.log(req.body);
   try {
     const { user, message } = await UserService.changeDisplayedTitles(
       userId,

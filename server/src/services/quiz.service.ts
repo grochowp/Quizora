@@ -305,12 +305,11 @@ class QuizService {
     const quizzesLength = await quizRepository.findQuizzesLength(
       aggregationPipeline
     );
-
     const skip = (page - 1) * limit;
     aggregationPipeline.push({ $skip: skip });
-    aggregationPipeline.push({ $limit: limit });
     aggregationPipeline.push({ $unset: "details" });
     aggregationPipeline.push({ $sort: { [sortBy]: order } });
+    aggregationPipeline.push({ $limit: limit });
 
     const quizzes = await quizRepository.executeAggregation(
       aggregationPipeline

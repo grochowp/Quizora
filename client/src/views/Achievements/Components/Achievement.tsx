@@ -106,25 +106,3 @@ export const Achievement = ({ achievement }: { achievement: IAchievement }) => {
     </div>
   );
 };
-
-/**${achievement.levels.indexOf(level) !== 5 ? "after:absolute after:right-8 after:top-3 after:h-[1px] after:w-4 after:bg-baseText after:sm:w-10" : ""} */
-
-// <div
-//   key={level.level}
-//   className={`relative flex h-6 w-6 flex-col gap-2 rounded-full border-[1px] bg-baseText ${isAchieved ? "opacity-100" : "opacity-25"} ${isCurrentLevel && userLevel !== 5 ? "scale-125 border-4 border-red-600 bg-extras bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg" : ""}`}
-// >
-//   {level.title && (
-//     <span
-//       className={`${isCurrentLevel && userLevel !== 5 && "text-extras"} absolute -top-6 left-[3px]`}
-//     >
-//       <CiTrophy />
-//     </span>
-//   )}
-//   <span
-//     className={`relative flex-nowrap text-center text-[10px] ${isCurrentLevel && userLevel !== 5 ? "top-[26px] text-extras" : "top-8"}`}
-//   >
-//     {loggedUserData?.userProfile?.checkpoints
-//       ? `${level?.requirement}`
-//       : `Poziom ${level.level}`}
-//   </span>
-// </div>
