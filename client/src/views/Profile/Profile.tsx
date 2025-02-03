@@ -27,7 +27,7 @@ function Profile() {
 
   return (
     <div className="flex w-[300px] flex-col gap-12 sm:w-[320px] lg:w-[660px] xl:w-[984px] 2xl:w-[1316px]">
-      <div className="relative flex flex-col items-center justify-between gap-4 border-b-[1px] border-secondary font-poppins lg:items-start xl:flex-row xl:items-end">
+      <div className="relative flex flex-col items-center justify-between gap-4 border-b-[1px] border-secondary font-roboto lg:items-start xl:flex-row xl:items-end">
         <UserCard
           user={userData}
           editButton={userId === loggedUserData?._id}

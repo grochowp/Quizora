@@ -5,7 +5,7 @@ export const themes: IThemes[] = [
   { name: "light", label: "Jasny" },
   { name: "blue", label: "Niebieski" },
   { name: "green", label: "Zielony", unlockAt: "Kreator" },
-  { name: "noir", label: "Noir", unlockAt: "Legenda" },
+  { name: "noir", label: "Noir", unlockAt: "Zbieracz" },
   { name: "cosmic", label: "Kosmiczny", unlockAt: "Legenda" },
 ];
 

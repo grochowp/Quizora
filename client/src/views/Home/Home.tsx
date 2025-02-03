@@ -8,26 +8,17 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-col gap-12 2xl:flex-row 2xl:gap-4">
-      <div className="flex max-w-[300px] flex-col gap-8 sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[1000px]">
-        <QuizSection title="Popularne" query="shuffle=true" maxQuizzes={6} />
-        <QuizSection
-          title="Ostatnio Dodane"
-          query={"recently=true&sortBy=updatedAt&shuffle=true"}
-        />
-        <QuizSection
-          difficultyFilter={quizDifficulty}
-          query={`difficulty=${quizDifficulty}&shuffle=true`}
-          handleDifficultyChange={handleDifficultyChange}
-        />
-      </div>
-      <div className="relative flex h-[300px] w-full max-w-[300px] flex-col rounded-xl border-l-4 border-extras bg-secondary shadow-md sm:max-w-[320px] lg:max-w-[650px] xl:max-w-[1000px] 2xl:top-[44px] 2xl:w-[300px]">
-        <div className="p-4">
-          <p className="text-center text-white">
-            Tutaj może być dodatkowa treść lub widget.
-          </p>
-        </div>
-      </div>
+    <div className="flex max-w-[300px] flex-col sm:max-w-[320px] lg:max-w-[660px] xl:max-w-[1000px] 2xl:gap-4">
+      <QuizSection title="Popularne" query="shuffle=true" maxQuizzes={6} />
+      <QuizSection
+        title="Ostatnio Dodane"
+        query={"recently=true&sortBy=updatedAt&shuffle=true"}
+      />
+      <QuizSection
+        difficultyFilter={quizDifficulty}
+        query={`difficulty=${quizDifficulty}&shuffle=true`}
+        handleDifficultyChange={handleDifficultyChange}
+      />
     </div>
   );
 };

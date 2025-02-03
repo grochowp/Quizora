@@ -23,7 +23,7 @@ export const Themes = ({
             onClick={() => handleTheme(theme.name)}
           >
             <img
-              src={`/assets/theme-light.png`} // TO-DO --- change to correct images
+              src={`/assets/theme-${theme.name}.png`}
               className={`w-28 rounded-lg border-4 ${titleNotUnlocked && "opacity-25"} ${selectedTheme === theme.name ? "border-extras" : "border-transparent"} lg:w-48`}
             />
             <h2

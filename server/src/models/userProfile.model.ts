@@ -24,7 +24,7 @@ const userProfileSchema = new mongoose.Schema<IUserProfile>({
     required: true,
     default: "default",
     enum: {
-      values: ["default", "light", "blue"],
+      values: ["default", "light", "blue", "green", "noir", "cosmic"],
       message: "Theme must have a value of 'Default', 'Light', or 'Blue'.",
     },
   },

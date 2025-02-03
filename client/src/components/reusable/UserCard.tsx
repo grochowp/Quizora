@@ -26,7 +26,7 @@ export const UserCard = ({
 
   return (
     <div
-      className={`${styles} group relative grid min-w-max flex-1 grid-cols-6 gap-2 rounded-lg border-l-4 border-extras bg-secondary md:grid-rows-2 lg:grid-cols-8`}
+      className={`group relative grid min-w-max max-w-[600px] flex-1 grid-cols-6 gap-2 rounded-lg border-l-4 border-extras bg-secondary md:grid-rows-2 lg:grid-cols-8 ${styles}`}
     >
       <img
         className="shadow-custom-inner col-span-2 col-start-1 row-span-2 row-start-1 mb-4 ml-4 mt-4 h-20 w-20 rounded-lg"
