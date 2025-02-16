@@ -98,5 +98,3 @@ export const getQuizWithDetails = async (quizId: string): Promise<IQuiz> => {
     throw new Error(err.response.data.message);
   }
 };
-
-
